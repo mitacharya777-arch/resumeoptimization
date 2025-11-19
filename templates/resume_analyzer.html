@@ -1064,6 +1064,33 @@
         let currentOptimizedResumeText = '';
         let currentOriginalScore = null;  // Store original match score
 
+        // Function to format contact line with clickable LinkedIn/GitHub links
+        function formatContactWithLinks(contactLine) {
+            if (!contactLine) return '';
+            
+            // Regular expression to find LinkedIn and GitHub URLs
+            // Matches: LinkedIn: https://linkedin.com/in/username or LinkedIn: linkedin.com/in/username
+            // Matches: GitHub: https://github.com/username or GitHub: github.com/username
+            const linkedinPattern = /(LinkedIn:\s*)(https?:\/\/)?(www\.)?(linkedin\.com\/[^\s|,;]+)/gi;
+            const githubPattern = /(GitHub:\s*)(https?:\/\/)?(www\.)?(github\.com\/[^\s|,;]+)/gi;
+            
+            let formatted = escapeHtml(contactLine);
+            
+            // Replace LinkedIn links
+            formatted = formatted.replace(linkedinPattern, (match, label, protocol, www, path) => {
+                const url = (protocol || 'https://') + (www || '') + path;
+                return `${label}<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FDC500; text-decoration: underline;">${url}</a>`;
+            });
+            
+            // Replace GitHub links
+            formatted = formatted.replace(githubPattern, (match, label, protocol, www, path) => {
+                const url = (protocol || 'https://') + (www || '') + path;
+                return `${label}<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FDC500; text-decoration: underline;">${url}</a>`;
+            });
+            
+            return formatted;
+        }
+
         function formatResumeForDisplay(resumeText) {
             if (!resumeText) return '';
             
@@ -1088,11 +1115,15 @@
                     !line.toUpperCase().includes('SUMMARY') && !line.toUpperCase().includes('EXPERIENCE') &&
                     !line.toUpperCase().includes('SKILLS') && !line.toUpperCase().includes('EDUCATION')) {
                     
-                    // Check if it's contact info (has | or location/email/phone keywords)
+                    // Check if it's contact info (has | or location/email/phone/linkedin/github keywords)
                     const isContactInfo = line.includes('|') || 
                                          line.toLowerCase().includes('location:') || 
                                          line.toLowerCase().includes('email:') || 
-                                         line.toLowerCase().includes('phone:');
+                                         line.toLowerCase().includes('phone:') ||
+                                         line.toLowerCase().includes('linkedin:') ||
+                                         line.toLowerCase().includes('github:') ||
+                                         line.toLowerCase().includes('linkedin.com') ||
+                                         line.toLowerCase().includes('github.com');
                     
                     // First line - Name (if not contact info and not a section header)
                     if (i === 0 && !isContactInfo) {
@@ -1102,7 +1133,9 @@
                     // Second line - Could be Job Title OR Contact Info
                     else if (i === 1) {
                         if (isContactInfo) {
-                            html += `<div class="resume-header-contact">${escapeHtml(line)}</div>`;
+                            // Convert LinkedIn and GitHub URLs to clickable links
+                            const contactWithLinks = formatContactWithLinks(line);
+                            html += `<div class="resume-header-contact">${contactWithLinks}</div>`;
                             prevType = 'header_contact';
                             headerProcessed = true;
                         } else {
@@ -1112,7 +1145,9 @@
                     }
                     // Third line or later - Contact Info (if not already processed)
                     else if ((i === 2 || i === 3) && isContactInfo && prevType !== 'header_contact') {
-                        html += `<div class="resume-header-contact">${escapeHtml(line)}</div>`;
+                        // Convert LinkedIn and GitHub URLs to clickable links
+                        const contactWithLinks = formatContactWithLinks(line);
+                        html += `<div class="resume-header-contact">${contactWithLinks}</div>`;
                         prevType = 'header_contact';
                         headerProcessed = true;
                     }

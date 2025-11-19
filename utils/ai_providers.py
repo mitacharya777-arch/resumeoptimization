@@ -22,7 +22,7 @@ class AIProvider(ABC):
         pass
     
     @abstractmethod
-    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str]) -> str:
+    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str], social_links: Optional[Dict] = None) -> str:
         """Create optimized resume."""
         pass
 
@@ -155,9 +155,17 @@ Start your response with "MATCH_SCORE:" immediately."""
         except Exception as e:
             return {"error": f"Groq API error: {str(e)}"}
     
-    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str]) -> str:
+    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str], social_links: Optional[Dict] = None) -> str:
         if not self.is_available():
             return "Groq API not available."
+        
+        # Prepare social links information for the prompt
+        social_links_info = ""
+        if social_links:
+            if social_links.get('linkedin'):
+                social_links_info += f"\nLinkedIn URL from original resume: {social_links['linkedin']}"
+            if social_links.get('github'):
+                social_links_info += f"\nGitHub URL from original resume: {social_links['github']}"
         
         prompt = f"""You are an expert resume writer. Create an optimized version of this resume that is specifically tailored to match the job description.
 
@@ -169,6 +177,9 @@ JOB DESCRIPTION:
 
 SUGGESTIONS TO IMPLEMENT:
 {chr(10).join(suggestions[:10])}
+{social_links_info}
+
+CRITICAL: If the original resume contains LinkedIn or GitHub links, you MUST preserve them in the header contact line with their full URLs.
 
 🚨 CRITICAL MANDATORY REQUIREMENT FOR EXPERIENCE SECTION 🚨
 YOU MUST COMPLETELY REWRITE EVERY EXPERIENCE BULLET POINT. DO NOT just add keywords or make minor edits.
@@ -250,7 +261,13 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 1. HEADER (First Line):
    [Full Name]
    [Job Title/Position]
-   Location: [City, State] | Email: [email] | Phone: [phone] | [Links: LinkedIn, GitHub, Portfolio, etc.]
+   Location: [City, State] | Email: [email] | Phone: [phone] | LinkedIn: [linkedin_url] | GitHub: [github_url]
+   
+   IMPORTANT: If the original resume contains LinkedIn or GitHub links, you MUST include them in the contact line with their full URLs.
+   - Extract the actual URLs from the original resume (they are provided above if found)
+   - Format: "LinkedIn: https://linkedin.com/in/username" or "GitHub: https://github.com/username"
+   - Only include links that exist in the original resume
+   - If no LinkedIn/GitHub in original, omit them
 
 2. SUMMARY Section:
    SUMMARY
@@ -452,9 +469,17 @@ Start with "MATCH_SCORE:" immediately."""
         except Exception as e:
             return {"error": f"OpenAI API error: {str(e)}"}
     
-    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str]) -> str:
+    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str], social_links: Optional[Dict] = None) -> str:
         if not self.is_available():
             return "OpenAI API not available."
+        
+        # Prepare social links information for the prompt
+        social_links_info = ""
+        if social_links:
+            if social_links.get('linkedin'):
+                social_links_info += f"\nLinkedIn URL from original resume: {social_links['linkedin']}"
+            if social_links.get('github'):
+                social_links_info += f"\nGitHub URL from original resume: {social_links['github']}"
         
         prompt = f"""You are an expert resume writer. Create an optimized version of this resume that is specifically tailored to match the job description.
 
@@ -466,6 +491,9 @@ JOB DESCRIPTION:
 
 SUGGESTIONS TO IMPLEMENT:
 {chr(10).join(suggestions[:10])}
+{social_links_info}
+
+CRITICAL: If the original resume contains LinkedIn or GitHub links, you MUST preserve them in the header contact line with their full URLs.
 
 🚨 CRITICAL MANDATORY REQUIREMENT FOR EXPERIENCE SECTION 🚨
 YOU MUST COMPLETELY REWRITE EVERY EXPERIENCE BULLET POINT. DO NOT just add keywords or make minor edits.
@@ -547,7 +575,13 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 1. HEADER (First Line):
    [Full Name]
    [Job Title/Position]
-   Location: [City, State] | Email: [email] | Phone: [phone] | [Links: LinkedIn, GitHub, Portfolio, etc.]
+   Location: [City, State] | Email: [email] | Phone: [phone] | LinkedIn: [linkedin_url] | GitHub: [github_url]
+   
+   IMPORTANT: If the original resume contains LinkedIn or GitHub links, you MUST include them in the contact line with their full URLs.
+   - Extract the actual URLs from the original resume (they are provided above if found)
+   - Format: "LinkedIn: https://linkedin.com/in/username" or "GitHub: https://github.com/username"
+   - Only include links that exist in the original resume
+   - If no LinkedIn/GitHub in original, omit them
 
 2. SUMMARY Section:
    SUMMARY
@@ -772,9 +806,17 @@ Start your response with "MATCH_SCORE:" immediately."""
         except Exception as e:
             return {"error": f"Claude API error: {str(e)}"}
     
-    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str]) -> str:
+    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str], social_links: Optional[Dict] = None) -> str:
         if not self.is_available():
             return "Claude API not available."
+        
+        # Prepare social links information for the prompt
+        social_links_info = ""
+        if social_links:
+            if social_links.get('linkedin'):
+                social_links_info += f"\nLinkedIn URL from original resume: {social_links['linkedin']}"
+            if social_links.get('github'):
+                social_links_info += f"\nGitHub URL from original resume: {social_links['github']}"
         
         prompt = f"""You are an expert resume writer. Create an optimized version of this resume that is specifically tailored to match the job description.
 
@@ -786,6 +828,9 @@ JOB DESCRIPTION:
 
 SUGGESTIONS TO IMPLEMENT:
 {chr(10).join(suggestions[:10])}
+{social_links_info}
+
+CRITICAL: If the original resume contains LinkedIn or GitHub links, you MUST preserve them in the header contact line with their full URLs.
 
 🚨 CRITICAL MANDATORY REQUIREMENT FOR EXPERIENCE SECTION 🚨
 YOU MUST COMPLETELY REWRITE EVERY EXPERIENCE BULLET POINT. DO NOT just add keywords or make minor edits.
@@ -867,7 +912,13 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 1. HEADER (First Line):
    [Full Name]
    [Job Title/Position]
-   Location: [City, State] | Email: [email] | Phone: [phone] | [Links: LinkedIn, GitHub, Portfolio, etc.]
+   Location: [City, State] | Email: [email] | Phone: [phone] | LinkedIn: [linkedin_url] | GitHub: [github_url]
+   
+   IMPORTANT: If the original resume contains LinkedIn or GitHub links, you MUST include them in the contact line with their full URLs.
+   - Extract the actual URLs from the original resume (they are provided above if found)
+   - Format: "LinkedIn: https://linkedin.com/in/username" or "GitHub: https://github.com/username"
+   - Only include links that exist in the original resume
+   - If no LinkedIn/GitHub in original, omit them
 
 2. SUMMARY Section:
    SUMMARY
@@ -1126,9 +1177,17 @@ Start your response with "MATCH_SCORE:" immediately."""
         except Exception as e:
             return {"error": f"Gemini API error: {str(e)}"}
     
-    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str]) -> str:
+    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str], social_links: Optional[Dict] = None) -> str:
         if not self.is_available():
             return "Gemini API not available."
+        
+        # Prepare social links information for the prompt
+        social_links_info = ""
+        if social_links:
+            if social_links.get('linkedin'):
+                social_links_info += f"\nLinkedIn URL from original resume: {social_links['linkedin']}"
+            if social_links.get('github'):
+                social_links_info += f"\nGitHub URL from original resume: {social_links['github']}"
         
         prompt = f"""You are an expert resume writer. Create an optimized version of this resume that is specifically tailored to match the job description.
 
@@ -1140,6 +1199,9 @@ JOB DESCRIPTION:
 
 SUGGESTIONS TO IMPLEMENT:
 {chr(10).join(suggestions[:10])}
+{social_links_info}
+
+CRITICAL: If the original resume contains LinkedIn or GitHub links, you MUST preserve them in the header contact line with their full URLs.
 
 🚨 CRITICAL MANDATORY REQUIREMENT FOR EXPERIENCE SECTION 🚨
 YOU MUST COMPLETELY REWRITE EVERY EXPERIENCE BULLET POINT. DO NOT just add keywords or make minor edits.
@@ -1221,7 +1283,13 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 1. HEADER (First Line):
    [Full Name]
    [Job Title/Position]
-   Location: [City, State] | Email: [email] | Phone: [phone] | [Links: LinkedIn, GitHub, Portfolio, etc.]
+   Location: [City, State] | Email: [email] | Phone: [phone] | LinkedIn: [linkedin_url] | GitHub: [github_url]
+   
+   IMPORTANT: If the original resume contains LinkedIn or GitHub links, you MUST include them in the contact line with their full URLs.
+   - Extract the actual URLs from the original resume (they are provided above if found)
+   - Format: "LinkedIn: https://linkedin.com/in/username" or "GitHub: https://github.com/username"
+   - Only include links that exist in the original resume
+   - If no LinkedIn/GitHub in original, omit them
 
 2. SUMMARY Section:
    SUMMARY
@@ -1426,9 +1494,17 @@ Start your response with "MATCH_SCORE:" immediately."""
         except Exception as e:
             return {"error": f"Cohere API error: {str(e)}"}
     
-    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str]) -> str:
+    def optimize_resume(self, resume_text: str, job_description: str, suggestions: List[str], social_links: Optional[Dict] = None) -> str:
         if not self.is_available():
             return "Cohere API not available."
+        
+        # Prepare social links information for the prompt
+        social_links_info = ""
+        if social_links:
+            if social_links.get('linkedin'):
+                social_links_info += f"\nLinkedIn URL from original resume: {social_links['linkedin']}"
+            if social_links.get('github'):
+                social_links_info += f"\nGitHub URL from original resume: {social_links['github']}"
         
         prompt = f"""You are an expert resume writer. Create an optimized version of this resume that is specifically tailored to match the job description.
 
@@ -1440,6 +1516,9 @@ JOB DESCRIPTION:
 
 SUGGESTIONS TO IMPLEMENT:
 {chr(10).join(suggestions[:10])}
+{social_links_info}
+
+CRITICAL: If the original resume contains LinkedIn or GitHub links, you MUST preserve them in the header contact line with their full URLs.
 
 🚨 CRITICAL MANDATORY REQUIREMENT FOR EXPERIENCE SECTION 🚨
 YOU MUST COMPLETELY REWRITE EVERY EXPERIENCE BULLET POINT. DO NOT just add keywords or make minor edits.
@@ -1521,7 +1600,13 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 1. HEADER (First Line):
    [Full Name]
    [Job Title/Position]
-   Location: [City, State] | Email: [email] | Phone: [phone] | [Links: LinkedIn, GitHub, Portfolio, etc.]
+   Location: [City, State] | Email: [email] | Phone: [phone] | LinkedIn: [linkedin_url] | GitHub: [github_url]
+   
+   IMPORTANT: If the original resume contains LinkedIn or GitHub links, you MUST include them in the contact line with their full URLs.
+   - Extract the actual URLs from the original resume (they are provided above if found)
+   - Format: "LinkedIn: https://linkedin.com/in/username" or "GitHub: https://github.com/username"
+   - Only include links that exist in the original resume
+   - If no LinkedIn/GitHub in original, omit them
 
 2. SUMMARY Section:
    SUMMARY

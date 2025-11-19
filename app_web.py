@@ -557,6 +557,9 @@ def analyze_section_improvements(original_resume, optimized_resume, job_descript
 
 def create_optimized_resume(resume_text, job_description, suggestions, provider_name="groq", api_key=None):
     """Create optimized resume based on suggestions using selected AI provider."""
+    # Extract LinkedIn and GitHub links from original resume
+    social_links = extract_social_links(resume_text)
+    
     # Get the selected AI provider
     provider = get_ai_provider(provider_name, api_key)
     
@@ -578,7 +581,7 @@ def create_optimized_resume(resume_text, job_description, suggestions, provider_
     
     try:
         # Use the provider to optimize
-        optimized_resume = provider.optimize_resume(resume_text, job_description, suggestions)
+        optimized_resume = provider.optimize_resume(resume_text, job_description, suggestions, social_links)
         
         # Clean up the response
         if "OPTIMIZED RESUME:" in optimized_resume:
@@ -1003,7 +1006,11 @@ def format_resume_line(line, prev_line_type=None, line_index=0, header_processed
         is_contact_info = ('|' in line or 
                           'location:' in line.lower() or 
                           'email:' in line.lower() or 
-                          'phone:' in line.lower())
+                          'phone:' in line.lower() or
+                          'linkedin:' in line.lower() or
+                          'github:' in line.lower() or
+                          'linkedin.com' in line.lower() or
+                          'github.com' in line.lower())
         
         # First line - Name (if not a section header and not contact info)
         if line_index == 0:
@@ -1132,6 +1139,8 @@ def download_resume():
                 from reportlab.lib.enums import TA_LEFT
                 from reportlab.pdfbase import pdfmetrics
                 from reportlab.pdfbase.ttfonts import TTFont
+                from reportlab.lib.colors import black, white
+                import re
                 
                 buffer = io.BytesIO()
                 doc = SimpleDocTemplate(buffer, pagesize=letter,
@@ -1302,12 +1311,38 @@ def download_resume():
                         para = Paragraph(line_data['text'], header_title_style)
                         elements.append(para)
                     elif line_data['type'] == 'header_contact':
+                        # Parse contact line and create clickable hyperlinks for LinkedIn/GitHub
+                        contact_text = line_data['text']
+                        # Find LinkedIn and GitHub URLs
+                        linkedin_match = re.search(r'(LinkedIn:\s*)(https?://)?(www\.)?(linkedin\.com/[^\s|,;]+)', contact_text, re.IGNORECASE)
+                        github_match = re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s|,;]+)', contact_text, re.IGNORECASE)
+                        
+                        # Build HTML with hyperlinks
+                        contact_html = contact_text
+                        if linkedin_match:
+                            label = linkedin_match.group(1)
+                            protocol = linkedin_match.group(2) or 'https://'
+                            www = linkedin_match.group(3) or ''
+                            path = linkedin_match.group(4)
+                            url = protocol + www + path
+                            contact_html = contact_html.replace(linkedin_match.group(0), 
+                                f'{label}<link href="{url}" color="#FDC500">{url}</link>')
+                        if github_match:
+                            label = github_match.group(1)
+                            protocol = github_match.group(2) or 'https://'
+                            www = github_match.group(3) or ''
+                            path = github_match.group(4)
+                            url = protocol + www + path
+                            contact_html = contact_html.replace(github_match.group(0),
+                                f'{label}<link href="{url}" color="#FDC500">{url}</link>')
+                        
                         # Create a table with black background for the contact info
                         # Calculate width: page width (8.5") - left margin (1") - right margin (1") = 6.5"
                         page_width = 8.5 * 72  # 8.5 inches in points
                         margins = 2 * 72  # 1 inch left + 1 inch right
                         table_width = page_width - margins
-                        contact_table = Table([[line_data['text']]], colWidths=[table_width])
+                        contact_para = Paragraph(contact_html, header_contact_style)
+                        contact_table = Table([[contact_para]], colWidths=[table_width])
                         contact_table.setStyle(TableStyle([
                             ('BACKGROUND', (0, 0), (-1, -1), '#000000'),  # Black background
                             ('TEXTCOLOR', (0, 0), (-1, -1), '#FFFFFF'),  # White text
@@ -1455,10 +1490,79 @@ def download_resume():
                         para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                         # Set paragraph shading to black background
                         para.paragraph_format.shading.background_color.rgb = RGBColor(0, 0, 0)  # Black background
-                        run = para.add_run(line_data['text'])
-                        run.font.size = Pt(11)
-                        run.font.color.rgb = RGBColor(255, 255, 255)  # White text
-                        run.bold = False
+                        
+                        # Parse contact line and create clickable hyperlinks for LinkedIn/GitHub
+                        contact_text = line_data['text']
+                        # Split by | to preserve structure
+                        parts = contact_text.split('|')
+                        for i, part in enumerate(parts):
+                            part = part.strip()
+                            if not part:
+                                continue
+                            
+                            # Check for LinkedIn
+                            linkedin_match = re.search(r'(LinkedIn:\s*)(https?://)?(www\.)?(linkedin\.com/[^\s|,;]+)', part, re.IGNORECASE)
+                            if linkedin_match:
+                                label = linkedin_match.group(1)
+                                protocol = linkedin_match.group(2) or 'https://'
+                                www = linkedin_match.group(3) or ''
+                                path = linkedin_match.group(4)
+                                url = protocol + www + path
+                                # Add label
+                                run = para.add_run(label)
+                                run.font.size = Pt(11)
+                                run.font.color.rgb = RGBColor(255, 255, 255)  # White text
+                                # Add hyperlink using python-docx hyperlink method
+                                from docx.oxml import parse_xml
+                                from docx.oxml.ns import nsdecls, qn
+                                # Create hyperlink element
+                                hyperlink = parse_xml(
+                                    f'<w:hyperlink r:id="rId1" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
+                                    f'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/>'
+                                )
+                                hyperlink_run = hyperlink.add_r()
+                                hyperlink_run.text = url
+                                hyperlink_run.rPr = parse_xml(
+                                    f'<w:rPr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+                                    f'<w:color w:val="FDC500"/><w:u w:val="single"/></w:rPr>'
+                                )
+                                para._element.append(hyperlink)
+                            # Check for GitHub
+                            elif re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s|,;]+)', part, re.IGNORECASE):
+                                github_match = re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s|,;]+)', part, re.IGNORECASE)
+                                label = github_match.group(1)
+                                protocol = github_match.group(2) or 'https://'
+                                www = github_match.group(3) or ''
+                                path = github_match.group(4)
+                                url = protocol + www + path
+                                # Add label
+                                run = para.add_run(label)
+                                run.font.size = Pt(11)
+                                run.font.color.rgb = RGBColor(255, 255, 255)  # White text
+                                # Add hyperlink
+                                hyperlink = parse_xml(
+                                    f'<w:hyperlink r:id="rId2" xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" '
+                                    f'xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships"/>'
+                                )
+                                hyperlink_run = hyperlink.add_r()
+                                hyperlink_run.text = url
+                                hyperlink_run.rPr = parse_xml(
+                                    f'<w:rPr xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main">'
+                                    f'<w:color w:val="FDC500"/><w:u w:val="single"/></w:rPr>'
+                                )
+                                para._element.append(hyperlink)
+                            else:
+                                # Regular text
+                                run = para.add_run(part)
+                                run.font.size = Pt(11)
+                                run.font.color.rgb = RGBColor(255, 255, 255)  # White text
+                            
+                            # Add separator if not last part
+                            if i < len(parts) - 1:
+                                run = para.add_run(' | ')
+                                run.font.size = Pt(11)
+                                run.font.color.rgb = RGBColor(255, 255, 255)  # White text
+                        
                         para.paragraph_format.space_after = Pt(14)
                         para.paragraph_format.space_before = Pt(0)
                         # Add padding by adjusting left/right indents
