@@ -1,0 +1,26 @@
+==========================================
+🚀 QUICK GROQ API SETUP (3 Steps)
+==========================================
+
+STEP 1: Get API Key
+   1. Visit: https://console.groq.com/
+   2. Sign up / Log in
+   3. Go to "API Keys"
+   4. Click "Create API Key"
+   5. Copy the key (starts with gsk_...)
+
+STEP 2: Install Package
+   pip3 install groq
+
+STEP 3: Set API Key
+   echo "GROQ_API_KEY=your_key_here" > .env
+   
+   (Replace "your_key_here" with your actual key)
+
+STEP 4: Restart App
+   python3 app_web.py
+
+✅ Done! You'll see "Groq API Connected" message.
+
+For detailed steps, see: GROQ_SETUP_STEPS.md
+==========================================

@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recruiter Dashboard - Resume Optimizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app_db.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recruiter.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🎯 Recruiter Tool</h2>
+                <p class="subtitle">Bulk Resume Optimizer</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-page="candidates">
+                    <span>👥</span> Candidates
+                </a>
+                <a href="#" class="nav-item" data-page="optimize">
+                    <span>🚀</span> Bulk Optimize
+                </a>
+                <a href="#" class="nav-item" data-page="review">
+                    <span>📝</span> Review Queue
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <h1>Recruiter Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Candidates</h3>
+                        <div class="stat-value" id="stat-candidates">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Job Postings</h3>
+                        <div class="stat-value" id="stat-jobs">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Optimizations</h3>
+                        <div class="stat-value" id="stat-optimizations">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Pending Review</h3>
+                        <div class="stat-value" id="stat-pending">0</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidates Page -->
+            <div id="candidates-page" class="page">
+                <div class="page-header">
+                    <h1>Candidate Selection</h1>
+                    <div class="search-filters">
+                        <input type="text" id="candidate-search" class="form-control" placeholder="Search candidates...">
+                        <select id="skills-filter" class="form-control" multiple>
+                            <option value="Python">Python</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="React">React</option>
+                            <option value="AWS">AWS</option>
+                            <option value="Docker">Docker</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bulk-actions">
+                    <button class="btn-secondary" onclick="selectAll()">Select All</button>
+                    <button class="btn-secondary" onclick="deselectAll()">Deselect All</button>
+                    <span id="selected-count">0 selected</span>
+                </div>
+                <div id="candidates-list" class="candidates-grid"></div>
+            </div>
+
+            <!-- Optimize Page -->
+            <div id="optimize-page" class="page">
+                <h1>Bulk Optimization</h1>
+                <div class="optimize-form">
+                    <div class="form-group">
+                        <label>Select Job Posting</label>
+                        <select id="optimize-job-select" class="form-control">
+                            <option value="">-- Select Job --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Selected Candidates</label>
+                        <div id="selected-candidates-list" class="selected-list">
+                            <p>No candidates selected. Go to Candidates tab to select.</p>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="use-groq" checked>
+                            Use Groq AI (requires API key)
+                        </label>
+                    </div>
+                    <div class="form-group" id="groq-key-group" style="display: none;">
+                        <label>Groq API Key (optional if set in env)</label>
+                        <input type="password" id="groq-api-key" class="form-control" placeholder="Enter Groq API key">
+                    </div>
+                    <button class="btn-primary" onclick="startBulkOptimization()">
+                        <span id="optimize-btn-text">🚀 Optimize Selected Candidates</span>
+                        <span id="optimize-loader" class="loader" style="display: none;"></span>
+                    </button>
+                </div>
+                <div id="optimization-progress" style="display: none;">
+                    <h3>Optimization Progress</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill"></div>
+                    </div>
+                    <p id="progress-text">Processing...</p>
+                </div>
+                <div id="optimization-results" style="display: none;"></div>
+            </div>
+
+            <!-- Review Page -->
+            <div id="review-page" class="page">
+                <div class="page-header">
+                    <h1>Review Queue</h1>
+                    <select id="review-job-select" class="form-control" onchange="loadReviewQueue()">
+                        <option value="">-- Select Job --</option>
+                    </select>
+                </div>
+                <div id="review-queue" class="review-queue"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div id="compare-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeModal('compare-modal')">&times;</span>
+            <h2>Before / After Comparison</h2>
+            <div class="comparison-container">
+                <div class="comparison-panel">
+                    <h3>Original</h3>
+                    <div class="comparison-content" id="original-content"></div>
+                </div>
+                <div class="comparison-panel">
+                    <h3>Optimized</h3>
+                    <div class="comparison-content" id="optimized-content"></div>
+                </div>
+            </div>
+            <div class="comparison-actions">
+                <button class="btn-danger" onclick="rejectOptimization()">Reject</button>
+                <button class="btn-primary" onclick="approveOptimization()">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="message" class="message" style="display: none;"></div>
+
+    <script src="{{ url_for('static', filename='js/recruiter.js') }}"></script>
+</body>
+</html>
+

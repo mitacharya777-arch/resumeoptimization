@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📄 Resume Optimizer</h1>
+            <p class="subtitle">Optimize your resume for job applications</p>
+        </header>
+
+        <div class="upload-section">
+            <form id="resumeForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="resume">Upload Resume (PDF, DOCX, or TXT)</label>
+                    <input type="file" id="resume" name="resume" accept=".pdf,.docx,.doc,.txt" required>
+                    <small>Maximum file size: 16MB</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="job_description">Job Description (Optional)</label>
+                    <textarea 
+                        id="job_description" 
+                        name="job_description" 
+                        rows="6" 
+                        placeholder="Paste the job description here to get targeted optimization suggestions..."
+                    ></textarea>
+                </div>
+
+                <button type="submit" id="analyzeBtn" class="btn-primary">
+                    <span id="btnText">Analyze Resume</span>
+                    <span id="btnLoader" class="loader" style="display: none;"></span>
+                </button>
+            </form>
+        </div>
+
+        <div id="results" class="results-section" style="display: none;">
+            <div class="score-cards">
+                <div class="score-card">
+                    <h3>Quality Score</h3>
+                    <div class="score-value" id="qualityScore">-</div>
+                    <div class="score-label">/ 100</div>
+                </div>
+                <div class="score-card" id="matchCard" style="display: none;">
+                    <h3>Job Match</h3>
+                    <div class="score-value" id="matchScore">-</div>
+                    <div class="score-label">%</div>
+                </div>
+            </div>
+
+            <div class="analysis-section">
+                <div class="analysis-card">
+                    <h3>📊 Resume Statistics</h3>
+                    <div id="statistics"></div>
+                </div>
+
+                <div class="analysis-card" id="matchAnalysis" style="display: none;">
+                    <h3>🎯 Job Match Analysis</h3>
+                    <div id="matchDetails"></div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>💻 Technical Skills</h3>
+                    <div id="technicalSkills"></div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>🔑 Top Keywords</h3>
+                    <div id="topKeywords"></div>
+                </div>
+
+                <div class="analysis-card">
+                    <h3>💡 Improvement Suggestions</h3>
+                    <div id="suggestions"></div>
+                </div>
+            </div>
+        </div>
+
+        <div id="error" class="error-message" style="display: none;"></div>
+    </div>
+
+    <script>
+        document.getElementById('resumeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            
+            // Show loading state
+            analyzeBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            results.style.display = 'none';
+            error.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+                
+                // Display results
+                displayResults(data);
+                results.style.display = 'block';
+                
+            } catch (err) {
+                error.textContent = `Error: ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                analyzeBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoader.style.display = 'none';
+            }
+        });
+        
+        function displayResults(data) {
+            // Quality Score
+            document.getElementById('qualityScore').textContent = data.resume_quality.quality_score;
+            updateScoreColor('qualityScore', data.resume_quality.quality_score);
+            
+            // Job Match Score
+            if (data.job_match) {
+                document.getElementById('matchCard').style.display = 'block';
+                document.getElementById('matchScore').textContent = data.job_match.score.toFixed(1);
+                updateScoreColor('matchScore', data.job_match.score);
+                displayMatchAnalysis(data.job_match);
+            }
+            
+            // Statistics
+            const stats = data.resume_quality;
+            document.getElementById('statistics').innerHTML = `
+                <p><strong>Word Count:</strong> ${stats.word_count}</p>
+                <p><strong>Sections:</strong> ${stats.section_count}</p>
+                <p><strong>Technical Skills:</strong> ${stats.technical_skills_count}</p>
+                ${stats.issues.length > 0 ? `
+                    <div class="issues">
+                        <strong>Issues:</strong>
+                        <ul>
+                            ${stats.issues.map(issue => `<li>${issue}</li>`).join('')}
+                        </ul>
+                    </div>
+                ` : ''}
+            `;
+            
+            // Technical Skills
+            if (data.technical_skills && data.technical_skills.length > 0) {
+                document.getElementById('technicalSkills').innerHTML = `
+                    <div class="skill-tags">
+                        ${data.technical_skills.map(skill => 
+                            `<span class="skill-tag">${skill}</span>`
+                        ).join('')}
+                    </div>
+                `;
+            } else {
+                document.getElementById('technicalSkills').innerHTML = 
+                    '<p>No technical skills detected.</p>';
+            }
+            
+            // Top Keywords
+            if (data.top_keywords && data.top_keywords.length > 0) {
+                document.getElementById('topKeywords').innerHTML = `
+                    <div class="keyword-list">
+                        ${data.top_keywords.slice(0, 15).map(([keyword, count]) => 
+                            `<div class="keyword-item">
+                                <span class="keyword">${keyword}</span>
+                                <span class="count">${count}</span>
+                            </div>`
+                        ).join('')}
+                    </div>
+                `;
+            }
+            
+            // Suggestions
+            if (data.suggestions && data.suggestions.length > 0) {
+                document.getElementById('suggestions').innerHTML = `
+                    <ul class="suggestions-list">
+                        ${data.suggestions.map(suggestion => 
+                            `<li>${suggestion}</li>`
+                        ).join('')}
+                    </ul>
+                `;
+            } else {
+                document.getElementById('suggestions').innerHTML = 
+                    '<p>Great job! No major issues found.</p>';
+            }
+        }
+        
+        function displayMatchAnalysis(matchData) {
+            document.getElementById('matchAnalysis').style.display = 'block';
+            let html = `
+                <p><strong>Matching Keywords:</strong> ${matchData.match_count} / ${matchData.total_job_keywords}</p>
+            `;
+            
+            if (matchData.matching_keywords && matchData.matching_keywords.length > 0) {
+                html += `
+                    <div class="match-section">
+                        <strong>✅ Found in Resume:</strong>
+                        <div class="keyword-tags">
+                            ${matchData.matching_keywords.slice(0, 15).map(kw => 
+                                `<span class="keyword-tag found">${kw}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            if (matchData.missing_keywords && matchData.missing_keywords.length > 0) {
+                html += `
+                    <div class="match-section">
+                        <strong>❌ Missing Keywords:</strong>
+                        <div class="keyword-tags">
+                            ${matchData.missing_keywords.slice(0, 15).map(kw => 
+                                `<span class="keyword-tag missing">${kw}</span>`
+                            ).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            document.getElementById('matchDetails').innerHTML = html;
+        }
+        
+        function updateScoreColor(elementId, score) {
+            const element = document.getElementById(elementId);
+            if (score >= 80) {
+                element.style.color = '#4CAF50';
+            } else if (score >= 60) {
+                element.style.color = '#FF9800';
+            } else {
+                element.style.color = '#F44336';
+            }
+        }
+    </script>
+</body>
+</html>
+

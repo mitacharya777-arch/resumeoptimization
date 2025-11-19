@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer - Groq Powered</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <style>
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        .tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 1em;
+            color: #666;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+        .tab.active {
+            color: #667eea;
+            border-bottom-color: #667eea;
+            font-weight: 600;
+        }
+        .tab-content {
+            display: none;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        .optimized-resume {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            max-height: 600px;
+            overflow-y: auto;
+            border: 1px solid #e0e0e0;
+        }
+        .api-key-input {
+            margin-bottom: 15px;
+        }
+        .api-key-input input {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+        }
+        .optimization-options {
+            margin: 15px 0;
+        }
+        .optimization-options label {
+            display: block;
+            margin: 10px 0;
+        }
+        .optimization-options input[type="radio"] {
+            margin-right: 8px;
+        }
+        .download-btn {
+            margin-top: 15px;
+            padding: 10px 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+        .download-btn:hover {
+            background: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📄 Resume Optimizer</h1>
+            <p class="subtitle">AI-Powered Resume Optimization with Groq</p>
+        </header>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('analyze')">Analyze</button>
+            <button class="tab" onclick="switchTab('optimize')">Optimize with AI</button>
+        </div>
+
+        <!-- Analyze Tab -->
+        <div id="analyze-tab" class="tab-content active">
+            <div class="upload-section">
+                <form id="resumeForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="resume">Upload Resume (PDF, DOCX, or TXT)</label>
+                        <input type="file" id="resume" name="resume" accept=".pdf,.docx,.doc,.txt" required>
+                        <small>Maximum file size: 16MB</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="job_description">Job Description (Optional)</label>
+                        <textarea 
+                            id="job_description" 
+                            name="job_description" 
+                            rows="6" 
+                            placeholder="Paste the job description here to get targeted optimization suggestions..."
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" id="analyzeBtn" class="btn-primary">
+                        <span id="btnText">Analyze Resume</span>
+                        <span id="btnLoader" class="loader" style="display: none;"></span>
+                    </button>
+                </form>
+            </div>
+
+            <div id="results" class="results-section" style="display: none;">
+                <!-- Results will be populated here -->
+            </div>
+        </div>
+
+        <!-- Optimize Tab -->
+        <div id="optimize-tab" class="tab-content">
+            <div class="upload-section">
+                <div class="api-key-input">
+                    <label for="groq_api_key">Groq API Key</label>
+                    <input 
+                        type="password" 
+                        id="groq_api_key" 
+                        placeholder="Enter your Groq API key (or set GROQ_API_KEY environment variable)"
+                    >
+                    <small>Get your API key from: <a href="https://console.groq.com/keys" target="_blank">console.groq.com</a></small>
+                </div>
+
+                <form id="optimizeForm" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label for="optimize_resume">Upload Resume (PDF, DOCX, or TXT)</label>
+                        <input type="file" id="optimize_resume" name="resume" accept=".pdf,.docx,.doc,.txt" required>
+                        <small>Maximum file size: 16MB</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="optimize_job_description">Job Description (Required)</label>
+                        <textarea 
+                            id="optimize_job_description" 
+                            name="job_description" 
+                            rows="8" 
+                            placeholder="Paste the complete job description here..."
+                            required
+                        ></textarea>
+                    </div>
+
+                    <div class="optimization-options">
+                        <label><strong>Optimization Type:</strong></label>
+                        <label>
+                            <input type="radio" name="optimization_type" value="complete" checked>
+                            Complete Resume Optimization (Recommended)
+                        </label>
+                        <label>
+                            <input type="radio" name="optimization_type" value="keywords">
+                            Keyword Suggestions Only
+                        </label>
+                        <label>
+                            <input type="radio" name="optimization_type" value="overall">
+                            Overall Analysis & Recommendations
+                        </label>
+                    </div>
+
+                    <button type="submit" id="optimizeBtn" class="btn-primary">
+                        <span id="optimizeBtnText">Optimize Resume</span>
+                        <span id="optimizeBtnLoader" class="loader" style="display: none;"></span>
+                    </button>
+                </form>
+            </div>
+
+            <div id="optimizeResults" class="results-section" style="display: none;">
+                <!-- Optimization results will be populated here -->
+            </div>
+        </div>
+
+        <div id="error" class="error-message" style="display: none;"></div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName + '-tab').classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Analyze form submission
+        document.getElementById('resumeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const analyzeBtn = document.getElementById('analyzeBtn');
+            const btnText = document.getElementById('btnText');
+            const btnLoader = document.getElementById('btnLoader');
+            const results = document.getElementById('results');
+            const error = document.getElementById('error');
+            
+            analyzeBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            results.style.display = 'none';
+            error.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Analysis failed');
+                }
+                
+                displayAnalysisResults(data);
+                results.style.display = 'block';
+                
+            } catch (err) {
+                error.textContent = `Error: ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                analyzeBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoader.style.display = 'none';
+            }
+        });
+
+        // Optimize form submission
+        document.getElementById('optimizeForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const apiKey = document.getElementById('groq_api_key').value;
+            if (apiKey) {
+                formData.append('api_key', apiKey);
+            }
+
+            const optimizeBtn = document.getElementById('optimizeBtn');
+            const btnText = document.getElementById('optimizeBtnText');
+            const btnLoader = document.getElementById('optimizeBtnLoader');
+            const results = document.getElementById('optimizeResults');
+            const error = document.getElementById('error');
+            
+            optimizeBtn.disabled = true;
+            btnText.style.display = 'none';
+            btnLoader.style.display = 'inline-block';
+            results.style.display = 'none';
+            error.style.display = 'none';
+            
+            try {
+                const response = await fetch('/api/optimize', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || 'Optimization failed');
+                }
+                
+                displayOptimizationResults(data);
+                results.style.display = 'block';
+                
+            } catch (err) {
+                error.textContent = `Error: ${err.message}`;
+                error.style.display = 'block';
+            } finally {
+                optimizeBtn.disabled = false;
+                btnText.style.display = 'inline';
+                btnLoader.style.display = 'none';
+            }
+        });
+
+        function displayAnalysisResults(data) {
+            // Reuse existing display logic from original index.html
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = `
+                <div class="score-cards">
+                    <div class="score-card">
+                        <h3>Quality Score</h3>
+                        <div class="score-value" style="color: ${getScoreColor(data.resume_quality.quality_score)}">
+                            ${data.resume_quality.quality_score}
+                        </div>
+                        <div class="score-label">/ 100</div>
+                    </div>
+                    ${data.job_match ? `
+                    <div class="score-card">
+                        <h3>Job Match</h3>
+                        <div class="score-value" style="color: ${getScoreColor(data.job_match.score)}">
+                            ${data.job_match.score.toFixed(1)}
+                        </div>
+                        <div class="score-label">%</div>
+                    </div>
+                    ` : ''}
+                </div>
+                <div class="analysis-section">
+                    <div class="analysis-card">
+                        <h3>📊 Resume Statistics</h3>
+                        <p><strong>Word Count:</strong> ${data.resume_quality.word_count}</p>
+                        <p><strong>Sections:</strong> ${data.resume_quality.section_count}</p>
+                        <p><strong>Technical Skills:</strong> ${data.resume_quality.technical_skills_count}</p>
+                    </div>
+                    ${data.suggestions && data.suggestions.length > 0 ? `
+                    <div class="analysis-card">
+                        <h3>💡 Suggestions</h3>
+                        <ul class="suggestions-list">
+                            ${data.suggestions.map(s => `<li>${s}</li>`).join('')}
+                        </ul>
+                    </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function displayOptimizationResults(data) {
+            const resultsDiv = document.getElementById('optimizeResults');
+            
+            if (data.optimized_resume) {
+                resultsDiv.innerHTML = `
+                    <div class="analysis-card">
+                        <h3>✨ Optimized Resume</h3>
+                        <div class="optimized-resume">${escapeHtml(data.optimized_resume)}</div>
+                        <button class="download-btn" onclick="downloadResume()">Download Optimized Resume</button>
+                    </div>
+                `;
+                window.optimizedResumeText = data.optimized_resume;
+            } else if (data.suggestions) {
+                resultsDiv.innerHTML = `
+                    <div class="analysis-card">
+                        <h3>🔑 Keyword Suggestions</h3>
+                        <div class="optimized-resume">${escapeHtml(data.suggestions)}</div>
+                    </div>
+                `;
+            } else if (data.analysis) {
+                resultsDiv.innerHTML = `
+                    <div class="analysis-card">
+                        <h3>📊 Optimization Analysis</h3>
+                        <div class="optimized-resume">${escapeHtml(data.analysis)}</div>
+                    </div>
+                `;
+            } else {
+                resultsDiv.innerHTML = `
+                    <div class="analysis-card">
+                        <h3>Result</h3>
+                        <pre>${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `;
+            }
+        }
+
+        function getScoreColor(score) {
+            if (score >= 80) return '#4CAF50';
+            if (score >= 60) return '#FF9800';
+            return '#F44336';
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function downloadResume() {
+            if (!window.optimizedResumeText) return;
+            
+            const blob = new Blob([window.optimizedResumeText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'optimized_resume.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
+

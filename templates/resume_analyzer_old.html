@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Analyzer & Optimizer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --bg: #0f172a;
+            --bg-card: #1e293b;
+            --bg-hover: #334155;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 3rem;
+            padding: 2rem 0;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .card h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        textarea {
+            width: 100%;
+            padding: 1rem;
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--text);
+            font-family: inherit;
+            font-size: 0.95rem;
+            resize: vertical;
+            min-height: 200px;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+
+        .btn-download {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-download:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .btn-upload {
+            background: var(--bg-hover);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 0.75rem 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .btn-upload:hover {
+            background: var(--border);
+            border-color: var(--primary);
+        }
+
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .results-section {
+            margin-top: 2rem;
+        }
+
+        .match-score-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2.5rem;
+            font-weight: 700;
+            position: relative;
+        }
+
+        .score-high {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        .score-medium {
+            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            color: white;
+        }
+
+        .score-low {
+            background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            color: white;
+        }
+
+        .analysis-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .analysis-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .strengths-list, .improvements-list, .suggestions-list {
+            list-style: none;
+        }
+
+        .strengths-list li, .improvements-list li {
+            padding: 0.75rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            display: flex;
+            align-items: start;
+            gap: 0.75rem;
+        }
+
+        .strengths-list li {
+            background: rgba(16, 185, 129, 0.1);
+            border-left: 3px solid var(--success);
+        }
+
+        .improvements-list li {
+            background: rgba(245, 158, 11, 0.1);
+            border-left: 3px solid var(--warning);
+        }
+
+        .suggestions-list li {
+            padding: 1rem;
+            margin-bottom: 0.75rem;
+            background: var(--bg-hover);
+            border-radius: 8px;
+            border-left: 3px solid var(--primary);
+        }
+
+        .optimization-section {
+            display: none;
+            margin-top: 2rem;
+        }
+
+        .optimization-section.show {
+            display: block;
+        }
+
+        .comparison-view {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .resume-panel {
+            background: var(--bg-hover);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .resume-panel h4 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .resume-content {
+            white-space: pre-wrap;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: var(--text-muted);
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .loading.show {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid var(--border);
+            border-top: 3px solid var(--primary);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .message {
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .message.show {
+            display: block;
+        }
+
+        .message-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        .message-error {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid var(--danger);
+            color: var(--danger);
+        }
+
+        .btn-center {
+            text-align: center;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .comparison-view {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-file-alt"></i> Resume Analyzer & Optimizer</h1>
+            <p>Analyze your resume against job descriptions and get intelligent optimization suggestions</p>
+        </div>
+
+        <div id="message" class="message"></div>
+
+        <div class="main-content">
+            <div class="card">
+                <h2><i class="fas fa-file-alt"></i> Your Resume</h2>
+                <div class="form-group">
+                    <label for="resume-upload">Upload your resume (PDF, DOCX, or TXT):</label>
+                    <div style="margin-bottom: 1rem;">
+                        <input type="file" id="resume-upload" accept=".pdf,.docx,.doc,.txt" style="display: none;" onchange="handleResumeUpload(event)">
+                        <button type="button" class="btn btn-upload" onclick="document.getElementById('resume-upload').click()">
+                            <i class="fas fa-upload"></i> Choose File
+                        </button>
+                        <span id="resume-filename" style="margin-left: 1rem; color: var(--text-muted);"></span>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <label style="font-size: 0.9rem; color: var(--text-muted);">Or paste your resume content:</label>
+                        <textarea id="resume-text" placeholder="John Doe&#10;Software Engineer&#10;&#10;EXPERIENCE&#10;Senior Software Engineer at Tech Corp (2020-2024)&#10;- Developed web applications using Python and JavaScript&#10;- Led team of 5 developers&#10;&#10;SKILLS&#10;Python, JavaScript, React, AWS, Docker" style="margin-top: 0.5rem;"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h2><i class="fas fa-briefcase"></i> Job Description</h2>
+                <div class="form-group">
+                    <label for="job-description">Paste the job description here:</label>
+                    <textarea id="job-description" placeholder="Senior Software Engineer&#10;&#10;We are looking for a Senior Software Engineer with:&#10;- 5+ years experience in Python and JavaScript&#10;- Experience with React, Node.js, and AWS&#10;- Strong problem-solving skills&#10;- Leadership experience"></textarea>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-center">
+            <button class="btn btn-primary" onclick="analyzeResume()">
+                <i class="fas fa-search"></i> Analyze Resume
+            </button>
+        </div>
+
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Analyzing your resume...</p>
+        </div>
+
+        <div id="results" style="display: none;">
+            <div class="match-score-card">
+                <div id="score-circle" class="score-circle">
+                    <span id="score-value">0%</span>
+                </div>
+                <h2 id="score-message">Analyzing...</h2>
+                <p id="score-description"></p>
+            </div>
+
+            <div class="analysis-card">
+                <h3><i class="fas fa-check-circle"></i> Strengths</h3>
+                <ul id="strengths-list" class="strengths-list"></ul>
+            </div>
+
+            <div class="analysis-card">
+                <h3><i class="fas fa-exclamation-triangle"></i> Improvements Needed</h3>
+                <ul id="improvements-list" class="improvements-list"></ul>
+            </div>
+
+            <div class="analysis-card">
+                <h3><i class="fas fa-lightbulb"></i> Content Suggestions</h3>
+                <ol id="suggestions-list" class="suggestions-list"></ol>
+            </div>
+
+            <div id="optimization-section" class="optimization-section">
+                <div class="btn-center">
+                    <button class="btn btn-primary" onclick="optimizeResume()">
+                        <i class="fas fa-magic"></i> Optimize Resume
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="optimization-results" style="display: none;">
+            <div class="analysis-card">
+                <h3><i class="fas fa-code-branch"></i> Before / After Comparison</h3>
+                <div class="comparison-view">
+                    <div class="resume-panel">
+                        <h4><i class="fas fa-file-alt"></i> Original Resume</h4>
+                        <div id="original-resume" class="resume-content"></div>
+                    </div>
+                    <div class="resume-panel">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <h4 style="margin: 0;"><i class="fas fa-star"></i> Optimized Resume</h4>
+                            <button class="btn btn-download" onclick="downloadOptimizedResume()" id="download-btn" style="display: none;">
+                                <i class="fas fa-download"></i> Download
+                            </button>
+                        </div>
+                        <div id="optimized-resume" class="resume-content"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentResumeText = '';
+        let currentJobDescription = '';
+        let currentSuggestions = [];
+
+        function showMessage(text, type = 'success') {
+            const messageEl = document.getElementById('message');
+            messageEl.textContent = text;
+            messageEl.className = `message message-${type} show`;
+            setTimeout(() => {
+                messageEl.classList.remove('show');
+            }, 5000);
+        }
+
+        async function handleResumeUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            document.getElementById('resume-filename').textContent = file.name;
+            
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('loading').querySelector('p').textContent = 'Uploading and parsing resume...';
+
+            try {
+                const formData = new FormData();
+                formData.append('file', file);
+
+                const response = await fetch('/api/upload-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                document.getElementById('loading').classList.remove('show');
+
+                if (data.success) {
+                    document.getElementById('resume-text').value = data.resume_text;
+                    showMessage('Resume uploaded and parsed successfully!', 'success');
+                } else {
+                    showMessage('Error: ' + (data.error || 'Failed to parse resume'), 'error');
+                }
+            } catch (error) {
+                document.getElementById('loading').classList.remove('show');
+                showMessage('Error uploading resume: ' + error.message, 'error');
+            }
+        }
+
+        async function analyzeResume() {
+            let resumeText = document.getElementById('resume-text').value.trim();
+            const jobDescription = document.getElementById('job-description').value.trim();
+
+            if (!resumeText || !jobDescription) {
+                showMessage('Please upload/paste resume and enter job description', 'error');
+                return;
+            }
+
+            currentResumeText = resumeText;
+            currentJobDescription = jobDescription;
+
+            // Show loading
+            document.getElementById('loading').classList.add('show');
+            document.getElementById('results').style.display = 'none';
+            document.getElementById('optimization-results').style.display = 'none';
+
+            try {
+                const response = await fetch('/api/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        resume_text: resumeText,
+                        job_description: jobDescription
+                    })
+                });
+
+                const data = await response.json();
+
+                document.getElementById('loading').classList.remove('show');
+
+                if (!data.success) {
+                    showMessage('Error: ' + (data.error || 'Unknown error'), 'error');
+                    return;
+                }
+
+                // Display results
+                displayAnalysisResults(data);
+
+            } catch (error) {
+                document.getElementById('loading').classList.remove('show');
+                showMessage('Error analyzing resume: ' + error.message, 'error');
+            }
+        }
+
+        function displayAnalysisResults(data) {
+            const score = data.match_score;
+            const scoreCircle = document.getElementById('score-circle');
+            const scoreValue = document.getElementById('score-value');
+            const scoreMessage = document.getElementById('score-message');
+            const scoreDescription = document.getElementById('score-description');
+
+            // Update score circle
+            scoreValue.textContent = score + '%';
+            scoreCircle.className = 'score-circle ';
+            if (score >= 70) {
+                scoreCircle.classList.add('score-high');
+                scoreMessage.textContent = 'Great Match!';
+                scoreDescription.textContent = 'Your resume is well-matched with this job. No optimization needed!';
+            } else if (score >= 50) {
+                scoreCircle.classList.add('score-medium');
+                scoreMessage.textContent = 'Good Match';
+                scoreDescription.textContent = 'Your resume matches well, but could be improved.';
+            } else {
+                scoreCircle.classList.add('score-low');
+                scoreMessage.textContent = 'Needs Improvement';
+                scoreDescription.textContent = 'Your resume needs optimization to better match this job.';
+            }
+
+            // Display strengths
+            const strengthsList = document.getElementById('strengths-list');
+            strengthsList.innerHTML = data.strengths.map(s => 
+                `<li><i class="fas fa-check"></i> ${s}</li>`
+            ).join('');
+
+            // Display improvements
+            const improvementsList = document.getElementById('improvements-list');
+            improvementsList.innerHTML = data.improvements_needed.map(i => 
+                `<li><i class="fas fa-exclamation-circle"></i> ${i}</li>`
+            ).join('');
+
+            // Display suggestions
+            const suggestionsList = document.getElementById('suggestions-list');
+            suggestionsList.innerHTML = data.content_suggestions.map(s => 
+                `<li>${s}</li>`
+            ).join('');
+
+            // Show/hide optimization button
+            const optimizationSection = document.getElementById('optimization-section');
+            if (data.show_optimization) {
+                optimizationSection.classList.add('show');
+                currentSuggestions = data.content_suggestions;
+            } else {
+                optimizationSection.classList.remove('show');
+            }
+
+            // Show results
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('results').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        async function optimizeResume() {
+            if (!currentResumeText || !currentJobDescription) {
+                showMessage('Please analyze your resume first', 'error');
+                return;
+            }
+
+            document.getElementById('loading').classList.add('show');
+
+            try {
+                const response = await fetch('/api/optimize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        resume_text: currentResumeText,
+                        job_description: currentJobDescription,
+                        suggestions: currentSuggestions
+                    })
+                });
+
+                const data = await response.json();
+
+                document.getElementById('loading').classList.remove('show');
+
+                if (!data.success) {
+                    showMessage('Error: ' + (data.error || 'Unknown error'), 'error');
+                    return;
+                }
+
+                // Display optimized resume
+                document.getElementById('original-resume').textContent = data.original_resume;
+                document.getElementById('optimized-resume').textContent = data.optimized_resume;
+                document.getElementById('optimization-results').style.display = 'block';
+                document.getElementById('download-btn').style.display = 'inline-flex';
+                document.getElementById('optimization-results').scrollIntoView({ behavior: 'smooth' });
+
+                showMessage('Resume optimized successfully!', 'success');
+
+            } catch (error) {
+                document.getElementById('loading').classList.remove('show');
+                showMessage('Error optimizing resume: ' + error.message, 'error');
+            }
+        }
+
+        function downloadOptimizedResume() {
+            const optimizedResume = document.getElementById('optimized-resume').textContent;
+            
+            if (!optimizedResume || optimizedResume.trim() === '') {
+                showMessage('No optimized resume to download', 'error');
+                return;
+            }
+
+            // Create a blob with the resume content
+            const blob = new Blob([optimizedResume], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            
+            // Create a temporary anchor element and trigger download
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'optimized_resume.txt';
+            document.body.appendChild(a);
+            a.click();
+            
+            // Clean up
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showMessage('Resume downloaded successfully!', 'success');
+        }
+    </script>
+</body>
+</html>
+

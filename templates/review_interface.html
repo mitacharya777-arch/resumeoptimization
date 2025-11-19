@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Review Interface - Resume Optimizer</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app_db.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recruiter.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>🎯 Recruiter Tool</h2>
+                <p class="subtitle">Review & Approval</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="/" class="nav-item">
+                    <span>←</span> Back to Dashboard
+                </a>
+            </nav>
+        </aside>
+
+        <main class="main-content">
+            <h1>Review Queue - Job #{{ job_id }}</h1>
+            <div id="review-queue" class="review-queue"></div>
+        </main>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div id="compare-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <h2>Before / After Comparison</h2>
+            <div class="comparison-container">
+                <div class="comparison-panel">
+                    <h3>Original Resume</h3>
+                    <div class="comparison-content" id="original-content"></div>
+                </div>
+                <div class="comparison-panel">
+                    <h3>Optimized Resume</h3>
+                    <div class="comparison-content" id="optimized-content"></div>
+                </div>
+            </div>
+            <div class="comparison-actions">
+                <button class="btn-danger" onclick="rejectOptimization()">Reject</button>
+                <button class="btn-primary" onclick="approveOptimization()">Approve</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const jobId = {{ job_id }};
+        let currentCandidateId = null;
+
+        async function loadReviewQueue() {
+            try {
+                const res = await fetch(`/api/recruiter/review/${jobId}`);
+                const data = await res.json();
+                
+                if (data.success) {
+                    displayReviewQueue(data.candidates);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function displayReviewQueue(candidates) {
+            const container = document.getElementById('review-queue');
+            
+            if (candidates.length === 0) {
+                container.innerHTML = '<p>No candidates in review queue. Optimize some candidates first!</p>';
+                return;
+            }
+            
+            container.innerHTML = candidates.map(c => `
+                <div class="review-item">
+                    <div class="review-item-info">
+                        <h3>${c.candidate_name}</h3>
+                        <div class="scores">
+                            <span class="score-badge match">Match: ${c.match_score}%</span>
+                            <span class="score-badge quality">Quality: ${c.quality_score}/100</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn-secondary" onclick="viewComparison(${c.candidate_id})">Review</button>
+                        <button class="btn-primary" onclick="quickApprove(${c.candidate_id})">Approve</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function viewComparison(candidateId) {
+            currentCandidateId = candidateId;
+            
+            try {
+                const res = await fetch(`/api/recruiter/review/compare/${candidateId}?job_id=${jobId}`);
+                const data = await res.json();
+                
+                if (data.success) {
+                    document.getElementById('original-content').textContent = data.original;
+                    document.getElementById('optimized-content').textContent = data.optimized;
+                    document.getElementById('compare-modal').classList.add('active');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function approveOptimization() {
+            if (!currentCandidateId) return;
+            
+            try {
+                const res = await fetch('/api/recruiter/approve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        candidate_id: currentCandidateId,
+                        job_id: jobId
+                    })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    alert('Optimization approved!');
+                    closeModal();
+                    loadReviewQueue();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        async function quickApprove(candidateId) {
+            try {
+                const res = await fetch('/api/recruiter/approve', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        candidate_id: candidateId,
+                        job_id: jobId
+                    })
+                });
+                
+                const data = await res.json();
+                if (data.success) {
+                    loadReviewQueue();
+                }
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        function rejectOptimization() {
+            alert('Optimization rejected');
+            closeModal();
+        }
+
+        function closeModal() {
+            document.getElementById('compare-modal').classList.remove('active');
+        }
+
+        // Load on page load
+        loadReviewQueue();
+    </script>
+</body>
+</html>
+

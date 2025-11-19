@@ -1,0 +1,104 @@
+═══════════════════════════════════════════════════════════════
+  RESUME OPTIMIZER - QUICK START GUIDE
+═══════════════════════════════════════════════════════════════
+
+✅ Flask is installed!
+✅ Python 3.9.6 is ready!
+
+═══════════════════════════════════════════════════════════════
+  OPTION 1: DEMO MODE (EASIEST - NO DATABASE!)
+═══════════════════════════════════════════════════════════════
+
+Step 1: Open Terminal
+  - Mac: Cmd + Space, type "Terminal"
+  - Or use the terminal you already have open
+
+Step 2: Go to project folder (if not already there)
+  cd Desktop/resumeoptimization
+
+Step 3: Run the demo app
+  python3 app_demo.py
+
+Step 4: Open your browser
+  Go to: http://localhost:5000
+
+That's it! You'll see the full UI with sample data!
+
+═══════════════════════════════════════════════════════════════
+  OPTION 2: FULL VERSION (WITH DATABASE)
+═══════════════════════════════════════════════════════════════
+
+Step 1: Set database type
+  export DB_TYPE=sqlite
+
+Step 2: Run the full app
+  python3 app_db.py
+
+Step 3: Open browser
+  Go to: http://localhost:5000
+
+═══════════════════════════════════════════════════════════════
+  QUICK COMMANDS
+═══════════════════════════════════════════════════════════════
+
+Demo Mode:
+  python3 app_demo.py
+
+Full Version:
+  export DB_TYPE=sqlite
+  python3 app_db.py
+
+Stop the app:
+  Press Ctrl+C in the terminal
+
+═══════════════════════════════════════════════════════════════
+  WHAT YOU'LL SEE
+═══════════════════════════════════════════════════════════════
+
+When you open http://localhost:5000, you'll see:
+
+📊 Dashboard
+  - Statistics and analytics
+  - Recent optimizations
+
+📄 Resumes Tab
+  - View and manage resumes
+  - (Demo mode has 2 sample resumes)
+
+💼 Jobs Tab
+  - View job descriptions
+  - (Demo mode has 3 sample jobs)
+
+🚀 Optimize Tab
+  - Select resume + job
+  - Click "Optimize"
+  - See results!
+
+📜 History Tab
+  - View past optimizations
+  - See match scores
+
+═══════════════════════════════════════════════════════════════
+  TROUBLESHOOTING
+═══════════════════════════════════════════════════════════════
+
+Port 5000 already in use?
+  - Close other apps using port 5000
+  - Or change port in the code
+
+Can't connect?
+  - Make sure the app is running (check terminal)
+  - Try http://127.0.0.1:5000 instead
+
+Need help?
+  - Check RUN_LOCALLY.md for detailed guide
+  - Check terminal output for error messages
+
+═══════════════════════════════════════════════════════════════
+
+Ready to start? Run: python3 app_demo.py
+
+Then open: http://localhost:5000
+
+Good luck! 🚀
+

@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer - Database Edition</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/app_db.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>📄 Resume Optimizer</h2>
+                <p class="subtitle">Database Edition</p>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <span>📊</span> Dashboard
+                </a>
+                <a href="#" class="nav-item" data-page="resumes">
+                    <span>📄</span> Resumes
+                </a>
+                <a href="#" class="nav-item" data-page="jobs">
+                    <span>💼</span> Job Descriptions
+                </a>
+                <a href="#" class="nav-item" data-page="optimize">
+                    <span>🚀</span> Optimize
+                </a>
+                <a href="#" class="nav-item" data-page="history">
+                    <span>📜</span> History
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <h1>Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <h3>Total Resumes</h3>
+                        <div class="stat-value" id="stat-resumes">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Job Descriptions</h3>
+                        <div class="stat-value" id="stat-jobs">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Optimizations</h3>
+                        <div class="stat-value" id="stat-optimizations">0</div>
+                    </div>
+                    <div class="stat-card">
+                        <h3>Avg Match Score</h3>
+                        <div class="stat-value" id="stat-match">0%</div>
+                    </div>
+                </div>
+                <div class="recent-section">
+                    <h2>Recent Optimizations</h2>
+                    <div id="recent-optimizations"></div>
+                </div>
+            </div>
+
+            <!-- Resumes Page -->
+            <div id="resumes-page" class="page">
+                <div class="page-header">
+                    <h1>Resume Management</h1>
+                    <button class="btn-primary" onclick="showUploadResumeModal()">+ Upload Resume</button>
+                </div>
+                <div id="resumes-list" class="items-list"></div>
+            </div>
+
+            <!-- Jobs Page -->
+            <div id="jobs-page" class="page">
+                <div class="page-header">
+                    <h1>Job Descriptions</h1>
+                    <button class="btn-primary" onclick="showAddJobModal()">+ Add Job Description</button>
+                </div>
+                <div id="jobs-list" class="items-list"></div>
+            </div>
+
+            <!-- Optimize Page -->
+            <div id="optimize-page" class="page">
+                <h1>Optimize Resume</h1>
+                <div class="optimize-form">
+                    <div class="form-group">
+                        <label>Select Resume</label>
+                        <select id="optimize-resume-select" class="form-control">
+                            <option value="">-- Select Resume --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Select Job Description</label>
+                        <select id="optimize-job-select" class="form-control">
+                            <option value="">-- Select Job --</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Optimization Type</label>
+                        <select id="optimize-type" class="form-control">
+                            <option value="complete">Complete Optimization</option>
+                            <option value="keywords">Keyword Suggestions</option>
+                            <option value="overall">Overall Analysis</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <input type="checkbox" id="use-groq" checked>
+                            Use Groq AI (requires API key)
+                        </label>
+                    </div>
+                    <div class="form-group" id="groq-key-group" style="display: none;">
+                        <label>Groq API Key (optional if set in env)</label>
+                        <input type="password" id="groq-api-key" class="form-control" placeholder="Enter Groq API key">
+                    </div>
+                    <button class="btn-primary" onclick="runOptimization()">
+                        <span id="optimize-btn-text">Optimize</span>
+                        <span id="optimize-loader" class="loader" style="display: none;"></span>
+                    </button>
+                </div>
+                <div id="optimize-results" style="display: none;"></div>
+            </div>
+
+            <!-- History Page -->
+            <div id="history-page" class="page">
+                <h1>Optimization History</h1>
+                <div id="history-list" class="items-list"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="upload-resume-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('upload-resume-modal')">&times;</span>
+            <h2>Upload Resume</h2>
+            <form id="upload-resume-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label>Resume Name</label>
+                    <input type="text" id="resume-name" class="form-control" placeholder="e.g., My Resume 2024">
+                </div>
+                <div class="form-group">
+                    <label>Resume File (PDF, DOCX, TXT)</label>
+                    <input type="file" id="resume-file" class="form-control" accept=".pdf,.docx,.doc,.txt" required>
+                </div>
+                <button type="submit" class="btn-primary">Upload</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="add-job-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal('add-job-modal')">&times;</span>
+            <h2>Add Job Description</h2>
+            <form id="add-job-form">
+                <div class="form-group">
+                    <label>Job Title</label>
+                    <input type="text" id="job-title" class="form-control" placeholder="e.g., Software Engineer" required>
+                </div>
+                <div class="form-group">
+                    <label>Company</label>
+                    <input type="text" id="job-company" class="form-control" placeholder="e.g., Tech Corp">
+                </div>
+                <div class="form-group">
+                    <label>Job Description</label>
+                    <textarea id="job-content" class="form-control" rows="10" placeholder="Paste job description here..." required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Source URL (optional)</label>
+                    <input type="url" id="job-url" class="form-control" placeholder="https://...">
+                </div>
+                <button type="submit" class="btn-primary">Add Job</button>
+            </form>
+        </div>
+    </div>
+
+    <div id="view-item-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close" onclick="closeModal('view-item-modal')">&times;</span>
+            <div id="view-item-content"></div>
+        </div>
+    </div>
+
+    <!-- Error/Success Messages -->
+    <div id="message" class="message" style="display: none;"></div>
+
+    <script src="{{ url_for('static', filename='js/app_db.js') }}"></script>
+</body>
+</html>
+

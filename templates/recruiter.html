@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer Pro - Recruiter Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/recruiter.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-wrapper">
+        <!-- Modern Sidebar -->
+        <aside class="modern-sidebar">
+            <div class="sidebar-brand">
+                <div class="brand-icon">
+                    <i class="fas fa-rocket"></i>
+                </div>
+                <div class="brand-text">
+                    <h2>Resume Optimizer</h2>
+                    <p class="brand-subtitle">Pro Edition</p>
+                </div>
+            </div>
+            
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-page="dashboard">
+                    <div class="nav-icon"><i class="fas fa-chart-line"></i></div>
+                    <span class="nav-text">Dashboard</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                <a href="#" class="nav-item" data-page="candidates">
+                    <div class="nav-icon"><i class="fas fa-users"></i></div>
+                    <span class="nav-text">Candidates</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                <a href="#" class="nav-item" data-page="optimize">
+                    <div class="nav-icon"><i class="fas fa-magic"></i></div>
+                    <span class="nav-text">Bulk Optimize</span>
+                    <div class="nav-indicator"></div>
+                </a>
+                <a href="#" class="nav-item" data-page="review">
+                    <div class="nav-icon"><i class="fas fa-clipboard-check"></i></div>
+                    <span class="nav-text">Review Queue</span>
+                    <div class="nav-indicator"></div>
+                </a>
+            </nav>
+            
+            <div class="sidebar-footer">
+                <div class="status-indicator">
+                    <div class="status-dot"></div>
+                    <span>System Online</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content-area">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <h1 class="page-title" id="page-title">Dashboard</h1>
+                    <p class="page-subtitle" id="page-subtitle">Welcome back! Here's what's happening today.</p>
+                </div>
+                <div class="header-right">
+                    <div class="header-actions">
+                        <button class="icon-btn" title="Notifications">
+                            <i class="fas fa-bell"></i>
+                            <span class="badge">3</span>
+                        </button>
+                        <button class="icon-btn" title="Settings">
+                            <i class="fas fa-cog"></i>
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Page -->
+            <div id="dashboard-page" class="page active">
+                <!-- Stats Cards -->
+                <div class="stats-container">
+                    <div class="stat-card gradient-blue">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Total Candidates</p>
+                            <h3 class="stat-value" id="stat-candidates">0</h3>
+                            <p class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 12% from last week
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card gradient-purple">
+                        <div class="stat-icon">
+                            <i class="fas fa-briefcase"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Job Postings</p>
+                            <h3 class="stat-value" id="stat-jobs">0</h3>
+                            <p class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 5 new today
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card gradient-green">
+                        <div class="stat-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Optimizations</p>
+                            <h3 class="stat-value" id="stat-optimizations">0</h3>
+                            <p class="stat-change positive">
+                                <i class="fas fa-arrow-up"></i> 98% success rate
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card gradient-orange">
+                        <div class="stat-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-content">
+                            <p class="stat-label">Pending Review</p>
+                            <h3 class="stat-value" id="stat-pending">0</h3>
+                            <p class="stat-change">
+                                Ready for review
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <h2 class="section-title">
+                        <i class="fas fa-bolt"></i> Quick Actions
+                    </h2>
+                    <div class="action-buttons">
+                        <button class="action-btn primary" onclick="navigateToPage('optimize')">
+                            <i class="fas fa-magic"></i>
+                            <span>Bulk Optimize</span>
+                        </button>
+                        <button class="action-btn secondary" onclick="navigateToPage('candidates')">
+                            <i class="fas fa-user-plus"></i>
+                            <span>View Candidates</span>
+                        </button>
+                        <button class="action-btn secondary" onclick="navigateToPage('review')">
+                            <i class="fas fa-clipboard-list"></i>
+                            <span>Review Queue</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Candidates Page -->
+            <div id="candidates-page" class="page">
+                <div class="page-header-modern">
+                    <div class="header-content">
+                        <h2 class="section-title">Candidate Selection</h2>
+                        <p class="section-description">Select candidates to optimize for job postings</p>
+                    </div>
+                </div>
+                
+                <div class="search-filters-modern">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="candidate-search" class="modern-input" placeholder="Search candidates by name or email...">
+                    </div>
+                    <div class="filter-box">
+                        <i class="fas fa-filter"></i>
+                        <select id="skills-filter" class="modern-select" multiple>
+                            <option value="Python">Python</option>
+                            <option value="JavaScript">JavaScript</option>
+                            <option value="React">React</option>
+                            <option value="AWS">AWS</option>
+                            <option value="Docker">Docker</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="bulk-actions-modern">
+                    <div class="selection-info">
+                        <span class="selected-badge" id="selected-count">0 selected</span>
+                    </div>
+                    <div class="action-buttons-group">
+                        <button class="btn-modern outline" onclick="selectAll()">
+                            <i class="fas fa-check-square"></i> Select All
+                        </button>
+                        <button class="btn-modern outline" onclick="deselectAll()">
+                            <i class="fas fa-square"></i> Deselect All
+                        </button>
+                    </div>
+                </div>
+                
+                <div id="candidates-list" class="candidates-grid-modern"></div>
+            </div>
+
+            <!-- Optimize Page -->
+            <div id="optimize-page" class="page">
+                <div class="page-header-modern">
+                    <div class="header-content">
+                        <h2 class="section-title">Bulk Optimization</h2>
+                        <p class="section-description">Optimize multiple candidates for a specific job posting</p>
+                    </div>
+                </div>
+                
+                <div class="optimize-form-modern">
+                    <div class="form-card">
+                        <div class="form-group-modern">
+                            <label class="form-label">
+                                <i class="fas fa-briefcase"></i> Select Job Posting
+                            </label>
+                            <select id="optimize-job-select" class="modern-select">
+                                <option value="">-- Select Job --</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group-modern">
+                            <label class="form-label">
+                                <i class="fas fa-users"></i> Selected Candidates
+                            </label>
+                            <div id="selected-candidates-list" class="selected-list-modern">
+                                <div class="empty-state">
+                                    <i class="fas fa-inbox"></i>
+                                    <p>No candidates selected. Go to Candidates tab to select.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group-modern">
+                            <label class="checkbox-modern">
+                                <input type="checkbox" id="use-groq" checked>
+                                <span class="checkmark"></span>
+                                <span class="checkbox-label">Use Groq AI (requires API key)</span>
+                            </label>
+                        </div>
+                        
+                        <div class="form-group-modern" id="groq-key-group" style="display: none;">
+                            <label class="form-label">
+                                <i class="fas fa-key"></i> Groq API Key
+                            </label>
+                            <input type="password" id="groq-api-key" class="modern-input" placeholder="Enter Groq API key (optional if set in env)">
+                        </div>
+                        
+                        <button class="btn-modern primary large" onclick="startBulkOptimization()">
+                            <span id="optimize-btn-text">
+                                <i class="fas fa-magic"></i> Optimize Selected Candidates
+                            </span>
+                            <span id="optimize-loader" class="spinner" style="display: none;">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </span>
+                        </button>
+                    </div>
+                    
+                    <div id="optimization-progress" class="progress-card" style="display: none;">
+                        <h3 class="progress-title">
+                            <i class="fas fa-tasks"></i> Optimization Progress
+                        </h3>
+                        <div class="progress-bar-modern">
+                            <div class="progress-fill-modern" id="progress-fill"></div>
+                        </div>
+                        <p class="progress-text" id="progress-text">Processing...</p>
+                    </div>
+                    
+                    <div id="optimization-results" style="display: none;"></div>
+                </div>
+            </div>
+
+            <!-- Review Page -->
+            <div id="review-page" class="page">
+                <div class="page-header-modern">
+                    <div class="header-content">
+                        <h2 class="section-title">Review Queue</h2>
+                        <p class="section-description">Review and approve optimized resumes</p>
+                    </div>
+                    <div class="header-actions">
+                        <select id="review-job-select" class="modern-select" onchange="loadReviewQueue()">
+                            <option value="">-- Select Job --</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="review-queue" class="review-queue-modern"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Comparison Modal -->
+    <div id="compare-modal" class="modal-overlay">
+        <div class="modal-container large">
+            <div class="modal-header">
+                <h2>
+                    <i class="fas fa-code-branch"></i> Before / After Comparison
+                </h2>
+                <button class="modal-close" onclick="closeModal('compare-modal')">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="comparison-container-modern">
+                    <div class="comparison-panel-modern">
+                        <div class="panel-header original">
+                            <i class="fas fa-file-alt"></i> Original
+                        </div>
+                        <div class="comparison-content-modern" id="original-content"></div>
+                    </div>
+                    <div class="comparison-panel-modern">
+                        <div class="panel-header optimized">
+                            <i class="fas fa-star"></i> Optimized
+                        </div>
+                        <div class="comparison-content-modern" id="optimized-content"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-modern danger" onclick="rejectOptimization()">
+                    <i class="fas fa-times"></i> Reject
+                </button>
+                <button class="btn-modern success" onclick="approveOptimization()">
+                    <i class="fas fa-check"></i> Approve
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast" style="display: none;">
+        <div class="toast-content">
+            <i class="toast-icon"></i>
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/recruiter.js') }}"></script>
+</body>
+</html>
+
