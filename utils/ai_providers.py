@@ -199,13 +199,13 @@ EXPERIENCE SECTION RULES (MANDATORY - APPLY TO EVERY BULLET):
    - Use: Designed, Built, Implemented, Led, Automated, Analyzed, Developed, Optimized, Increased, Reduced, Managed, Created, Deployed, Architected, Streamlined, Accelerated, Transformed, etc.
    - Vary verbs: If first bullet uses "Developed", second should use "Architected" or "Built", not "Developed" again
 
-4. QUANTITATIVE METRICS (MANDATORY): Every bullet MUST include at least ONE measurable metric:
-   - Numbers: "3 applications", "50K users", "5 team members"
-   - Percentages: "40% faster", "25% reduction", "30% increase"
-   - Time: "reduced from 5 hours to 30 minutes", "deployed in 2 weeks"
-   - Money: "$50K saved", "revenue increased by $200K"
-   - Scale: "serving 1M+ requests", "processing 10TB data daily"
-   - If original has no metrics, ADD realistic, job-relevant metrics based on the work described
+4. QUANTITATIVE METRICS (BALANCED APPROACH):
+   - AIM for metrics in ~50-60% of bullet points, NOT every single one.
+   - QUALITY OVER QUANTITY: Only use metrics where they feel natural and credible.
+   - Avoid "data stuffing" (e.g., don't force a % into a task where it doesn't belong).
+   - Good metrics: "Reduced latency by 40%", "Managed $50k budget", "Led team of 5"
+   - Bad metrics: "Wrote 100% of code", "Attended 5 meetings", "Used 3 keyboards"
+   - If a metric feels forced, focus on the QUALITATIVE impact instead (e.g., "Enabled new capabilities," "Solved critical bug").
 
 5. JOB RELEVANCE (MANDATORY): Every bullet MUST connect to job description requirements:
    - Identify key technologies/tools from job description
@@ -228,11 +228,25 @@ EXPERIENCE SECTION RULES (MANDATORY - APPLY TO EVERY BULLET):
 
 11. QUANTITY: Provide 4-6 bullet points per position (expand if original has fewer, consolidate if original has too many)
 
-12. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
+12. BALANCE (CRITICAL): Maintain a natural balance between quantifiable and technical points:
+    - ~50% QUANTIFIABLE: Focus on metrics, numbers, percentages, measurable results (where natural)
+    - ~50% TECHNICAL/QUALITATIVE: Focus on technical skills, architectures, complex problem solving (without forced numbers)
+    - Example of quantifiable: "Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45%"
+    - Example of technical/qualitative: "Architected microservices infrastructure using Docker and Kubernetes, implementing service mesh patterns for improved scalability"
+    - DO NOT include soft skills (leadership, collaboration) unless tied to a specific technical outcome.
 
-13. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+13. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
 
-14. QUALITATIVE ACHIEVEMENTS: Include leadership, problem-solving, innovation when relevant, but ALWAYS pair with quantitative metrics
+14. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+
+15. TECHNICAL NON-QUANTIFIABLE BULLETS: For the 50% technical bullets (without metrics), focus on:
+    - Technical implementations and architectures (microservices, APIs, data pipelines, etc.)
+    - Technologies and tools from job description (Docker, Kubernetes, AWS services, frameworks, etc.)
+    - Technical patterns and best practices (RESTful design, event-driven architecture, etc.)
+    - System design and technical solutions
+    - Integration with specific technologies or platforms
+    - DO NOT include soft skills, leadership, collaboration, or strategic thinking
+    - These bullets should demonstrate technical depth and job-relevant technical expertise
 
 EXPERIENCE REWRITING EXAMPLES (MANDATORY TRANSFORMATION):
 
@@ -248,13 +262,20 @@ AFTER: "Led cross-functional team of 8 engineers and 3 product managers, impleme
 BEFORE: "Used machine learning for data analysis"
 AFTER: "Developed and deployed machine learning models using Python, scikit-learn, and TensorFlow, improving prediction accuracy from 72% to 89%, processing 2M+ data points daily, and enabling automated decision-making that saved 20 hours/week of manual analysis"
 
+BEFORE: "Worked on backend systems"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns with Istio and container orchestration best practices for scalable distributed systems"
+
+BEFORE: "Developed APIs"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Designed and implemented RESTful APIs following OpenAPI 3.0 specifications, integrating OAuth 2.0 authentication, JWT token management, and rate limiting middleware for secure and scalable API architecture"
+
 ⚠️ CRITICAL: Notice how each "AFTER" example:
 - Completely rewrites the content (not just adds keywords)
-- Includes specific technologies from job description
-- Adds multiple quantitative metrics
-- Shows clear business impact
+- Includes specific technologies from job description (for quantifiable bullets)
+- Adds multiple quantitative metrics (for 70% of bullets)
+- Shows clear business impact (for 50% quantifiable bullets) or demonstrates technical depth and job-relevant technologies (for 50% technical bullets)
 - Uses varied, strong action verbs
 - Follows Problem → Action → Result structure
+- Maintains 50/50 balance: Half the bullets are quantifiable with metrics, half focus on technical implementations and technologies without metrics
 
 CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 
@@ -293,10 +314,17 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    • [Bullet point]
 
 
-5. EDUCATION Section:
+5. EDUCATION Section (ONLY if original resume has education):
    EDUCATION
    [Degree Name]: [University Name], [Location]
    [Degree Name]: [University Name], [Location]
+   
+   ⚠️ CRITICAL: ONLY include education entries that exist in the original resume. 
+   - DO NOT add any education (Bachelor's, Master's, PhD, etc.) if it is NOT mentioned in the original resume
+   - Copy and paste education information exactly as it appears in the original resume
+   - If the original resume has no education section, DO NOT create one
+   - If the original resume only has a Master's degree, DO NOT add a Bachelor's degree
+   - Only include what is explicitly stated in the original resume
 
 6. PROJECTS Section (ONLY if original resume has projects):
    PROJECTS
@@ -307,11 +335,21 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    [Next Project Name] | [Technologies Used] | [Date or Duration]
    • [Description]
    • [Key features or results]
+   
+   ⚠️ CRITICAL: Check for project sections using these common names (case-insensitive):
+   - "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS"
+   - "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS"
+   - "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS"
+   - "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing the word "PROJECT"
+   - If ANY of these exist in the original resume, include the PROJECTS section
+   - If NONE of these exist, do NOT add a PROJECTS section
 
 IMPORTANT INSTRUCTIONS:
 - Maintain ALL original information - only enhance and optimize, don't remove truthful content
 - Use the EXACT section headers: SUMMARY, SKILLS, EXPERIENCE, EDUCATION (all caps)
-- Include PROJECTS section ONLY if the original resume has a projects section - do NOT add projects if they don't exist in the original
+- Include EDUCATION section ONLY if the original resume has an education section - do NOT add education if it doesn't exist in the original
+- Include PROJECTS section ONLY if the original resume has a projects section (check for: "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS", "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS", "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS", "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing "PROJECT") - do NOT add projects if they don't exist in the original
+- CRITICAL: For EDUCATION section, ONLY copy education entries that are explicitly mentioned in the original resume. DO NOT add Bachelor's, Master's, or any other degree if it is not in the original resume
 - For experience entries, use format: "Company, Location | Date Range | Position"
 - For projects, use format: "Project Name | Technologies | Date/Duration"
 - Use bullet points (•) for experience and project descriptions
@@ -322,7 +360,7 @@ IMPORTANT INSTRUCTIONS:
 - Keep formatting clean and professional
 - Do NOT add any explanatory text before or after the resume
 - Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION → PROJECTS (if exists)
+- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
 Provide ONLY the complete optimized resume in the format above, nothing else."""
 
@@ -332,7 +370,7 @@ Provide ONLY the complete optimized resume in the format above, nothing else."""
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are an expert resume writer specializing in tailoring resumes to specific job descriptions. 🚨 CRITICAL MANDATORY REQUIREMENT: You MUST completely rewrite every experience bullet point from scratch. DO NOT just add keywords or make minor edits. Each bullet must be transformed with: (1) Specific quantitative metrics (numbers, percentages, time, money, scale), (2) Job-relevant technologies/tools from the job description, (3) Problem → Action → Result structure, (4) Strong, varied action verbs (never repeat verbs), (5) Clear business impact. If original bullet says 'Worked on projects', rewrite to 'Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily'. Every bullet MUST include at least one measurable metric. Transform vague statements into specific, measurable achievements that directly connect to job requirements. Use natural, business-professional tone - NO generic/AI-style language. Provide 4-6 bullets per position. Maintain truthfulness while making content significantly more compelling and job-relevant."
+                        "content": "You are an expert resume writer specializing in tailoring resumes to specific job descriptions. 🚨 CRITICAL MANDATORY REQUIREMENT: You MUST completely rewrite every experience bullet point from scratch. DO NOT just add keywords or make minor edits. Each bullet must be transformed with: (1) Specific quantitative metrics (numbers, percentages, time, money, scale) for 50% of bullets, (2) Job-relevant technologies/tools from the job description, (3) Problem → Action → Result structure, (4) Strong, varied action verbs (never repeat verbs), (5) Clear business impact. CRITICAL BALANCE: Maintain 50% quantifiable bullets (heavy on metrics) and 50% technical bullets (technical implementations, architectures, technologies matching job description, but WITHOUT metrics). DO NOT include soft skills like leadership, collaboration, or strategic thinking. For 4 bullets: 2 quantifiable, 2 technical. For 5 bullets: 2-3 quantifiable, 2-3 technical. For 6 bullets: 3 quantifiable, 3 technical. If original bullet says 'Worked on projects', rewrite to 'Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily'. Transform vague statements into specific, measurable achievements that directly connect to job requirements. Use natural, business-professional tone - NO generic/AI-style language. Provide 4-6 bullets per position. Maintain truthfulness while making content significantly more compelling and job-relevant."
                     },
                     {"role": "user", "content": prompt}
                 ],
@@ -542,11 +580,30 @@ EXPERIENCE SECTION RULES (MANDATORY - APPLY TO EVERY BULLET):
 
 11. QUANTITY: Provide 4-6 bullet points per position (expand if original has fewer, consolidate if original has too many)
 
-12. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
+12. BALANCE (CRITICAL): Maintain a 50/50 balance between quantifiable and technical points:
+    - 50% of bullets should be QUANTIFIABLE (heavy on metrics, numbers, percentages, measurable results)
+    - 50% of bullets should be TECHNICAL (job-relevant technical skills, technologies, implementations, but WITHOUT metrics/numbers)
+    - Example of quantifiable (50%): "Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily"
+    - Example of technical non-quantifiable (50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns and container orchestration best practices"
+    - Example of technical non-quantifiable (50%): "Developed RESTful APIs following OpenAPI specifications, implementing OAuth 2.0 authentication and JWT token management for secure access control"
+    - Example of technical non-quantifiable (50%): "Built data processing pipelines using Apache Spark and Kafka, implementing stream processing patterns and event-driven architecture for real-time analytics"
+    - For 4 bullets: 2 should be quantifiable, 2 should be technical (no metrics)
+    - For 5 bullets: 2-3 should be quantifiable, 2-3 should be technical (no metrics)
+    - For 6 bullets: 3 should be quantifiable, 3 should be technical (no metrics)
+    - DO NOT include soft skills (leadership, collaboration, strategic thinking) - focus ONLY on technical implementations, architectures, and technologies
 
-13. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+13. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
 
-14. QUALITATIVE ACHIEVEMENTS: Include leadership, problem-solving, innovation when relevant, but ALWAYS pair with quantitative metrics
+14. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+
+15. TECHNICAL NON-QUANTIFIABLE BULLETS: For the 50% technical bullets (without metrics), focus on:
+    - Technical implementations and architectures (microservices, APIs, data pipelines, etc.)
+    - Technologies and tools from job description (Docker, Kubernetes, AWS services, frameworks, etc.)
+    - Technical patterns and best practices (RESTful design, event-driven architecture, etc.)
+    - System design and technical solutions
+    - Integration with specific technologies or platforms
+    - DO NOT include soft skills, leadership, collaboration, or strategic thinking
+    - These bullets should demonstrate technical depth and job-relevant technical expertise
 
 EXPERIENCE REWRITING EXAMPLES (MANDATORY TRANSFORMATION):
 
@@ -562,13 +619,20 @@ AFTER: "Led cross-functional team of 8 engineers and 3 product managers, impleme
 BEFORE: "Used machine learning for data analysis"
 AFTER: "Developed and deployed machine learning models using Python, scikit-learn, and TensorFlow, improving prediction accuracy from 72% to 89%, processing 2M+ data points daily, and enabling automated decision-making that saved 20 hours/week of manual analysis"
 
+BEFORE: "Worked on backend systems"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns with Istio and container orchestration best practices for scalable distributed systems"
+
+BEFORE: "Developed APIs"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Designed and implemented RESTful APIs following OpenAPI 3.0 specifications, integrating OAuth 2.0 authentication, JWT token management, and rate limiting middleware for secure and scalable API architecture"
+
 ⚠️ CRITICAL: Notice how each "AFTER" example:
 - Completely rewrites the content (not just adds keywords)
-- Includes specific technologies from job description
-- Adds multiple quantitative metrics
-- Shows clear business impact
+- Includes specific technologies from job description (for quantifiable bullets)
+- Adds multiple quantitative metrics (for 70% of bullets)
+- Shows clear business impact (for 50% quantifiable bullets) or demonstrates technical depth and job-relevant technologies (for 50% technical bullets)
 - Uses varied, strong action verbs
 - Follows Problem → Action → Result structure
+- Maintains 50/50 balance: Half the bullets are quantifiable with metrics, half focus on technical implementations and technologies without metrics
 
 CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 
@@ -607,10 +671,17 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    • [Bullet point]
 
 
-5. EDUCATION Section:
+5. EDUCATION Section (ONLY if original resume has education):
    EDUCATION
    [Degree Name]: [University Name], [Location]
    [Degree Name]: [University Name], [Location]
+   
+   ⚠️ CRITICAL: ONLY include education entries that exist in the original resume. 
+   - DO NOT add any education (Bachelor's, Master's, PhD, etc.) if it is NOT mentioned in the original resume
+   - Copy and paste education information exactly as it appears in the original resume
+   - If the original resume has no education section, DO NOT create one
+   - If the original resume only has a Master's degree, DO NOT add a Bachelor's degree
+   - Only include what is explicitly stated in the original resume
 
 6. PROJECTS Section (ONLY if original resume has projects):
    PROJECTS
@@ -621,11 +692,21 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    [Next Project Name] | [Technologies Used] | [Date or Duration]
    • [Description]
    • [Key features or results]
+   
+   ⚠️ CRITICAL: Check for project sections using these common names (case-insensitive):
+   - "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS"
+   - "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS"
+   - "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS"
+   - "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing the word "PROJECT"
+   - If ANY of these exist in the original resume, include the PROJECTS section
+   - If NONE of these exist, do NOT add a PROJECTS section
 
 IMPORTANT INSTRUCTIONS:
 - Maintain ALL original information - only enhance and optimize, don't remove truthful content
 - Use the EXACT section headers: SUMMARY, SKILLS, EXPERIENCE, EDUCATION (all caps)
-- Include PROJECTS section ONLY if the original resume has a projects section - do NOT add projects if they don't exist in the original
+- Include EDUCATION section ONLY if the original resume has an education section - do NOT add education if it doesn't exist in the original
+- Include PROJECTS section ONLY if the original resume has a projects section (check for: "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS", "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS", "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS", "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing "PROJECT") - do NOT add projects if they don't exist in the original
+- CRITICAL: For EDUCATION section, ONLY copy education entries that are explicitly mentioned in the original resume. DO NOT add Bachelor's, Master's, or any other degree if it is not in the original resume
 - For experience entries, use format: "Company, Location | Date Range | Position"
 - For projects, use format: "Project Name | Technologies | Date/Duration"
 - Use bullet points (•) for experience and project descriptions
@@ -636,7 +717,7 @@ IMPORTANT INSTRUCTIONS:
 - Keep formatting clean and professional
 - Do NOT add any explanatory text before or after the resume
 - Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION → PROJECTS (if exists)
+- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
 Provide ONLY the complete optimized resume in the format above, nothing else."""
 
@@ -646,7 +727,7 @@ Provide ONLY the complete optimized resume in the format above, nothing else."""
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are an expert resume writer specializing in tailoring resumes to specific job descriptions. 🚨 CRITICAL MANDATORY REQUIREMENT: You MUST completely rewrite every experience bullet point from scratch. DO NOT just add keywords or make minor edits. Each bullet must be transformed with: (1) Specific quantitative metrics (numbers, percentages, time, money, scale), (2) Job-relevant technologies/tools from the job description, (3) Problem → Action → Result structure, (4) Strong, varied action verbs (never repeat verbs), (5) Clear business impact. If original bullet says 'Worked on projects', rewrite to 'Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily'. Every bullet MUST include at least one measurable metric. Transform vague statements into specific, measurable achievements that directly connect to job requirements. Use natural, business-professional tone - NO generic/AI-style language. Provide 4-6 bullets per position. Maintain truthfulness while making content significantly more compelling and job-relevant."
+                        "content": "You are an expert resume writer specializing in tailoring resumes to specific job descriptions. 🚨 CRITICAL MANDATORY REQUIREMENT: You MUST completely rewrite every experience bullet point from scratch. DO NOT just add keywords or make minor edits. Each bullet must be transformed with: (1) Specific quantitative metrics (numbers, percentages, time, money, scale) for 50% of bullets, (2) Job-relevant technologies/tools from the job description, (3) Problem → Action → Result structure, (4) Strong, varied action verbs (never repeat verbs), (5) Clear business impact. CRITICAL BALANCE: Maintain 50% quantifiable bullets (heavy on metrics) and 50% technical bullets (technical implementations, architectures, technologies matching job description, but WITHOUT metrics). DO NOT include soft skills like leadership, collaboration, or strategic thinking. For 4 bullets: 2 quantifiable, 2 technical. For 5 bullets: 2-3 quantifiable, 2-3 technical. For 6 bullets: 3 quantifiable, 3 technical. If original bullet says 'Worked on projects', rewrite to 'Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily'. Transform vague statements into specific, measurable achievements that directly connect to job requirements. Use natural, business-professional tone - NO generic/AI-style language. Provide 4-6 bullets per position. Maintain truthfulness while making content significantly more compelling and job-relevant."
                     },
                     {"role": "user", "content": prompt}
                 ],
@@ -879,11 +960,30 @@ EXPERIENCE SECTION RULES (MANDATORY - APPLY TO EVERY BULLET):
 
 11. QUANTITY: Provide 4-6 bullet points per position (expand if original has fewer, consolidate if original has too many)
 
-12. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
+12. BALANCE (CRITICAL): Maintain a 50/50 balance between quantifiable and technical points:
+    - 50% of bullets should be QUANTIFIABLE (heavy on metrics, numbers, percentages, measurable results)
+    - 50% of bullets should be TECHNICAL (job-relevant technical skills, technologies, implementations, but WITHOUT metrics/numbers)
+    - Example of quantifiable (50%): "Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily"
+    - Example of technical non-quantifiable (50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns and container orchestration best practices"
+    - Example of technical non-quantifiable (50%): "Developed RESTful APIs following OpenAPI specifications, implementing OAuth 2.0 authentication and JWT token management for secure access control"
+    - Example of technical non-quantifiable (50%): "Built data processing pipelines using Apache Spark and Kafka, implementing stream processing patterns and event-driven architecture for real-time analytics"
+    - For 4 bullets: 2 should be quantifiable, 2 should be technical (no metrics)
+    - For 5 bullets: 2-3 should be quantifiable, 2-3 should be technical (no metrics)
+    - For 6 bullets: 3 should be quantifiable, 3 should be technical (no metrics)
+    - DO NOT include soft skills (leadership, collaboration, strategic thinking) - focus ONLY on technical implementations, architectures, and technologies
 
-13. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+13. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
 
-14. QUALITATIVE ACHIEVEMENTS: Include leadership, problem-solving, innovation when relevant, but ALWAYS pair with quantitative metrics
+14. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+
+15. TECHNICAL NON-QUANTIFIABLE BULLETS: For the 50% technical bullets (without metrics), focus on:
+    - Technical implementations and architectures (microservices, APIs, data pipelines, etc.)
+    - Technologies and tools from job description (Docker, Kubernetes, AWS services, frameworks, etc.)
+    - Technical patterns and best practices (RESTful design, event-driven architecture, etc.)
+    - System design and technical solutions
+    - Integration with specific technologies or platforms
+    - DO NOT include soft skills, leadership, collaboration, or strategic thinking
+    - These bullets should demonstrate technical depth and job-relevant technical expertise
 
 EXPERIENCE REWRITING EXAMPLES (MANDATORY TRANSFORMATION):
 
@@ -899,13 +999,20 @@ AFTER: "Led cross-functional team of 8 engineers and 3 product managers, impleme
 BEFORE: "Used machine learning for data analysis"
 AFTER: "Developed and deployed machine learning models using Python, scikit-learn, and TensorFlow, improving prediction accuracy from 72% to 89%, processing 2M+ data points daily, and enabling automated decision-making that saved 20 hours/week of manual analysis"
 
+BEFORE: "Worked on backend systems"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns with Istio and container orchestration best practices for scalable distributed systems"
+
+BEFORE: "Developed APIs"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Designed and implemented RESTful APIs following OpenAPI 3.0 specifications, integrating OAuth 2.0 authentication, JWT token management, and rate limiting middleware for secure and scalable API architecture"
+
 ⚠️ CRITICAL: Notice how each "AFTER" example:
 - Completely rewrites the content (not just adds keywords)
-- Includes specific technologies from job description
-- Adds multiple quantitative metrics
-- Shows clear business impact
+- Includes specific technologies from job description (for quantifiable bullets)
+- Adds multiple quantitative metrics (for 70% of bullets)
+- Shows clear business impact (for 50% quantifiable bullets) or demonstrates technical depth and job-relevant technologies (for 50% technical bullets)
 - Uses varied, strong action verbs
 - Follows Problem → Action → Result structure
+- Maintains 50/50 balance: Half the bullets are quantifiable with metrics, half focus on technical implementations and technologies without metrics
 
 CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 
@@ -944,10 +1051,17 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    • [Bullet point]
 
 
-5. EDUCATION Section:
+5. EDUCATION Section (ONLY if original resume has education):
    EDUCATION
    [Degree Name]: [University Name], [Location]
    [Degree Name]: [University Name], [Location]
+   
+   ⚠️ CRITICAL: ONLY include education entries that exist in the original resume. 
+   - DO NOT add any education (Bachelor's, Master's, PhD, etc.) if it is NOT mentioned in the original resume
+   - Copy and paste education information exactly as it appears in the original resume
+   - If the original resume has no education section, DO NOT create one
+   - If the original resume only has a Master's degree, DO NOT add a Bachelor's degree
+   - Only include what is explicitly stated in the original resume
 
 6. PROJECTS Section (ONLY if original resume has projects):
    PROJECTS
@@ -958,11 +1072,21 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    [Next Project Name] | [Technologies Used] | [Date or Duration]
    • [Description]
    • [Key features or results]
+   
+   ⚠️ CRITICAL: Check for project sections using these common names (case-insensitive):
+   - "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS"
+   - "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS"
+   - "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS"
+   - "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing the word "PROJECT"
+   - If ANY of these exist in the original resume, include the PROJECTS section
+   - If NONE of these exist, do NOT add a PROJECTS section
 
 IMPORTANT INSTRUCTIONS:
 - Maintain ALL original information - only enhance and optimize, don't remove truthful content
 - Use the EXACT section headers: SUMMARY, SKILLS, EXPERIENCE, EDUCATION (all caps)
-- Include PROJECTS section ONLY if the original resume has a projects section - do NOT add projects if they don't exist in the original
+- Include EDUCATION section ONLY if the original resume has an education section - do NOT add education if it doesn't exist in the original
+- Include PROJECTS section ONLY if the original resume has a projects section (check for: "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS", "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS", "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS", "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing "PROJECT") - do NOT add projects if they don't exist in the original
+- CRITICAL: For EDUCATION section, ONLY copy education entries that are explicitly mentioned in the original resume. DO NOT add Bachelor's, Master's, or any other degree if it is not in the original resume
 - For experience entries, use format: "Company, Location | Date Range | Position"
 - For projects, use format: "Project Name | Technologies | Date/Duration"
 - Use bullet points (•) for experience and project descriptions
@@ -973,7 +1097,7 @@ IMPORTANT INSTRUCTIONS:
 - Keep formatting clean and professional
 - Do NOT add any explanatory text before or after the resume
 - Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION → PROJECTS (if exists)
+- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
 Provide ONLY the complete optimized resume in the format above, nothing else."""
 
@@ -1250,11 +1374,30 @@ EXPERIENCE SECTION RULES (MANDATORY - APPLY TO EVERY BULLET):
 
 11. QUANTITY: Provide 4-6 bullet points per position (expand if original has fewer, consolidate if original has too many)
 
-12. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
+12. BALANCE (CRITICAL): Maintain a 50/50 balance between quantifiable and technical points:
+    - 50% of bullets should be QUANTIFIABLE (heavy on metrics, numbers, percentages, measurable results)
+    - 50% of bullets should be TECHNICAL (job-relevant technical skills, technologies, implementations, but WITHOUT metrics/numbers)
+    - Example of quantifiable (50%): "Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily"
+    - Example of technical non-quantifiable (50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns and container orchestration best practices"
+    - Example of technical non-quantifiable (50%): "Developed RESTful APIs following OpenAPI specifications, implementing OAuth 2.0 authentication and JWT token management for secure access control"
+    - Example of technical non-quantifiable (50%): "Built data processing pipelines using Apache Spark and Kafka, implementing stream processing patterns and event-driven architecture for real-time analytics"
+    - For 4 bullets: 2 should be quantifiable, 2 should be technical (no metrics)
+    - For 5 bullets: 2-3 should be quantifiable, 2-3 should be technical (no metrics)
+    - For 6 bullets: 3 should be quantifiable, 3 should be technical (no metrics)
+    - DO NOT include soft skills (leadership, collaboration, strategic thinking) - focus ONLY on technical implementations, architectures, and technologies
 
-13. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+13. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
 
-14. QUALITATIVE ACHIEVEMENTS: Include leadership, problem-solving, innovation when relevant, but ALWAYS pair with quantitative metrics
+14. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+
+15. TECHNICAL NON-QUANTIFIABLE BULLETS: For the 50% technical bullets (without metrics), focus on:
+    - Technical implementations and architectures (microservices, APIs, data pipelines, etc.)
+    - Technologies and tools from job description (Docker, Kubernetes, AWS services, frameworks, etc.)
+    - Technical patterns and best practices (RESTful design, event-driven architecture, etc.)
+    - System design and technical solutions
+    - Integration with specific technologies or platforms
+    - DO NOT include soft skills, leadership, collaboration, or strategic thinking
+    - These bullets should demonstrate technical depth and job-relevant technical expertise
 
 EXPERIENCE REWRITING EXAMPLES (MANDATORY TRANSFORMATION):
 
@@ -1270,13 +1413,20 @@ AFTER: "Led cross-functional team of 8 engineers and 3 product managers, impleme
 BEFORE: "Used machine learning for data analysis"
 AFTER: "Developed and deployed machine learning models using Python, scikit-learn, and TensorFlow, improving prediction accuracy from 72% to 89%, processing 2M+ data points daily, and enabling automated decision-making that saved 20 hours/week of manual analysis"
 
+BEFORE: "Worked on backend systems"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns with Istio and container orchestration best practices for scalable distributed systems"
+
+BEFORE: "Developed APIs"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Designed and implemented RESTful APIs following OpenAPI 3.0 specifications, integrating OAuth 2.0 authentication, JWT token management, and rate limiting middleware for secure and scalable API architecture"
+
 ⚠️ CRITICAL: Notice how each "AFTER" example:
 - Completely rewrites the content (not just adds keywords)
-- Includes specific technologies from job description
-- Adds multiple quantitative metrics
-- Shows clear business impact
+- Includes specific technologies from job description (for quantifiable bullets)
+- Adds multiple quantitative metrics (for 70% of bullets)
+- Shows clear business impact (for 50% quantifiable bullets) or demonstrates technical depth and job-relevant technologies (for 50% technical bullets)
 - Uses varied, strong action verbs
 - Follows Problem → Action → Result structure
+- Maintains 50/50 balance: Half the bullets are quantifiable with metrics, half focus on technical implementations and technologies without metrics
 
 CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 
@@ -1315,10 +1465,17 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    • [Bullet point]
 
 
-5. EDUCATION Section:
+5. EDUCATION Section (ONLY if original resume has education):
    EDUCATION
    [Degree Name]: [University Name], [Location]
    [Degree Name]: [University Name], [Location]
+   
+   ⚠️ CRITICAL: ONLY include education entries that exist in the original resume. 
+   - DO NOT add any education (Bachelor's, Master's, PhD, etc.) if it is NOT mentioned in the original resume
+   - Copy and paste education information exactly as it appears in the original resume
+   - If the original resume has no education section, DO NOT create one
+   - If the original resume only has a Master's degree, DO NOT add a Bachelor's degree
+   - Only include what is explicitly stated in the original resume
 
 6. PROJECTS Section (ONLY if original resume has projects):
    PROJECTS
@@ -1329,11 +1486,21 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    [Next Project Name] | [Technologies Used] | [Date or Duration]
    • [Description]
    • [Key features or results]
+   
+   ⚠️ CRITICAL: Check for project sections using these common names (case-insensitive):
+   - "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS"
+   - "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS"
+   - "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS"
+   - "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing the word "PROJECT"
+   - If ANY of these exist in the original resume, include the PROJECTS section
+   - If NONE of these exist, do NOT add a PROJECTS section
 
 IMPORTANT INSTRUCTIONS:
 - Maintain ALL original information - only enhance and optimize, don't remove truthful content
 - Use the EXACT section headers: SUMMARY, SKILLS, EXPERIENCE, EDUCATION (all caps)
-- Include PROJECTS section ONLY if the original resume has a projects section - do NOT add projects if they don't exist in the original
+- Include EDUCATION section ONLY if the original resume has an education section - do NOT add education if it doesn't exist in the original
+- Include PROJECTS section ONLY if the original resume has a projects section (check for: "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS", "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS", "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS", "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing "PROJECT") - do NOT add projects if they don't exist in the original
+- CRITICAL: For EDUCATION section, ONLY copy education entries that are explicitly mentioned in the original resume. DO NOT add Bachelor's, Master's, or any other degree if it is not in the original resume
 - For experience entries, use format: "Company, Location | Date Range | Position"
 - For projects, use format: "Project Name | Technologies | Date/Duration"
 - Use bullet points (•) for experience and project descriptions
@@ -1344,7 +1511,7 @@ IMPORTANT INSTRUCTIONS:
 - Keep formatting clean and professional
 - Do NOT add any explanatory text before or after the resume
 - Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION → PROJECTS (if exists)
+- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
 Provide ONLY the complete optimized resume in the format above, nothing else."""
 
@@ -1567,11 +1734,30 @@ EXPERIENCE SECTION RULES (MANDATORY - APPLY TO EVERY BULLET):
 
 11. QUANTITY: Provide 4-6 bullet points per position (expand if original has fewer, consolidate if original has too many)
 
-12. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
+12. BALANCE (CRITICAL): Maintain a 50/50 balance between quantifiable and technical points:
+    - 50% of bullets should be QUANTIFIABLE (heavy on metrics, numbers, percentages, measurable results)
+    - 50% of bullets should be TECHNICAL (job-relevant technical skills, technologies, implementations, but WITHOUT metrics/numbers)
+    - Example of quantifiable (50%): "Designed and deployed 3 microservices using Python and Docker, reducing API response time by 45% and handling 50K+ requests daily"
+    - Example of technical non-quantifiable (50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns and container orchestration best practices"
+    - Example of technical non-quantifiable (50%): "Developed RESTful APIs following OpenAPI specifications, implementing OAuth 2.0 authentication and JWT token management for secure access control"
+    - Example of technical non-quantifiable (50%): "Built data processing pipelines using Apache Spark and Kafka, implementing stream processing patterns and event-driven architecture for real-time analytics"
+    - For 4 bullets: 2 should be quantifiable, 2 should be technical (no metrics)
+    - For 5 bullets: 2-3 should be quantifiable, 2-3 should be technical (no metrics)
+    - For 6 bullets: 3 should be quantifiable, 3 should be technical (no metrics)
+    - DO NOT include soft skills (leadership, collaboration, strategic thinking) - focus ONLY on technical implementations, architectures, and technologies
 
-13. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+13. KEYWORDS: Include relevant keywords from job description NATURALLY within the rewritten content - NO keyword stuffing
 
-14. QUALITATIVE ACHIEVEMENTS: Include leadership, problem-solving, innovation when relevant, but ALWAYS pair with quantitative metrics
+14. LEARNING: Extract and incorporate skills/technologies from BOTH job description AND candidate's resume
+
+15. TECHNICAL NON-QUANTIFIABLE BULLETS: For the 50% technical bullets (without metrics), focus on:
+    - Technical implementations and architectures (microservices, APIs, data pipelines, etc.)
+    - Technologies and tools from job description (Docker, Kubernetes, AWS services, frameworks, etc.)
+    - Technical patterns and best practices (RESTful design, event-driven architecture, etc.)
+    - System design and technical solutions
+    - Integration with specific technologies or platforms
+    - DO NOT include soft skills, leadership, collaboration, or strategic thinking
+    - These bullets should demonstrate technical depth and job-relevant technical expertise
 
 EXPERIENCE REWRITING EXAMPLES (MANDATORY TRANSFORMATION):
 
@@ -1587,13 +1773,20 @@ AFTER: "Led cross-functional team of 8 engineers and 3 product managers, impleme
 BEFORE: "Used machine learning for data analysis"
 AFTER: "Developed and deployed machine learning models using Python, scikit-learn, and TensorFlow, improving prediction accuracy from 72% to 89%, processing 2M+ data points daily, and enabling automated decision-making that saved 20 hours/week of manual analysis"
 
+BEFORE: "Worked on backend systems"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Architected microservices infrastructure using Docker, Kubernetes, and AWS ECS, implementing service mesh patterns with Istio and container orchestration best practices for scalable distributed systems"
+
+BEFORE: "Developed APIs"
+AFTER (TECHNICAL NON-QUANTIFIABLE - 50%): "Designed and implemented RESTful APIs following OpenAPI 3.0 specifications, integrating OAuth 2.0 authentication, JWT token management, and rate limiting middleware for secure and scalable API architecture"
+
 ⚠️ CRITICAL: Notice how each "AFTER" example:
 - Completely rewrites the content (not just adds keywords)
-- Includes specific technologies from job description
-- Adds multiple quantitative metrics
-- Shows clear business impact
+- Includes specific technologies from job description (for quantifiable bullets)
+- Adds multiple quantitative metrics (for 70% of bullets)
+- Shows clear business impact (for 50% quantifiable bullets) or demonstrates technical depth and job-relevant technologies (for 50% technical bullets)
 - Uses varied, strong action verbs
 - Follows Problem → Action → Result structure
+- Maintains 50/50 balance: Half the bullets are quantifiable with metrics, half focus on technical implementations and technologies without metrics
 
 CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
 
@@ -1632,10 +1825,17 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    • [Bullet point]
 
 
-5. EDUCATION Section:
+5. EDUCATION Section (ONLY if original resume has education):
    EDUCATION
    [Degree Name]: [University Name], [Location]
    [Degree Name]: [University Name], [Location]
+   
+   ⚠️ CRITICAL: ONLY include education entries that exist in the original resume. 
+   - DO NOT add any education (Bachelor's, Master's, PhD, etc.) if it is NOT mentioned in the original resume
+   - Copy and paste education information exactly as it appears in the original resume
+   - If the original resume has no education section, DO NOT create one
+   - If the original resume only has a Master's degree, DO NOT add a Bachelor's degree
+   - Only include what is explicitly stated in the original resume
 
 6. PROJECTS Section (ONLY if original resume has projects):
    PROJECTS
@@ -1646,11 +1846,21 @@ CRITICAL FORMATTING REQUIREMENTS - Follow this EXACT structure:
    [Next Project Name] | [Technologies Used] | [Date or Duration]
    • [Description]
    • [Key features or results]
+   
+   ⚠️ CRITICAL: Check for project sections using these common names (case-insensitive):
+   - "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS"
+   - "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS"
+   - "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS"
+   - "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing the word "PROJECT"
+   - If ANY of these exist in the original resume, include the PROJECTS section
+   - If NONE of these exist, do NOT add a PROJECTS section
 
 IMPORTANT INSTRUCTIONS:
 - Maintain ALL original information - only enhance and optimize, don't remove truthful content
 - Use the EXACT section headers: SUMMARY, SKILLS, EXPERIENCE, EDUCATION (all caps)
-- Include PROJECTS section ONLY if the original resume has a projects section - do NOT add projects if they don't exist in the original
+- Include EDUCATION section ONLY if the original resume has an education section - do NOT add education if it doesn't exist in the original
+- Include PROJECTS section ONLY if the original resume has a projects section (check for: "PROJECTS", "ACADEMIC PROJECTS", "SCHOOL PROJECTS", "PERSONAL PROJECTS", "SIDE PROJECTS", "PORTFOLIO PROJECTS", "CAPSTONE PROJECTS", "RESEARCH PROJECTS", "INDIVIDUAL PROJECTS", "TEAM PROJECTS", "GROUP PROJECTS", "COURSE PROJECTS", "UNIVERSITY PROJECTS", "COLLEGE PROJECTS", or any section containing "PROJECT") - do NOT add projects if they don't exist in the original
+- CRITICAL: For EDUCATION section, ONLY copy education entries that are explicitly mentioned in the original resume. DO NOT add Bachelor's, Master's, or any other degree if it is not in the original resume
 - For experience entries, use format: "Company, Location | Date Range | Position"
 - For projects, use format: "Project Name | Technologies | Date/Duration"
 - Use bullet points (•) for experience and project descriptions
@@ -1661,7 +1871,7 @@ IMPORTANT INSTRUCTIONS:
 - Keep formatting clean and professional
 - Do NOT add any explanatory text before or after the resume
 - Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION → PROJECTS (if exists)
+- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
 Provide ONLY the complete optimized resume in the format above, nothing else."""
 

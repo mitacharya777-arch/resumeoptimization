@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CareerVest Resume Match | AI-Powered Resume Optimization</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <style>
         * {
             margin: 0;
@@ -57,7 +59,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: 
+            background:
                 radial-gradient(circle at 20% 50%, rgba(104, 42, 83, 0.2) 0%, transparent 60%),
                 radial-gradient(circle at 80% 80%, rgba(253, 197, 0, 0.15) 0%, transparent 60%),
                 radial-gradient(circle at 50% 20%, rgba(255, 255, 255, 0.03) 0%, transparent 50%);
@@ -170,175 +172,328 @@
             background: rgba(255, 255, 255, 0.06);
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
-            border-radius: 24px;
-            padding: 2.5rem;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            box-shadow: var(--shadow);
+            border-radius: 28px;
+            padding: 2.75rem 3rem;
+            transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow:
+                0 10px 30px -5px rgba(104, 42, 83, 0.3),
+                0 4px 12px -2px rgba(0, 0, 0, 0.2),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, rgba(253, 197, 0, 0.5), transparent);
+            border-radius: 28px 28px 0 0;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
         }
 
         .card:hover {
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-lg), 0 0 20px rgba(253, 197, 0, 0.2);
-            border-color: var(--accent);
-            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-6px);
+            box-shadow:
+                0 20px 45px -5px rgba(104, 42, 83, 0.4),
+                0 12px 24px -2px rgba(253, 197, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 30px rgba(253, 197, 0, 0.15);
+            border-color: rgba(253, 197, 0, 0.6);
+            background: rgba(255, 255, 255, 0.09);
         }
 
         .card h2 {
-            font-size: 1.75rem;
-            margin-bottom: 1.5rem;
+            font-size: 1.85rem;
+            margin-bottom: 2rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.25rem;
             font-weight: 700;
             color: var(--text);
+            letter-spacing: -0.01em;
         }
 
         .card h2 i {
             color: var(--accent);
-            font-size: 1.5rem;
-            text-shadow: 0 0 10px rgba(253, 197, 0, 0.5);
+            font-size: 1.6rem;
+            text-shadow: 0 0 15px rgba(253, 197, 0, 0.6);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                filter: brightness(1);
+            }
+
+            50% {
+                transform: scale(1.05);
+                filter: brightness(1.2);
+            }
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 2rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 0.75rem;
+            margin-bottom: 1rem;
             font-weight: 600;
             color: var(--text);
-            font-size: 0.95rem;
+            font-size: 1rem;
+            letter-spacing: 0.01em;
         }
 
         .upload-area {
             border: 2px dashed var(--border);
-            border-radius: 16px;
-            padding: 2rem;
+            border-radius: 20px;
+            padding: 2.5rem;
             text-align: center;
-            transition: all 0.3s;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             background: var(--bg-glass);
-            margin-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            cursor: pointer;
         }
 
         .upload-area:hover {
             border-color: var(--accent);
-            background: rgba(253, 197, 0, 0.1);
-            box-shadow: 0 0 20px rgba(253, 197, 0, 0.2);
+            background: rgba(253, 197, 0, 0.12);
+            box-shadow:
+                0 8px 24px rgba(253, 197, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            transform: scale(1.01);
         }
 
         .btn {
-            padding: 1rem 2rem;
+            padding: 1.125rem 2.5rem;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 16px;
+            font-size: 1.05rem;
+            font-weight: 700;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             display: inline-flex;
             align-items: center;
-            gap: 0.75rem;
+            justify-content: center;
+            gap: 0.875rem;
             position: relative;
             overflow: hidden;
+            text-transform: none;
+            letter-spacing: 0.02em;
+            min-width: 200px;
+            box-shadow: 0 4px 14px 0 rgba(0, 0, 0, 0.3);
+        }
+
+        .btn i {
+            font-size: 1.15rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover i {
+            transform: scale(1.15) rotate(5deg);
         }
 
         .btn::before {
             content: '';
             position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+            transition: left 0.6s ease;
         }
 
         .btn:hover::before {
-            width: 300px;
-            height: 300px;
+            left: 100%;
+        }
+
+        .btn::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            padding: 2px;
+            background: linear-gradient(135deg, rgba(253, 197, 0, 0.4), transparent, rgba(255, 255, 255, 0.2));
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .btn:hover::after {
+            opacity: 1;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 100%);
+            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 50%, #682A53 100%);
+            background-size: 200% 100%;
+            background-position: 0% 50%;
             color: #ffffff;
-            box-shadow: 0 10px 25px rgba(104, 42, 83, 0.5), 0 0 20px rgba(253, 197, 0, 0.3);
-            border: 1px solid rgba(253, 197, 0, 0.3);
+            box-shadow:
+                0 8px 24px rgba(104, 42, 83, 0.5),
+                0 4px 12px rgba(253, 197, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(253, 197, 0, 0.4);
+            position: relative;
+        }
+
+        .btn-primary::before {
+            background: linear-gradient(90deg, transparent, rgba(253, 197, 0, 0.3), transparent);
         }
 
         .btn-primary:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 35px rgba(104, 42, 83, 0.6), 0 0 30px rgba(253, 197, 0, 0.4);
-            background: linear-gradient(135deg, #4d1f3d 0%, #682A53 100%);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow:
+                0 14px 40px rgba(104, 42, 83, 0.65),
+                0 8px 20px rgba(253, 197, 0, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(253, 197, 0, 0.3);
             border-color: var(--accent);
+            background-position: 100% 50%;
         }
 
         .btn-primary:active {
-            transform: translateY(-1px);
+            transform: translateY(-2px) scale(0.98);
+            box-shadow:
+                0 4px 16px rgba(104, 42, 83, 0.6),
+                0 2px 8px rgba(253, 197, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
         }
 
         .btn-download {
-            background: linear-gradient(135deg, #FDC500 0%, #ffd633 100%);
-            color: #682A53;
-            padding: 0.875rem 1.75rem;
-            font-size: 0.95rem;
-            font-weight: 700;
-            box-shadow: 0 8px 20px rgba(253, 197, 0, 0.4), 0 0 15px rgba(253, 197, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: linear-gradient(135deg, #FDC500 0%, #ffd633 50%, #FDC500 100%);
+            background-size: 200% 100%;
+            background-position: 0% 50%;
+            color: #2a1a25;
+            padding: 1rem 2.25rem;
+            font-size: 1rem;
+            font-weight: 800;
+            box-shadow:
+                0 8px 24px rgba(253, 197, 0, 0.5),
+                0 4px 12px rgba(104, 42, 83, 0.2),
+                inset 0 2px 0 rgba(255, 255, 255, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-download::before {
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
         }
 
         .btn-download:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(253, 197, 0, 0.5), 0 0 25px rgba(253, 197, 0, 0.4);
-            background: linear-gradient(135deg, #d4a500 0%, #FDC500 100%);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow:
+                0 14px 40px rgba(253, 197, 0, 0.65),
+                0 8px 20px rgba(253, 197, 0, 0.5),
+                inset 0 2px 0 rgba(255, 255, 255, 0.4),
+                0 0 35px rgba(253, 197, 0, 0.5);
+            background-position: 100% 50%;
+            border-color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-download:active {
+            transform: translateY(-2px) scale(0.98);
         }
 
         .btn-upload {
-            background: var(--bg-glass);
+            background: linear-gradient(135deg, rgba(104, 42, 83, 0.2) 0%, rgba(104, 42, 83, 0.3) 100%);
             color: var(--text);
-            border: 1px solid var(--border);
-            padding: 0.875rem 1.75rem;
-            font-size: 0.95rem;
+            border: 2px solid var(--border);
+            padding: 1rem 2.25rem;
+            font-size: 1rem;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+            box-shadow:
+                0 4px 14px rgba(0, 0, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-upload::before {
+            background: linear-gradient(90deg, transparent, rgba(253, 197, 0, 0.2), transparent);
         }
 
         .btn-upload:hover {
-            background: rgba(104, 42, 83, 0.3);
+            background: linear-gradient(135deg, rgba(104, 42, 83, 0.35) 0%, rgba(104, 42, 83, 0.45) 100%);
             border-color: var(--accent);
             color: var(--accent);
-            box-shadow: 0 0 15px rgba(253, 197, 0, 0.3);
+            box-shadow:
+                0 8px 24px rgba(104, 42, 83, 0.4),
+                0 0 20px rgba(253, 197, 0, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            transform: translateY(-3px) scale(1.01);
+        }
+
+        .btn-upload:active {
+            transform: translateY(-1px) scale(0.99);
         }
 
         .btn:disabled {
             opacity: 0.5;
             cursor: not-allowed;
             transform: none !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2) !important;
+        }
+
+        .btn:disabled::before,
+        .btn:disabled::after {
+            display: none;
+        }
+
+        .btn:disabled i {
+            transform: none !important;
         }
 
         textarea {
             width: 100%;
-            padding: 1.25rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--border);
-            border-radius: 12px;
+            padding: 1.5rem 1.75rem;
+            background: rgba(255, 255, 255, 0.06);
+            border: 2px solid rgba(104, 42, 83, 0.3);
+            border-radius: 16px;
             color: var(--text);
             font-family: inherit;
-            font-size: 0.95rem;
+            font-size: 1rem;
             resize: vertical;
-            min-height: 220px;
-            transition: all 0.3s;
-            line-height: 1.7;
+            min-height: 240px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            line-height: 1.8;
+            box-shadow:
+                inset 0 2px 6px rgba(0, 0, 0, 0.15),
+                0 2px 8px rgba(104, 42, 83, 0.1);
+        }
+
+        textarea:hover {
+            border-color: rgba(104, 42, 83, 0.5);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         textarea:focus {
             outline: none;
             border-color: var(--accent);
-            box-shadow: 0 0 0 4px rgba(253, 197, 0, 0.2), 0 0 20px rgba(253, 197, 0, 0.1);
-            background: rgba(255, 255, 255, 0.08);
+            box-shadow:
+                0 0 0 4px rgba(253, 197, 0, 0.25),
+                0 4px 20px rgba(253, 197, 0, 0.15),
+                inset 0 2px 6px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.005);
         }
 
         textarea::placeholder {
             color: var(--text-light);
+            opacity: 0.7;
         }
 
         .btn-center {
@@ -372,13 +527,23 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         @keyframes fadeInDown {
@@ -386,6 +551,7 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -397,6 +563,7 @@
                 opacity: 0;
                 transform: translateY(20px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -404,12 +571,29 @@
         }
 
         .message {
-            padding: 1.25rem 1.5rem;
-            border-radius: 12px;
-            margin-bottom: 1.5rem;
+            padding: 1.5rem 2rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
             display: none;
-            animation: slideIn 0.3s ease-out;
-            font-weight: 500;
+            animation: slideIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            font-weight: 600;
+            font-size: 1.05rem;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            border-width: 2px;
+            border-style: solid;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .message::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 5px;
+            background: currentColor;
+            opacity: 0.8;
         }
 
         .message.show {
@@ -419,23 +603,24 @@
         @keyframes slideIn {
             from {
                 opacity: 0;
-                transform: translateX(-20px);
+                transform: translateX(-30px) translateY(-10px);
             }
+
             to {
                 opacity: 1;
-                transform: translateX(0);
+                transform: translateX(0) translateY(0);
             }
         }
 
         .message-success {
-            background: rgba(16, 185, 129, 0.15);
-            border: 1px solid var(--success);
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.18) 0%, rgba(16, 185, 129, 0.12) 100%);
+            border-color: var(--success);
             color: var(--success);
         }
 
         .message-error {
-            background: rgba(239, 68, 68, 0.15);
-            border: 1px solid var(--danger);
+            background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(239, 68, 68, 0.12) 100%);
+            border-color: var(--danger);
             color: var(--danger);
         }
 
@@ -493,6 +678,7 @@
             background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
             -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             -webkit-mask-composite: xor;
+            mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
             mask-composite: exclude;
         }
 
@@ -574,11 +760,14 @@
             text-shadow: 0 0 10px rgba(253, 197, 0, 0.5);
         }
 
-        .strengths-list, .improvements-list, .suggestions-list {
+        .strengths-list,
+        .improvements-list,
+        .suggestions-list {
             list-style: none;
         }
 
-        .strengths-list li, .improvements-list li {
+        .strengths-list li,
+        .improvements-list li {
             padding: 1rem 1.25rem;
             margin-bottom: 0.75rem;
             border-radius: 12px;
@@ -588,7 +777,8 @@
             transition: all 0.2s;
         }
 
-        .strengths-list li:hover, .improvements-list li:hover {
+        .strengths-list li:hover,
+        .improvements-list li:hover {
             transform: translateX(4px);
         }
 
@@ -614,19 +804,58 @@
         }
 
         .suggestions-list li {
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            background: rgba(104, 42, 83, 0.15);
-            border-radius: 12px;
-            border-left: 4px solid var(--accent);
-            transition: all 0.2s;
-            line-height: 1.7;
+            padding: 1.75rem 2rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, rgba(104, 42, 83, 0.18) 0%, rgba(104, 42, 83, 0.12) 100%);
+            border-radius: 16px;
+            border-left: 5px solid var(--accent);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            line-height: 1.8;
+            box-shadow:
+                0 4px 12px rgba(0, 0, 0, 0.15),
+                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .suggestions-list li::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent), rgba(253, 197, 0, 0.3));
+            transition: width 0.3s ease;
+        }
+
+        .suggestions-list li:hover::before {
+            width: 8px;
         }
 
         .suggestions-list li:hover {
-            background: rgba(104, 42, 83, 0.25);
-            transform: translateX(4px);
-            box-shadow: 0 0 15px rgba(253, 197, 0, 0.2);
+            background: linear-gradient(135deg, rgba(104, 42, 83, 0.25) 0%, rgba(104, 42, 83, 0.18) 100%);
+            transform: translateX(6px) scale(1.01);
+            box-shadow:
+                0 8px 24px rgba(253, 197, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15),
+                0 0 20px rgba(253, 197, 0, 0.15);
+            border-left-color: rgba(253, 197, 0, 0.9);
+        }
+
+        /* Enhanced suggestion content styling */
+        .suggestions-list li strong {
+            color: var(--accent);
+            font-weight: 700;
+            text-shadow: 0 0 8px rgba(253, 197, 0, 0.3);
+        }
+
+        .suggestions-list li em {
+            color: var(--text-muted);
+            font-style: normal;
+            font-size: 0.95em;
         }
 
         .optimization-section {
@@ -648,31 +877,36 @@
         }
 
         .resume-panel {
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.95);
+            border: 2px solid var(--primary);
             border-radius: 16px;
             padding: 2rem;
             transition: all 0.3s;
             display: flex;
             flex-direction: column;
             height: 100%;
+            box-shadow: 0 8px 20px rgba(104, 42, 83, 0.2);
         }
 
         .resume-panel:hover {
             border-color: var(--accent);
-            box-shadow: 0 10px 25px rgba(253, 197, 0, 0.3), 0 0 15px rgba(253, 197, 0, 0.2);
+            box-shadow: 0 12px 30px rgba(253, 197, 0, 0.4), 0 0 20px rgba(253, 197, 0, 0.3);
+            transform: translateY(-2px);
         }
 
         .resume-panel h4 {
             margin-bottom: 1.5rem;
-            color: var(--accent);
+            color: var(--primary);
             font-size: 1.25rem;
             font-weight: 700;
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            text-shadow: 0 0 10px rgba(253, 197, 0, 0.3);
             flex-shrink: 0;
+        }
+
+        .resume-panel h4 i {
+            color: var(--accent);
         }
 
         .resume-panel-header {
@@ -696,21 +930,24 @@
         }
 
         .resume-content {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            font-size: 0.9rem;
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
             line-height: 1.3;
-            color: var(--text);
+            color: #1a1a1a;
             max-height: 600px;
             overflow-y: auto;
             padding: 1.5rem;
-            background: rgba(0, 0, 0, 0.2);
+            background: #ffffff;
+            border: 1px solid rgba(104, 42, 83, 0.2);
             border-radius: 8px;
             flex: 1;
             min-height: 0;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .resume-header-name {
-            font-size: 1.8rem;
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 20pt;
             font-weight: 700;
             color: #000000;
             margin-top: 0;
@@ -721,7 +958,8 @@
         }
 
         .resume-header-title {
-            font-size: 1.3rem;
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
             font-weight: 700;
             color: #000000;
             margin-top: 0;
@@ -731,19 +969,27 @@
         }
 
         .resume-header-contact {
-            font-size: 0.9rem;
-            color: #000000;
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
+            font-weight: 400;
+            color: #FFFFFF;
+            /* White text on colored background */
+            background-color: #000000;
+            /* Default black, will be overridden by template */
             margin-top: 0;
             margin-bottom: 1.2rem;
+            padding: 0.5rem 1rem;
             text-align: center;
             line-height: 1.4;
-            font-weight: 400;
+            border-radius: 0;
         }
 
         .resume-main-section {
-            font-size: 1.05rem;
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 12pt;
             font-weight: 700;
-            color: #000000;  /* Black color instead of maroon */
+            color: #000000;
+            /* Default black */
             margin-top: 0.8rem;
             margin-bottom: 0.4rem;
             padding-bottom: 0.2rem;
@@ -755,10 +1001,71 @@
             margin-top: 0;
         }
 
+        /* Template-specific styles */
+        /* Professional Modern - Blue accents with underlines */
+        .template-professional_modern .resume-main-section {
+            color: #2563eb;
+            border-bottom: 2px solid #2563eb;
+        }
+
+        .template-professional_modern .resume-header-name {
+            border-bottom: 2px solid #2563eb;
+            padding-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-professional_modern .resume-header-contact {
+            background-color: #2563eb;
+            /* Blue background */
+            color: #FFFFFF;
+            /* White text */
+        }
+
+        /* Tech Minimalist - Minimal, no special styling */
+        .template-tech_minimalist .resume-main-section {
+            color: #000000;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .template-tech_minimalist .resume-header-name {
+            border-bottom: none;
+        }
+
+        .template-tech_minimalist .resume-header-contact {
+            background-color: #000000;
+            /* Black background */
+            color: #FFFFFF;
+            /* White text */
+        }
+
+        /* Data Professional - Teal accents with underlines */
+        .template-data_professional .resume-main-section {
+            color: #14b8a6;
+            border-bottom: 2px solid #14b8a6;
+        }
+
+        .template-data_professional .resume-header-name {
+            border-bottom: 3px solid #14b8a6;
+            padding-bottom: 0.3rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .template-data_professional .resume-header-contact {
+            background-color: #14b8a6;
+            /* Teal background */
+            color: #FFFFFF;
+            /* White text */
+        }
+
+        .template-data_professional .resume-category {
+            color: #14b8a6;
+        }
+
         .resume-category {
-            font-size: 0.9rem;
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
             font-weight: 600;
-            color: var(--text);
+            color: #682A53;
             margin-top: 0.3rem;
             margin-bottom: 0.15rem;
             margin-left: 0;
@@ -766,9 +1073,8 @@
         }
 
         .resume-experience-entry {
-            font-size: 0.9rem;
-            font-weight: 700;
-            color: var(--text);
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #1a1a1a;
             margin-top: 0.3rem;
             margin-bottom: 0.15rem;
             margin-left: 0;
@@ -777,9 +1083,11 @@
         }
 
         .resume-project-entry {
-            font-size: 0.9rem;
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
             font-weight: 700;
-            color: #000000;  /* Black color instead of maroon */
+            color: #000000;
+            /* Black color instead of maroon */
             margin-top: 0.3rem;
             margin-bottom: 0.15rem;
             margin-left: 0;
@@ -788,8 +1096,10 @@
         }
 
         .resume-bullet {
-            font-size: 0.85rem;
-            color: var(--text-muted);
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10.5pt;
+            font-weight: 400;
+            color: #2d2d2d;
             margin-left: 0;
             margin-bottom: 0.1rem;
             padding-left: 0;
@@ -804,12 +1114,48 @@
         }
 
         .resume-normal {
-            font-size: 0.9rem;
-            color: var(--text);
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
+            font-weight: 400;
+            color: #1a1a1a;
             margin-top: 0.15rem;
             margin-bottom: 0.15rem;
             line-height: 1.4;
             text-align: left;
+        }
+
+        /* Styles for experience entry parts */
+        .resume-company {
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
+            font-weight: 700;
+        }
+
+        .resume-job-title {
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11pt;
+            font-weight: 400;
+        }
+
+        .resume-date {
+            font-family: 'Calibri', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 10pt;
+            font-weight: 400;
+        }
+
+        /* Highlight for changed content in optimized resume */
+        .resume-changed {
+            background-color: rgba(253, 197, 0, 0.25) !important;
+            /* Yellow highlight with transparency */
+            border-left: 3px solid #FDC500;
+            /* Yellow border on left */
+            padding-left: 0.5rem;
+            margin-left: -0.5rem;
+            transition: background-color 0.2s ease;
+        }
+
+        .resume-changed:hover {
+            background-color: rgba(253, 197, 0, 0.35) !important;
         }
 
         .resume-content::-webkit-scrollbar {
@@ -817,7 +1163,7 @@
         }
 
         .resume-content::-webkit-scrollbar-track {
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(104, 42, 83, 0.1);
             border-radius: 4px;
         }
 
@@ -834,7 +1180,7 @@
             .main-content {
                 grid-template-columns: 1fr;
             }
-            
+
             .comparison-view {
                 grid-template-columns: 1fr;
                 align-items: start;
@@ -893,8 +1239,50 @@
             align-items: center;
             gap: 0.5rem;
         }
+
+        /* Template Carousel Styles */
+        .template-option {
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 0.5rem;
+            border: 2px solid transparent;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .template-option:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .template-option.active {
+            border-color: var(--accent);
+            background: rgba(253, 197, 0, 0.1);
+            box-shadow: 0 0 15px rgba(253, 197, 0, 0.2);
+        }
+
+        .template-preview {
+            height: 80px;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            padding: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .template-name {
+            text-align: center;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .template-option.active .template-name {
+            color: var(--accent);
+        }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="header">
@@ -905,14 +1293,10 @@
                             <!-- Yellow C shape - more pronounced curve -->
                             <path d="M 15 60 
                                      C 15 25, 30 15, 60 15 
-                                     C 90 15, 105 25, 105 60" 
-                                  stroke="#FDC500" 
-                                  stroke-width="14" 
-                                  fill="none" 
-                                  stroke-linecap="round" 
-                                  stroke-linejoin="round"/>
+                                     C 90 15, 105 25, 105 60" stroke="#FDC500" stroke-width="14" fill="none"
+                                stroke-linecap="round" stroke-linejoin="round" />
                             <!-- Yellow circle inside C - positioned in the concave part -->
-                            <circle cx="75" cy="60" r="10" fill="#FDC500"/>
+                            <circle cx="75" cy="60" r="10" fill="#FDC500" />
                         </svg>
                     </div>
                     <div class="logo-text">
@@ -933,35 +1317,50 @@
                 <div class="form-group">
                     <label for="resume-upload">Upload Resume (PDF, DOCX, TXT)</label>
                     <div class="upload-area">
-                        <input type="file" id="resume-upload" accept=".pdf,.docx,.doc,.txt" style="display: none;" onchange="handleResumeUpload(event)">
-                        <button type="button" class="btn btn-upload" onclick="document.getElementById('resume-upload').click()">
+                        <input type="file" id="resume-upload" accept=".pdf,.docx,.doc,.txt" style="display: none;"
+                            onchange="handleResumeUpload(event)">
+                        <button type="button" class="btn btn-upload"
+                            onclick="document.getElementById('resume-upload').click()">
                             <i class="fas fa-cloud-upload-alt"></i> Choose File
                         </button>
                         <div id="resume-filename" class="filename-display" style="display: none;"></div>
                     </div>
                     <div style="margin-top: 1.5rem;">
-                        <label style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Or paste your resume content:</label>
-                        <textarea id="resume-text" placeholder="John Doe&#10;Software Engineer&#10;&#10;EXPERIENCE&#10;Senior Software Engineer at Tech Corp (2020-2024)&#10;- Developed web applications using Python and JavaScript&#10;- Led team of 5 developers&#10;&#10;SKILLS&#10;Python, JavaScript, React, AWS, Docker"></textarea>
+                        <label style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">Or paste your
+                            resume content:</label>
+                        <textarea id="resume-text"
+                            placeholder="John Doe&#10;Software Engineer&#10;&#10;EXPERIENCE&#10;Senior Software Engineer at Tech Corp (2020-2024)&#10;- Developed web applications using Python and JavaScript&#10;- Led team of 5 developers&#10;&#10;SKILLS&#10;Python, JavaScript, React, AWS, Docker"></textarea>
                     </div>
                 </div>
             </div>
 
             <div class="card">
                 <h2><i class="fas fa-file-alt"></i> Job Description</h2>
+                <!-- Template selector moved to bottom -->
                 <div class="form-group">
                     <label for="ai-provider">AI Model for Analysis</label>
-                    <select id="ai-provider" style="padding: 0.875rem 1.25rem; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; cursor: pointer; outline: none; transition: all 0.3s; width: 100%; margin-bottom: 1rem;" onchange="updateProviderStatus()">
-                        <option value="groq" style="background: var(--bg-card); color: var(--text);">Groq (Llama 3.3) - Fast & Cost-effective</option>
-                        <option value="openai" style="background: var(--bg-card); color: var(--text);">OpenAI (GPT-4o Mini) - High Quality</option>
-                        <option value="claude" style="background: var(--bg-card); color: var(--text);">Claude (3.5 Sonnet) - Advanced Reasoning</option>
-                        <option value="gemini" style="background: var(--bg-card); color: var(--text);">Google Gemini (2.5 Flash) - Fast & Multimodal AI</option>
-                        <option value="cohere" style="background: var(--bg-card); color: var(--text);">Cohere (Command R+) - Enterprise AI</option>
+                    <select id="ai-provider"
+                        style="padding: 0.875rem 1.25rem; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; cursor: pointer; outline: none; transition: all 0.3s; width: 100%; margin-bottom: 1rem;"
+                        onchange="updateProviderStatus()">
+                        <option value="groq" style="background: var(--bg-card); color: var(--text);">Groq (Llama 3.3) -
+                            Fast & Cost-effective</option>
+                        <option value="openai" style="background: var(--bg-card); color: var(--text);">OpenAI (GPT-4o
+                            Mini) - High Quality</option>
+                        <option value="claude" style="background: var(--bg-card); color: var(--text);">Claude (3.5
+                            Sonnet) - Advanced Reasoning</option>
+                        <option value="gemini" style="background: var(--bg-card); color: var(--text);">Google Gemini
+                            (2.5 Flash) - Fast & Multimodal AI</option>
+                        <option value="cohere" style="background: var(--bg-card); color: var(--text);">Cohere (Command
+                            R+) - Enterprise AI</option>
                     </select>
-                    <div id="provider-status" style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 6px;"></div>
+                    <div id="provider-status"
+                        style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 6px;">
+                    </div>
                 </div>
                 <div class="form-group">
                     <label for="job-description">Paste Job Description</label>
-                    <textarea id="job-description" placeholder="Senior Software Engineer&#10;&#10;We are looking for a Senior Software Engineer with:&#10;- 5+ years experience in Python and JavaScript&#10;- Experience with React, Node.js, and AWS&#10;- Strong problem-solving skills&#10;- Leadership experience"></textarea>
+                    <textarea id="job-description"
+                        placeholder="Senior Software Engineer&#10;&#10;We are looking for a Senior Software Engineer with:&#10;- 5+ years experience in Python and JavaScript&#10;- Experience with React, Node.js, and AWS&#10;- Strong problem-solving skills&#10;- Leadership experience"></textarea>
                 </div>
             </div>
         </div>
@@ -1001,6 +1400,28 @@
                 <ol id="suggestions-list" class="suggestions-list"></ol>
             </div>
 
+            <!-- ATS Compliance Card -->
+            <div id="ats-analysis-card" style="display: none;" class="analysis-card">
+                <h3><i class="fas fa-check-square" style="color: #FDC500;"></i> ATS Compliance Score</h3>
+                <div id="ats-analysis-content"></div>
+            </div>
+
+            <!-- Intelligent Suggestions Card -->
+            <div id="suggestions-card" style="display: none;" class="analysis-card">
+                <h3><i class="fas fa-magic" style="color: #FDC500;"></i> Intelligent Suggestions</h3>
+                <div id="suggestions-summary" style="margin-bottom: 1rem;"></div>
+                <div id="suggestions-content"></div>
+                <div style="margin-top: 1rem; text-align: center;">
+                    <button class="btn btn-primary" onclick="loadSuggestions()" id="load-suggestions-btn">
+                        <i class="fas fa-sparkles"></i> Generate Smart Suggestions
+                    </button>
+                    <button class="btn btn-secondary" onclick="applyAcceptedSuggestions()" id="apply-suggestions-btn"
+                        style="display: none; margin-left: 0.5rem;">
+                        <i class="fas fa-check-double"></i> Apply Selected
+                    </button>
+                </div>
+            </div>
+
             <div id="optimization-section" class="optimization-section">
                 <div class="btn-center">
                     <button class="btn btn-primary" onclick="optimizeResume()">
@@ -1016,41 +1437,113 @@
                 <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Score Improvement</h3>
                 <div id="score-comparison-content"></div>
             </div>
-            
+
             <!-- Section Breakdown Card -->
             <div id="section-breakdown-card" style="display: none; margin-bottom: 2rem;" class="analysis-card">
                 <h3><i class="fas fa-list-check" style="color: var(--primary);"></i> Section Improvements</h3>
                 <div id="section-breakdown-content"></div>
             </div>
-            
+
             <!-- Additional Suggestions Card (if score < 60%) -->
-            <div id="additional-suggestions-card" style="display: none; margin-bottom: 2rem; border-left: 4px solid var(--warning);" class="analysis-card">
+            <div id="additional-suggestions-card"
+                style="display: none; margin-bottom: 2rem; border-left: 4px solid var(--warning);"
+                class="analysis-card">
                 <h3><i class="fas fa-lightbulb" style="color: var(--warning);"></i> Additional Suggestions</h3>
                 <div id="additional-suggestions-content"></div>
             </div>
-            
+
             <div class="analysis-card">
                 <h3><i class="fas fa-code-branch" style="color: var(--primary);"></i> Before / After Comparison</h3>
-                <div class="comparison-view">
-                    <div class="resume-panel">
+                <div class="comparison-view template-professional_modern">
+                    <div class="resume-panel template-professional_modern" id="original-resume-panel">
                         <h4><i class="fas fa-file-alt"></i> Original Resume</h4>
-                        <div id="original-resume" class="resume-content"></div>
+                        <div id="original-resume" class="resume-content template-professional_modern"></div>
                     </div>
-                    <div class="resume-panel">
+                    <div class="resume-panel template-professional_modern" id="optimized-resume-panel">
                         <div class="resume-panel-header">
                             <h4><i class="fas fa-star"></i> Optimized Resume</h4>
-                            <div class="download-controls" id="download-section" style="display: none;">
-                                <select id="download-format" style="padding: 0.875rem 1.25rem; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border); border-radius: 8px; color: var(--text); font-size: 0.95rem; cursor: pointer; outline: none; transition: all 0.3s;" onchange="this.style.borderColor='var(--accent)'">
-                                    <option value="pdf" style="background: var(--bg-card); color: var(--text);">PDF</option>
-                                    <option value="docx" style="background: var(--bg-card); color: var(--text);">Word (DOCX)</option>
-                                    <option value="txt" style="background: var(--bg-card); color: var(--text);">Text (TXT)</option>
+                        </div>
+                        <div id="optimized-resume" class="resume-content template-professional_modern"></div>
+
+                        <!-- Template Selection & Download Section -->
+                        <div id="download-section"
+                            style="display: none; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+
+                            <!-- Template Carousel -->
+                            <div style="margin-bottom: 1.5rem;">
+                                <h5
+                                    style="margin-bottom: 0.8rem; color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                    Choose Design Style</h5>
+                                <div class="template-carousel"
+                                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                                    <!-- Professional Modern -->
+                                    <div class="template-option active" onclick="selectTemplate('professional_modern')"
+                                        id="tmpl-professional_modern">
+                                        <div class="template-preview"
+                                            style="background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%); border-left: 4px solid #2563eb;">
+                                            <div
+                                                style="height: 4px; width: 40%; background: #2563eb; margin-bottom: 4px;">
+                                            </div>
+                                            <div
+                                                style="height: 2px; width: 70%; background: #e5e7eb; margin-bottom: 2px;">
+                                            </div>
+                                            <div style="height: 2px; width: 60%; background: #e5e7eb;"></div>
+                                        </div>
+                                        <div class="template-name">Professional</div>
+                                    </div>
+
+                                    <!-- Tech Minimalist -->
+                                    <div class="template-option" onclick="selectTemplate('tech_minimalist')"
+                                        id="tmpl-tech_minimalist">
+                                        <div class="template-preview"
+                                            style="background: #ffffff; border: 1px solid #e5e7eb;">
+                                            <div
+                                                style="height: 2px; width: 100%; background: #000000; margin-bottom: 6px;">
+                                            </div>
+                                            <div
+                                                style="height: 2px; width: 80%; background: #e5e7eb; margin-bottom: 2px;">
+                                            </div>
+                                            <div style="height: 2px; width: 60%; background: #e5e7eb;"></div>
+                                        </div>
+                                        <div class="template-name">Minimalist</div>
+                                    </div>
+
+                                    <!-- Data Professional -->
+                                    <div class="template-option" onclick="selectTemplate('data_professional')"
+                                        id="tmpl-data_professional">
+                                        <div class="template-preview"
+                                            style="background: #ffffff; border-top: 4px solid #14b8a6;">
+                                            <div
+                                                style="height: 4px; width: 30%; background: #14b8a6; margin-bottom: 4px; border-radius: 2px;">
+                                            </div>
+                                            <div
+                                                style="height: 2px; width: 70%; background: #e5e7eb; margin-bottom: 2px;">
+                                            </div>
+                                            <div style="height: 2px; width: 50%; background: #e5e7eb;"></div>
+                                        </div>
+                                        <div class="template-name">Data Pro</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Download Controls -->
+                            <div class="download-controls"
+                                style="display: flex; gap: 1rem; align-items: center; justify-content: flex-end;">
+                                <select id="download-format"
+                                    style="padding: 0.875rem 1.25rem; background: #ffffff; border: 2px solid #682A53; border-radius: 8px; color: #1a1a1a; font-size: 0.95rem; font-weight: 600; cursor: pointer; outline: none; transition: all 0.3s; flex: 1;">
+                                    <option value="pdf" style="background: #ffffff; color: #1a1a1a;">PDF Document (.pdf)
+                                    </option>
+                                    <option value="docx" style="background: #ffffff; color: #1a1a1a;">Word Document
+                                        (.docx)</option>
+                                    <option value="txt" style="background: #ffffff; color: #1a1a1a;">Text File (.txt)
+                                    </option>
                                 </select>
-                                <button class="btn btn-download" onclick="downloadOptimizedResume()" id="download-btn">
-                                    <i class="fas fa-download"></i> Download
+                                <button class="btn btn-download" onclick="downloadOptimizedResume()" id="download-btn"
+                                    style="flex: 1;">
+                                    <i class="fas fa-download"></i> Download Resume
                                 </button>
                             </div>
                         </div>
-                        <div id="optimized-resume" class="resume-content"></div>
                     </div>
                 </div>
             </div>
@@ -1058,73 +1551,234 @@
     </div>
 
     <script>
+        // Global variables
         let currentResumeText = '';
         let currentJobDescription = '';
         let currentSuggestions = [];
         let currentOptimizedResumeText = '';
+        let currentOriginalResumeText = '';  // Store original resume text for comparison
         let currentOriginalScore = null;  // Store original match score
+        let currentTemplate = 'professional_modern';  // Default template
+
+        // Store suggestions data
+        let suggestionMap = {};
+        let acceptedSuggestionIds = new Set();
+
+        // Template information
+        const templateInfo = {
+            professional_modern: {
+                name: "Professional Modern",
+                description: "Best for corporate positions, business roles, traditional companies",
+                accent: "#2563eb"
+            },
+            tech_minimalist: {
+                name: "Tech Minimalist",
+                description: "Best for tech companies, startups, ATS-optimized",
+                accent: "#000000"
+            },
+            data_professional: {
+                name: "Data Professional",
+                description: "Best for data analyst/scientist roles, research positions",
+                accent: "#14b8a6"
+            }
+        };
+
+        function updateTemplateInfo() {
+            const templateSelect = document.getElementById('resume-template');
+            const templateInfoDiv = document.getElementById('template-info');
+            if (templateSelect && templateInfoDiv) {
+                currentTemplate = templateSelect.value;
+                const info = templateInfo[currentTemplate];
+                if (info) {
+                    templateInfoDiv.textContent = info.description;
+                }
+                // Apply template class to resume containers
+                applyTemplateStyling();
+            }
+        }
+
+        function applyTemplateStyling() {
+            // Remove all template classes and add current template class
+            const templateClass = `template-${currentTemplate}`;
+            const allTemplateClasses = ['template-professional_modern', 'template-tech_minimalist', 'template-data_professional'];
+
+            // Apply template ONLY to optimized resume (NOT original)
+            const optimizedResume = document.getElementById('optimized-resume');
+            const optimizedPanel = document.getElementById('optimized-resume-panel');
+
+            if (optimizedResume) {
+                allTemplateClasses.forEach(cls => optimizedResume.classList.remove(cls));
+                optimizedResume.classList.add(templateClass);
+            }
+
+            if (optimizedPanel) {
+                allTemplateClasses.forEach(cls => optimizedPanel.classList.remove(cls));
+                optimizedPanel.classList.add(templateClass);
+            }
+
+            // Remove template classes from original resume (keep it unchanged)
+            const originalResume = document.getElementById('original-resume');
+            const originalPanel = document.getElementById('original-resume-panel');
+
+            if (originalResume) {
+                allTemplateClasses.forEach(cls => originalResume.classList.remove(cls));
+            }
+
+            if (originalPanel) {
+                allTemplateClasses.forEach(cls => originalPanel.classList.remove(cls));
+            }
+
+            // Apply to comparison view container (for optimized side only)
+            const comparisonView = document.querySelector('.comparison-view');
+            if (comparisonView) {
+                allTemplateClasses.forEach(cls => comparisonView.classList.remove(cls));
+                comparisonView.classList.add(templateClass);
+            }
+        }
 
         // Function to format contact line with clickable LinkedIn/GitHub links
         function formatContactWithLinks(contactLine) {
             if (!contactLine) return '';
-            
+
             // Regular expression to find LinkedIn and GitHub URLs
             // Matches: LinkedIn: https://linkedin.com/in/username or LinkedIn: linkedin.com/in/username
             // Matches: GitHub: https://github.com/username or GitHub: github.com/username
             const linkedinPattern = /(LinkedIn:\s*)(https?:\/\/)?(www\.)?(linkedin\.com\/[^\s|,;]+)/gi;
             const githubPattern = /(GitHub:\s*)(https?:\/\/)?(www\.)?(github\.com\/[^\s|,;]+)/gi;
-            
+
             let formatted = escapeHtml(contactLine);
-            
+
             // Replace LinkedIn links
             formatted = formatted.replace(linkedinPattern, (match, label, protocol, www, path) => {
                 const url = (protocol || 'https://') + (www || '') + path;
                 return `${label}<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FDC500; text-decoration: underline;">${url}</a>`;
             });
-            
+
             // Replace GitHub links
             formatted = formatted.replace(githubPattern, (match, label, protocol, www, path) => {
                 const url = (protocol || 'https://') + (www || '') + path;
                 return `${label}<a href="${url}" target="_blank" rel="noopener noreferrer" style="color: #FDC500; text-decoration: underline;">${url}</a>`;
             });
-            
+
             return formatted;
+        }
+
+        // Function to highlight differences between original and optimized resume
+        function formatResumeWithHighlights(originalText, optimizedText) {
+            if (!optimizedText) return '';
+            if (!originalText) return formatResumeForDisplay(optimizedText);
+
+            // First, format the optimized resume normally
+            const formattedHtml = formatResumeForDisplay(optimizedText);
+
+            // Split into lines for comparison
+            const originalLines = originalText.split('\n').map(l => l.trim()).filter(l => l);
+            const optimizedLines = optimizedText.split('\n').map(l => l.trim()).filter(l => l);
+
+            // Create a set of original lines for quick lookup
+            const originalLineSet = new Set(originalLines);
+            const originalLineMap = new Map();
+            originalLines.forEach((line) => {
+                const key = line.toLowerCase().substring(0, 50); // Use first 50 chars as key
+                if (!originalLineMap.has(key)) {
+                    originalLineMap.set(key, []);
+                }
+                originalLineMap.get(key).push(line);
+            });
+
+            // Create a map of which optimized lines are changed
+            const changedLineIndices = new Set();
+            optimizedLines.forEach((optLine, optIdx) => {
+                const optKey = optLine.toLowerCase().substring(0, 50);
+                const isExactMatch = originalLineSet.has(optLine);
+                const isSimilarMatch = originalLineMap.has(optKey) &&
+                    originalLineMap.get(optKey).some(origLine => {
+                        // Check if lines are similar (at least 70% word overlap)
+                        const origWords = new Set(origLine.toLowerCase().split(/\s+/));
+                        const optWords = new Set(optLine.toLowerCase().split(/\s+/));
+                        const intersection = new Set([...origWords].filter(x => optWords.has(x)));
+                        const union = new Set([...origWords, ...optWords]);
+                        return intersection.size / union.size > 0.7;
+                    });
+
+                // If line is new or significantly modified, mark it as changed
+                if (!isExactMatch && !isSimilarMatch) {
+                    changedLineIndices.add(optIdx);
+                }
+            });
+
+            // Now, add highlights to the formatted HTML
+            // We'll split the HTML by div tags and add highlights to changed lines
+            const htmlLines = formattedHtml.split('</div>');
+            let highlightedHtml = '';
+            let lineIndex = 0;
+
+            htmlLines.forEach((htmlLine, htmlIdx) => {
+                if (htmlLine.trim()) {
+                    // Check if this line corresponds to a changed line
+                    if (changedLineIndices.has(lineIndex)) {
+                        // Add highlight class to this div
+                        const highlighted = htmlLine.replace(
+                            /<div class="([^"]+)">/,
+                            '<div class="$1 resume-changed" title="Changed from original">'
+                        );
+                        highlightedHtml += highlighted + '</div>';
+                    } else {
+                        highlightedHtml += htmlLine + '</div>';
+                    }
+                    lineIndex++;
+                } else {
+                    highlightedHtml += htmlLine;
+                }
+            });
+
+            return highlightedHtml;
         }
 
         function formatResumeForDisplay(resumeText) {
             if (!resumeText) return '';
-            
-            const mainSections = ['CONTACT', 'PROFESSIONAL SUMMARY', 'SUMMARY', 'OBJECTIVE', 'EXPERIENCE', 
-                                 'WORK EXPERIENCE', 'EDUCATION', 'SKILLS', 'TECHNICAL SKILLS', 'CERTIFICATIONS',
-                                 'PROJECTS', 'ACHIEVEMENTS', 'AWARDS', 'PUBLICATIONS', 'LANGUAGES', 'REFERENCES'];
-            
+
+            const mainSections = ['CONTACT', 'PROFESSIONAL SUMMARY', 'SUMMARY', 'OBJECTIVE', 'EXPERIENCE',
+                'WORK EXPERIENCE', 'EDUCATION', 'SKILLS', 'TECHNICAL SKILLS', 'CERTIFICATIONS',
+                'PROJECTS', 'ACADEMIC PROJECTS', 'SCHOOL PROJECTS', 'PERSONAL PROJECTS',
+                'SIDE PROJECTS', 'PORTFOLIO PROJECTS', 'CAPSTONE PROJECTS', 'RESEARCH PROJECTS',
+                'INDIVIDUAL PROJECTS', 'TEAM PROJECTS', 'GROUP PROJECTS', 'COURSE PROJECTS',
+                'UNIVERSITY PROJECTS', 'COLLEGE PROJECTS', 'ACHIEVEMENTS', 'AWARDS',
+                'PUBLICATIONS', 'LANGUAGES', 'REFERENCES'];
+
+            // Helper function to check if a section is a project section
+            function isProjectSection(sectionText) {
+                return sectionText.toUpperCase().includes('PROJECT');
+            }
+
             const lines = resumeText.split('\n').filter(l => l.trim()); // Remove empty lines
             let html = '';
             let prevType = null;
             let lineIndex = 0;
             let headerProcessed = false;
             let currentSection = null;  // Track current section (EXPERIENCE, PROJECTS, etc.)
-            
+            let contactAdded = false;  // Track if contact info has been added to prevent duplicates
+
             for (let i = 0; i < lines.length; i++) {
                 let line = lines[i].trim();
                 if (!line) continue;
-                
+
                 // Detect header section (first 2-3 lines that are not section headers)
                 // Name is typically first line, Job Title is second, Contact is third
-                if (!headerProcessed && i < 5 && !mainSections.includes(line.toUpperCase()) && 
+                if (!headerProcessed && i < 5 && !mainSections.includes(line.toUpperCase()) &&
                     !line.toUpperCase().includes('SUMMARY') && !line.toUpperCase().includes('EXPERIENCE') &&
                     !line.toUpperCase().includes('SKILLS') && !line.toUpperCase().includes('EDUCATION')) {
-                    
+
                     // Check if it's contact info (has | or location/email/phone/linkedin/github keywords)
-                    const isContactInfo = line.includes('|') || 
-                                         line.toLowerCase().includes('location:') || 
-                                         line.toLowerCase().includes('email:') || 
-                                         line.toLowerCase().includes('phone:') ||
-                                         line.toLowerCase().includes('linkedin:') ||
-                                         line.toLowerCase().includes('github:') ||
-                                         line.toLowerCase().includes('linkedin.com') ||
-                                         line.toLowerCase().includes('github.com');
-                    
+                    const isContactInfo = line.includes('|') ||
+                        line.toLowerCase().includes('location:') ||
+                        line.toLowerCase().includes('email:') ||
+                        line.toLowerCase().includes('phone:') ||
+                        line.toLowerCase().includes('linkedin:') ||
+                        line.toLowerCase().includes('github:') ||
+                        line.toLowerCase().includes('linkedin.com') ||
+                        line.toLowerCase().includes('github.com');
+
                     // First line - Name (if not contact info and not a section header)
                     if (i === 0 && !isContactInfo) {
                         html += `<div class="resume-header-name">${escapeHtml(line)}</div>`;
@@ -1132,23 +1786,26 @@
                     }
                     // Second line - Could be Job Title OR Contact Info
                     else if (i === 1) {
-                        if (isContactInfo) {
+                        if (isContactInfo && !contactAdded) {
                             // Convert LinkedIn and GitHub URLs to clickable links
                             const contactWithLinks = formatContactWithLinks(line);
                             html += `<div class="resume-header-contact">${contactWithLinks}</div>`;
                             prevType = 'header_contact';
+                            contactAdded = true;
                             headerProcessed = true;
-                        } else {
+                        } else if (!isContactInfo) {
                             html += `<div class="resume-header-title">${escapeHtml(line)}</div>`;
                             prevType = 'header_title';
                         }
+                        // If contact info but already added, skip it
                     }
                     // Third line or later - Contact Info (if not already processed)
-                    else if ((i === 2 || i === 3) && isContactInfo && prevType !== 'header_contact') {
+                    else if ((i === 2 || i === 3) && isContactInfo && !contactAdded) {
                         // Convert LinkedIn and GitHub URLs to clickable links
                         const contactWithLinks = formatContactWithLinks(line);
                         html += `<div class="resume-header-contact">${contactWithLinks}</div>`;
                         prevType = 'header_contact';
+                        contactAdded = true;
                         headerProcessed = true;
                     }
                     // If we've seen name and title, and this is not contact, we're done with header
@@ -1166,14 +1823,42 @@
                         if (i >= 3) headerProcessed = true;
                     }
                 }
-                
+
                 // If header is processed, continue with normal processing
                 if (headerProcessed || i >= 5) {
+                    // Skip duplicate contact info lines (if contact was already added in header)
+                    const isContactInfo = line.includes('|') ||
+                        line.toLowerCase().includes('location:') ||
+                        line.toLowerCase().includes('email:') ||
+                        line.toLowerCase().includes('phone:') ||
+                        line.toLowerCase().includes('linkedin:') ||
+                        line.toLowerCase().includes('github:') ||
+                        line.toLowerCase().includes('linkedin.com') ||
+                        line.toLowerCase().includes('github.com');
+
+                    // If this looks like contact info and we've already added it, skip it
+                    if (isContactInfo && contactAdded && i < 10) {
+                        continue;  // Skip this line
+                    }
+
                     // Main section headers (SKILLS, EXPERIENCE, etc.)
-                    if (mainSections.includes(line.toUpperCase()) || (line.toUpperCase() === line && line.split(' ').length <= 3 && !line.endsWith(':'))) {
+                    const lineUpper = line.toUpperCase();
+                    if (mainSections.includes(lineUpper) || (line.toUpperCase() === line && line.split(' ').length <= 3 && !line.endsWith(':'))) {
                         html += `<div class="resume-main-section">${escapeHtml(line)}</div>`;
                         prevType = 'main_section';
-                        currentSection = line.toUpperCase();  // Track current section
+                        // Normalize all project section variations to 'PROJECTS'
+                        if (isProjectSection(lineUpper)) {
+                            currentSection = 'PROJECTS';
+                        } else {
+                            currentSection = lineUpper;
+                        }
+                        headerProcessed = true;
+                    }
+                    // Also check if it's a project section variation (contains "PROJECT")
+                    else if (isProjectSection(line) && (line.toUpperCase() === line || lineUpper === line)) {
+                        html += `<div class="resume-main-section">${escapeHtml(line)}</div>`;
+                        prevType = 'main_section';
+                        currentSection = 'PROJECTS';  // Normalize to 'PROJECTS'
                         headerProcessed = true;
                     }
                     // Category headers (Data Engineering:, Cloud & Big Data:, etc.)
@@ -1199,12 +1884,12 @@
                             const isMetadata = /^(technologies|status|duration|date|tools|stack):/i.test(line);
                             // Check if it looks like a project name (not too long, doesn't have common words)
                             const looksLikeProjectName = (
-                                !line.endsWith(':') && 
+                                !line.endsWith(':') &&
                                 !isMetadata &&
                                 line.split(' ').length <= 5 &&  // Project names are usually short
                                 !/developed|built|created|designed|implemented/i.test(line)  // Not a description
                             );
-                            if (line.includes('|') || 
+                            if (line.includes('|') ||
                                 (prevType === 'main_section' && looksLikeProjectName) ||
                                 (prevType === 'bullet' && looksLikeProjectName) ||  // New project after bullets
                                 (prevType === 'project_entry' && line.includes('|'))) {
@@ -1225,7 +1910,31 @@
                     }
                     // Experience entry: Contains "|" and date patterns (Company, Location | Dates | Job Title)
                     else if (line.includes('|') && (/\d{4}|\b(Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s+\d{4}/i.test(line) || prevType === 'main_section') && !line.match(/^[•\-\*·]\s/)) {
-                        html += `<div class="resume-experience-entry">${escapeHtml(line)}</div>`;
+                        // Parse experience entry to style parts differently
+                        // Format: "Company, Location | Dates | Job Title"
+                        const parts = line.split('|').map(p => p.trim());
+                        let formattedLine = '';
+
+                        if (parts.length >= 3) {
+                            // Company and Location (11pt Bold)
+                            formattedLine += `<span class="resume-company">${escapeHtml(parts[0])}</span>`;
+                            formattedLine += ` <span style="font-size: 10pt; font-weight: 400;">|</span> `;
+                            // Dates (10pt Regular)
+                            formattedLine += `<span class="resume-date">${escapeHtml(parts[1])}</span>`;
+                            formattedLine += ` <span style="font-size: 10pt; font-weight: 400;">|</span> `;
+                            // Job Title (11pt Regular)
+                            formattedLine += `<span class="resume-job-title">${escapeHtml(parts[2])}</span>`;
+                        } else if (parts.length === 2) {
+                            // Fallback: if only 2 parts, assume first is company, second is dates
+                            formattedLine += `<span class="resume-company">${escapeHtml(parts[0])}</span>`;
+                            formattedLine += ` <span style="font-size: 10pt; font-weight: 400;">|</span> `;
+                            formattedLine += `<span class="resume-date">${escapeHtml(parts[1])}</span>`;
+                        } else {
+                            // Fallback: just use the line as is with bold
+                            formattedLine = `<span class="resume-company">${escapeHtml(line)}</span>`;
+                        }
+
+                        html += `<div class="resume-experience-entry">${formattedLine}</div>`;
                         prevType = 'experience_entry';
                         headerProcessed = true;
                     }
@@ -1244,7 +1953,7 @@
                     }
                 }
             }
-            
+
             return html;
         }
 
@@ -1266,20 +1975,20 @@
         function displayScoreComparison(comparison) {
             const card = document.getElementById('score-comparison-card');
             const content = document.getElementById('score-comparison-content');
-            
+
             const originalScore = comparison.original_score || 0;
             const newScore = comparison.new_score || 0;
             const improvement = comparison.improvement || 0;
             const improvementPercent = comparison.improvement_percent || 0;
             const status = comparison.status || 'no_change';
             const statusMessage = comparison.status_message || 'No Change';
-            
+
             // Determine color based on status
             let statusColor = '#10b981'; // Green for improvement
             if (status === 'no_change') statusColor = '#6b7280'; // Gray
             else if (status === 'decreased') statusColor = '#ef4444'; // Red
             else if (status === 'minor_improvement') statusColor = '#f59e0b'; // Yellow
-            
+
             const html = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
                     <div>
@@ -1307,7 +2016,7 @@
                     ${improvementPercent > 0 ? `<div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.5rem;">${improvementPercent.toFixed(1)}% relative improvement</div>` : ''}
                 </div>
             `;
-            
+
             content.innerHTML = html;
             card.style.display = 'block';
         }
@@ -1315,15 +2024,15 @@
         function displaySectionBreakdown(breakdown) {
             const card = document.getElementById('section-breakdown-card');
             const content = document.getElementById('section-breakdown-content');
-            
+
             const sectionsImproved = breakdown.sections_improved || 0;
             const improvements = breakdown.improvements || [];
-            
+
             if (improvements.length === 0) {
                 card.style.display = 'none';
                 return;
             }
-            
+
             let html = `
                 <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; border-left: 4px solid #10b981;">
                     <div style="font-size: 1.1rem; font-weight: 600; color: #10b981; margin-bottom: 0.25rem;">
@@ -1332,7 +2041,7 @@
                 </div>
                 <div style="display: flex; flex-direction: column; gap: 1rem;">
             `;
-            
+
             improvements.forEach(imp => {
                 html += `
                     <div style="padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 3px solid #FDC500;">
@@ -1350,7 +2059,7 @@
                     </div>
                 `;
             });
-            
+
             html += '</div>';
             content.innerHTML = html;
             card.style.display = 'block';
@@ -1359,16 +2068,16 @@
         function displayAdditionalSuggestions(additional) {
             const card = document.getElementById('additional-suggestions-card');
             const content = document.getElementById('additional-suggestions-content');
-            
+
             const provider = additional.provider || 'alternative provider';
             const suggestions = additional.suggestions || [];
             const message = additional.message || 'Additional suggestions:';
-            
+
             if (suggestions.length === 0) {
                 card.style.display = 'none';
                 return;
             }
-            
+
             let html = `
                 <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(245, 158, 11, 0.1); border-radius: 8px;">
                     <div style="font-size: 0.95rem; color: var(--text);">
@@ -1377,7 +2086,7 @@
                 </div>
                 <ul style="list-style: none; padding: 0; margin: 0;">
             `;
-            
+
             suggestions.forEach((suggestion, index) => {
                 html += `
                     <li style="padding: 0.75rem; margin-bottom: 0.5rem; background: rgba(255,255,255,0.05); border-radius: 6px; border-left: 3px solid var(--warning);">
@@ -1386,7 +2095,7 @@
                     </li>
                 `;
             });
-            
+
             html += '</ul>';
             content.innerHTML = html;
             card.style.display = 'block';
@@ -1399,7 +2108,7 @@
             const filenameEl = document.getElementById('resume-filename');
             filenameEl.innerHTML = `<i class="fas fa-file"></i> ${file.name}`;
             filenameEl.style.display = 'inline-flex';
-            
+
             document.getElementById('loading').classList.add('show');
             document.getElementById('loading').querySelector('p').textContent = 'Uploading and parsing resume...';
 
@@ -1416,11 +2125,16 @@
                 document.getElementById('loading').classList.remove('show');
 
                 if (data.success) {
-                    document.getElementById('resume-text').value = data.resume_text;
+                    const resumeText = data.resume_text || '';
+                    document.getElementById('resume-text').value = resumeText;
+                    // Update global variable
+                    currentResumeText = resumeText;
                     showMessage('Resume uploaded and parsed successfully!', 'success');
+                    console.log('Resume uploaded successfully, length:', resumeText.length);
                 } else {
                     showMessage('Error: ' + (data.error || 'Failed to parse resume'), 'error');
                     filenameEl.style.display = 'none';
+                    console.error('Upload error:', data.error);
                 }
             } catch (error) {
                 document.getElementById('loading').classList.remove('show');
@@ -1460,7 +2174,7 @@
             const select = document.getElementById('ai-provider');
             const statusDiv = document.getElementById('provider-status');
             const selectedProvider = select.value;
-            
+
             const providerInfo = {
                 'groq': { name: 'Groq', key: 'GROQ_API_KEY' },
                 'openai': { name: 'OpenAI', key: 'OPENAI_API_KEY' },
@@ -1468,7 +2182,7 @@
                 'gemini': { name: 'Gemini', key: 'GEMINI_API_KEY' },
                 'cohere': { name: 'Cohere', key: 'COHERE_API_KEY' }
             };
-            
+
             const info = providerInfo[selectedProvider] || { name: selectedProvider, key: 'API_KEY' };
             statusDiv.innerHTML = `<i class="fas fa-info-circle"></i> Using ${info.name}. Set ${info.key} environment variable if not configured.`;
         }
@@ -1477,14 +2191,22 @@
         window.addEventListener('DOMContentLoaded', loadProviders);
 
         async function analyzeResume() {
+            // Get resume text from textarea or use currentResumeText if set
             let resumeText = document.getElementById('resume-text').value.trim();
+            if (!resumeText && typeof currentResumeText !== 'undefined' && currentResumeText) {
+                resumeText = currentResumeText;
+            }
+
             const jobDescription = document.getElementById('job-description').value.trim();
             const provider = document.getElementById('ai-provider').value;
 
             if (!resumeText || !jobDescription) {
                 showMessage('Please upload/paste resume and enter job description', 'error');
+                console.error('Missing data:', { resumeText: !!resumeText, jobDescription: !!jobDescription });
                 return;
             }
+
+            console.log('Analyzing resume...', { resumeLength: resumeText.length, jobLength: jobDescription.length });
 
             currentResumeText = resumeText;
             currentJobDescription = jobDescription;
@@ -1514,16 +2236,122 @@
 
                 displayAnalysisResults(data);
 
+                // Display ATS analysis if available
+                if (data.ats_analysis) {
+                    displayATSAnalysis(data.ats_analysis);
+                }
+
+                // Show suggestions card (user can load suggestions on demand)
+                document.getElementById('suggestions-card').style.display = 'block';
+
             } catch (error) {
                 document.getElementById('loading').classList.remove('show');
                 showMessage('Error analyzing resume: ' + error.message, 'error');
             }
         }
 
+        function displayATSAnalysis(atsData) {
+            const card = document.getElementById('ats-analysis-card');
+            const content = document.getElementById('ats-analysis-content');
+
+            if (!atsData || !atsData.ats_score) {
+                card.style.display = 'none';
+                return;
+            }
+
+            const score = atsData.ats_score;
+            const grade = atsData.ats_grade || 'N/A';
+            const status = atsData.ats_status || 'Unknown';
+            const summary = atsData.summary || {};
+            const recommendations = atsData.recommendations || [];
+
+            // Determine color based on score
+            let scoreColor = '#ef4444'; // Red
+            if (score >= 80) scoreColor = '#10b981'; // Green
+            else if (score >= 70) scoreColor = '#3b82f6'; // Blue
+            else if (score >= 60) scoreColor = '#f59e0b'; // Yellow
+            else if (score >= 50) scoreColor = '#f97316'; // Orange
+
+            let html = `
+                <div style="text-align: center; padding: 1.5rem; background: rgba(104, 42, 83, 0.1); border-radius: 12px; margin-bottom: 1rem;">
+                    <div style="font-size: 2.5rem; font-weight: 700; color: ${scoreColor}; margin-bottom: 0.5rem;">
+                        ${score}%
+                    </div>
+                    <div style="font-size: 1.5rem; font-weight: 600; color: ${scoreColor}; margin-bottom: 0.25rem;">
+                        Grade: ${grade}
+                    </div>
+                    <div style="font-size: 1rem; color: var(--text-muted);">
+                        ${status}
+                    </div>
+                </div>
+            `;
+
+            // Summary stats
+            if (summary.required_keywords_total > 0) {
+                const requiredPct = ((summary.required_keywords_found || 0) / summary.required_keywords_total * 100).toFixed(1);
+                html += `
+                    <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                        <div style="font-weight: 600; color: var(--text); margin-bottom: 0.5rem;">
+                            <i class="fas fa-keywords" style="color: #FDC500;"></i> Keyword Coverage
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-muted);">Required Keywords:</span>
+                            <span style="color: var(--text); font-weight: 600;">${summary.required_keywords_found || 0} / ${summary.required_keywords_total}</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                            <div style="width: ${requiredPct}%; height: 100%; background: ${requiredPct >= 70 ? '#10b981' : requiredPct >= 50 ? '#f59e0b' : '#ef4444'}; transition: width 0.3s;"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                            ${requiredPct}% coverage
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Recommendations
+            if (recommendations.length > 0) {
+                html += `
+                    <div style="margin-top: 1rem;">
+                        <div style="font-weight: 600; color: var(--text); margin-bottom: 0.75rem;">
+                            <i class="fas fa-list-check" style="color: #FDC500;"></i> Top Recommendations
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                `;
+
+                recommendations.slice(0, 5).forEach((rec, idx) => {
+                    // Handle both object and string formats
+                    const recObj = typeof rec === 'string' ? { message: rec, category: 'General', priority: 'medium' } : rec;
+                    const priority = recObj.priority || 'low';
+                    const category = recObj.category || 'General';
+                    const message = recObj.message || recObj || '';
+                    const priorityColor = priority === 'high' ? '#ef4444' : priority === 'medium' ? '#f59e0b' : '#3b82f6';
+                    html += `
+                        <div style="padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 3px solid ${priorityColor};">
+                            <div style="display: flex; align-items: start; gap: 0.5rem;">
+                                <span style="color: ${priorityColor}; font-weight: 600; min-width: 60px; font-size: 0.85rem; text-transform: uppercase;">${priority}</span>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">${category}</div>
+                                    <div style="color: var(--text);">${message}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+            card.style.display = 'block';
+        }
+
         function displayAnalysisResults(data) {
             const score = data.match_score;
             currentOriginalScore = score;  // Store original score for comparison
-            
+
             const scoreCircle = document.getElementById('score-circle');
             const scoreValue = document.getElementById('score-value');
             const scoreMessage = document.getElementById('score-message');
@@ -1557,17 +2385,17 @@
             }
 
             const strengthsList = document.getElementById('strengths-list');
-            strengthsList.innerHTML = data.strengths.map(s => 
+            strengthsList.innerHTML = data.strengths.map(s =>
                 `<li><i class="fas fa-check"></i> <span>${s}</span></li>`
             ).join('');
 
             const improvementsList = document.getElementById('improvements-list');
-            improvementsList.innerHTML = data.improvements_needed.map(i => 
+            improvementsList.innerHTML = data.improvements_needed.map(i =>
                 `<li><i class="fas fa-exclamation-circle"></i> <span>${i}</span></li>`
             ).join('');
 
             const suggestionsList = document.getElementById('suggestions-list');
-            suggestionsList.innerHTML = data.content_suggestions.map((s, idx) => 
+            suggestionsList.innerHTML = data.content_suggestions.map((s, idx) =>
                 `<li><strong>${idx + 1}.</strong> ${s}</li>`
             ).join('');
 
@@ -1581,11 +2409,414 @@
 
             document.getElementById('results').style.display = 'block';
             document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'start' });
-            
+
             // Show provider info if available
             if (data.provider || data.analysis?.provider) {
                 const providerName = data.provider || data.analysis?.provider || 'selected model';
                 showMessage(`Resume analyzed using ${providerName}!`, 'success');
+            }
+        }
+
+        function displayATSAnalysis(atsData) {
+            const card = document.getElementById('ats-analysis-card');
+            const content = document.getElementById('ats-analysis-content');
+
+            if (!atsData || !atsData.ats_score) {
+                card.style.display = 'none';
+                return;
+            }
+
+            const score = atsData.ats_score;
+            const grade = atsData.ats_grade || 'N/A';
+            const status = atsData.ats_status || 'Unknown';
+            const summary = atsData.summary || {};
+            const recommendations = atsData.recommendations || [];
+
+            // Determine color based on score
+            let scoreColor = '#ef4444'; // Red
+            if (score >= 80) scoreColor = '#10b981'; // Green
+            else if (score >= 70) scoreColor = '#3b82f6'; // Blue
+            else if (score >= 60) scoreColor = '#f59e0b'; // Yellow
+            else if (score >= 50) scoreColor = '#f97316'; // Orange
+
+            let html = `
+                <div style="text-align: center; padding: 1.5rem; background: rgba(104, 42, 83, 0.1); border-radius: 12px; margin-bottom: 1rem;">
+                    <div style="font-size: 2.5rem; font-weight: 700; color: ${scoreColor}; margin-bottom: 0.5rem;">
+                        ${score}%
+                    </div>
+                    <div style="font-size: 1.5rem; font-weight: 600; color: ${scoreColor}; margin-bottom: 0.25rem;">
+                        Grade: ${grade}
+                    </div>
+                    <div style="font-size: 1rem; color: var(--text-muted);">
+                        ${status}
+                    </div>
+                </div>
+            `;
+
+            // Summary stats
+            if (summary.required_keywords_total > 0) {
+                const requiredPct = ((summary.required_keywords_found || 0) / summary.required_keywords_total * 100).toFixed(1);
+                html += `
+                    <div style="margin-bottom: 1rem; padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px;">
+                        <div style="font-weight: 600; color: var(--text); margin-bottom: 0.5rem;">
+                            <i class="fas fa-keywords" style="color: #FDC500;"></i> Keyword Coverage
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
+                            <span style="color: var(--text-muted);">Required Keywords:</span>
+                            <span style="color: var(--text); font-weight: 600;">${summary.required_keywords_found || 0} / ${summary.required_keywords_total}</span>
+                        </div>
+                        <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; overflow: hidden;">
+                            <div style="width: ${requiredPct}%; height: 100%; background: ${requiredPct >= 70 ? '#10b981' : requiredPct >= 50 ? '#f59e0b' : '#ef4444'}; transition: width 0.3s;"></div>
+                        </div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem;">
+                            ${requiredPct}% coverage
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Recommendations
+            if (recommendations.length > 0) {
+                html += `
+                    <div style="margin-top: 1rem;">
+                        <div style="font-weight: 600; color: var(--text); margin-bottom: 0.75rem;">
+                            <i class="fas fa-list-check" style="color: #FDC500;"></i> Top Recommendations
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                `;
+
+                recommendations.slice(0, 5).forEach((rec, idx) => {
+                    const priorityColor = rec.priority === 'high' ? '#ef4444' : rec.priority === 'medium' ? '#f59e0b' : '#3b82f6';
+                    const message = typeof rec === 'string' ? rec : rec.message;
+                    const category = rec.category || 'General';
+                    const priority = rec.priority || 'low';
+                    html += `
+                        <div style="padding: 0.75rem; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 3px solid ${priorityColor};">
+                            <div style="display: flex; align-items: start; gap: 0.5rem;">
+                                <span style="color: ${priorityColor}; font-weight: 600; min-width: 60px; font-size: 0.85rem; text-transform: uppercase;">${priority}</span>
+                                <div style="flex: 1;">
+                                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">${category}</div>
+                                    <div style="color: var(--text);">${message}</div>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                        </div>
+                    </div>
+                `;
+            }
+
+            content.innerHTML = html;
+            card.style.display = 'block';
+        }
+
+        // Suggestions data variables already declared in global scope above
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function loadSuggestions() {
+            const resumeText = document.getElementById('resume-text').value.trim();
+            const jobDescription = document.getElementById('job-description').value.trim();
+            const provider = document.getElementById('ai-provider').value;
+
+            if (!resumeText || !jobDescription) {
+                showMessage('Please provide resume and job description first', 'error');
+                return;
+            }
+
+            const btn = document.getElementById('load-suggestions-btn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating Suggestions...';
+
+            try {
+                const response = await fetch('/api/suggestions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        resume_text: resumeText,
+                        job_description: jobDescription,
+                        provider: provider
+                    })
+                });
+
+                const data = await response.json();
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sparkles"></i> Generate Smart Suggestions';
+
+                if (!data.success) {
+                    showMessage('Error: ' + (data.error || 'Failed to generate suggestions'), 'error');
+                    return;
+                }
+
+                currentSuggestions = data.suggestions || [];
+                suggestionMap = {};
+                currentSuggestions.forEach(sug => {
+                    suggestionMap[sug.id] = sug;
+                });
+
+                displaySuggestions(data);
+                showMessage(`Generated ${data.summary.total} suggestions!`, 'success');
+
+            } catch (error) {
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fas fa-sparkles"></i> Generate Smart Suggestions';
+                showMessage('Error loading suggestions: ' + error.message, 'error');
+            }
+        }
+
+        function displaySuggestions(data) {
+            const content = document.getElementById('suggestions-content');
+            const summary = document.getElementById('suggestions-summary');
+            const suggestions = data.suggestions || [];
+            const summaryData = data.summary || {};
+
+            // Display summary
+            summary.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">${summaryData.total || 0}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Total Suggestions</div>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(16, 185, 129, 0.1); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #10b981;">${summaryData.auto_applied || 0}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Auto-Applied</div>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(251, 191, 36, 0.1); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #fbbf24;">${summaryData.medium_confidence || 0}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Need Review</div>
+                    </div>
+                    <div style="padding: 1rem; background: rgba(59, 130, 246, 0.1); border-radius: 8px; text-align: center;">
+                        <div style="font-size: 1.5rem; font-weight: 700; color: #3b82f6;">${summaryData.needs_info || 0}</div>
+                        <div style="font-size: 0.85rem; color: var(--text-muted);">Need Info</div>
+                    </div>
+                </div>
+            `;
+
+            // Group suggestions by type
+            const highConf = suggestions.filter(s => s.type === 'high');
+            const mediumConf = suggestions.filter(s => s.type === 'medium');
+            const needsInfo = suggestions.filter(s => s.type === 'needs_info');
+
+            let html = '';
+
+            // High confidence (auto-applied, but can be reviewed)
+            if (highConf.length > 0) {
+                html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="color: #10b981; margin-bottom: 1rem;">
+                            <i class="fas fa-check-circle"></i> High Confidence (Auto-Applied)
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                `;
+                highConf.slice(0, 10).forEach(sug => {
+                    html += createSuggestionHTML(sug, true);
+                });
+                html += '</div></div>';
+            }
+
+            // Medium confidence (need approval)
+            if (mediumConf.length > 0) {
+                html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="color: #fbbf24; margin-bottom: 1rem;">
+                            <i class="fas fa-exclamation-circle"></i> Medium Confidence (Review Needed)
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                `;
+                mediumConf.slice(0, 15).forEach(sug => {
+                    html += createSuggestionHTML(sug, false);
+                });
+                html += '</div></div>';
+            }
+
+            // Needs info
+            if (needsInfo.length > 0) {
+                html += `
+                    <div style="margin-bottom: 2rem;">
+                        <h4 style="color: #3b82f6; margin-bottom: 1rem;">
+                            <i class="fas fa-question-circle"></i> Needs Information
+                        </h4>
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+                `;
+                needsInfo.slice(0, 10).forEach(sug => {
+                    html += createSuggestionHTML(sug, false, true);
+                });
+                html += '</div></div>';
+            }
+
+            content.innerHTML = html;
+            document.getElementById('apply-suggestions-btn').style.display = acceptedSuggestionIds.size > 0 ? 'inline-block' : 'none';
+        }
+
+        function createSuggestionHTML(sug, isAutoApplied, isNeedsInfo = false) {
+            const isAccepted = acceptedSuggestionIds.has(sug.id);
+            const typeColor = sug.type === 'high' ? '#10b981' : sug.type === 'medium' ? '#fbbf24' : '#3b82f6';
+            const impactStars = '★'.repeat(sug.impact_score || 1) + '☆'.repeat(5 - (sug.impact_score || 1));
+
+            let html = `
+                <div id="sug-${sug.id}" style="padding: 1rem; background: rgba(255,255,255,0.05); border-radius: 8px; border-left: 4px solid ${typeColor}; ${isAccepted ? 'background: rgba(16, 185, 129, 0.15);' : ''}">
+                    <div style="display: flex; justify-content: space-between; align-items: start; gap: 1rem;">
+                        <div style="flex: 1;">
+                            <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                                <span style="font-size: 0.75rem; padding: 0.25rem 0.5rem; background: ${typeColor}20; color: ${typeColor}; border-radius: 4px; text-transform: uppercase; font-weight: 600;">
+                                    ${sug.category || 'general'}
+                                </span>
+                                <span style="font-size: 0.75rem; color: var(--text-muted);">
+                                    ${impactStars} Impact
+                                </span>
+                                ${isAutoApplied ? '<span style="font-size: 0.75rem; color: #10b981;"><i class="fas fa-check"></i> Auto-applied</span>' : ''}
+                            </div>
+                            
+                            <div style="margin-bottom: 0.5rem;">
+                                <div style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.25rem;">
+                                    <span style="text-decoration: line-through; opacity: 0.7;">${escapeHtml(sug.original_text || '')}</span>
+                                </div>
+                                <div style="color: #FDC500; font-weight: 600; font-size: 1rem;">
+                                    ${escapeHtml(sug.suggested_text || '')}
+                                </div>
+                            </div>
+                            
+                            ${sug.reasoning ? `
+                                <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.5rem; font-style: italic;">
+                                    <i class="fas fa-lightbulb"></i> ${escapeHtml(sug.reasoning)}
+                                </div>
+                            ` : ''}
+                            
+                            ${isNeedsInfo && sug.alternatives ? `
+                                <div style="margin-top: 0.5rem;">
+                                    <div style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.25rem;">Choose value:</div>
+                                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                        ${sug.alternatives.map(alt => `
+                                            <button onclick="selectAlternative('${sug.id}', '${escapeHtml(alt)}')" 
+                                                    style="padding: 0.25rem 0.75rem; background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; border-radius: 4px; color: #3b82f6; cursor: pointer; font-size: 0.85rem;">
+                                                ${escapeHtml(alt)}
+                                            </button>
+                                        `).join('')}
+                                        <input type="text" id="custom-${sug.id}" placeholder="Custom" 
+                                               style="padding: 0.25rem 0.5rem; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 4px; color: var(--text); width: 100px; font-size: 0.85rem;">
+                                        <button onclick="setCustomValue('${sug.id}')" 
+                                                style="padding: 0.25rem 0.5rem; background: rgba(59, 130, 246, 0.2); border: 1px solid #3b82f6; border-radius: 4px; color: #3b82f6; cursor: pointer; font-size: 0.85rem;">
+                                            Set
+                                        </button>
+                                    </div>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            ${!isAutoApplied ? `
+                                <button onclick="toggleSuggestion('${sug.id}')" 
+                                        style="padding: 0.5rem 1rem; background: ${isAccepted ? '#10b981' : 'rgba(255,255,255,0.1)'}; border: 1px solid ${isAccepted ? '#10b981' : 'rgba(255,255,255,0.2)'}; border-radius: 6px; color: ${isAccepted ? '#fff' : 'var(--text)'}; cursor: pointer;">
+                                    <i class="fas fa-${isAccepted ? 'check' : 'plus'}"></i> ${isAccepted ? 'Accepted' : 'Accept'}
+                                </button>
+                            ` : ''}
+                            <button onclick="rejectSuggestion('${sug.id}')" 
+                                    style="padding: 0.5rem 1rem; background: rgba(239, 68, 68, 0.1); border: 1px solid #ef4444; border-radius: 6px; color: #ef4444; cursor: pointer;">
+                                <i class="fas fa-times"></i> Reject
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            `;
+            return html;
+        }
+
+        function toggleSuggestion(sugId) {
+            if (acceptedSuggestionIds.has(sugId)) {
+                acceptedSuggestionIds.delete(sugId);
+            } else {
+                acceptedSuggestionIds.add(sugId);
+            }
+            updateSuggestionUI(sugId);
+            document.getElementById('apply-suggestions-btn').style.display = acceptedSuggestionIds.size > 0 ? 'inline-block' : 'none';
+        }
+
+        function rejectSuggestion(sugId) {
+            acceptedSuggestionIds.delete(sugId);
+            const element = document.getElementById(`sug-${sugId}`);
+            if (element) {
+                element.style.opacity = '0.5';
+                element.style.textDecoration = 'line-through';
+            }
+            document.getElementById('apply-suggestions-btn').style.display = acceptedSuggestionIds.size > 0 ? 'inline-block' : 'none';
+        }
+
+        function updateSuggestionUI(sugId) {
+            const element = document.getElementById(`sug-${sugId}`);
+            if (element) {
+                const isAccepted = acceptedSuggestionIds.has(sugId);
+                element.style.background = isAccepted ? 'rgba(16, 185, 129, 0.15)' : 'rgba(255,255,255,0.05)';
+                const btn = element.querySelector('button');
+                if (btn) {
+                    btn.innerHTML = `<i class="fas fa-${isAccepted ? 'check' : 'plus'}"></i> ${isAccepted ? 'Accepted' : 'Accept'}`;
+                    btn.style.background = isAccepted ? '#10b981' : 'rgba(255,255,255,0.1)';
+                    btn.style.color = isAccepted ? '#fff' : 'var(--text)';
+                }
+            }
+        }
+
+        function selectAlternative(sugId, value) {
+            if (suggestionMap[sugId]) {
+                const original = suggestionMap[sugId].original_text;
+                suggestionMap[sugId].suggested_text = original.replace(/\?/, value);
+                suggestionMap[sugId].confidence = 0.7; // Increased confidence after user input
+                displaySuggestions({ suggestions: currentSuggestions, summary: { total: currentSuggestions.length } });
+            }
+        }
+
+        function setCustomValue(sugId) {
+            const input = document.getElementById(`custom-${sugId}`);
+            if (input && input.value) {
+                selectAlternative(sugId, input.value);
+            }
+        }
+
+        async function applyAcceptedSuggestions() {
+            if (acceptedSuggestionIds.size === 0) {
+                showMessage('No suggestions selected', 'error');
+                return;
+            }
+
+            const resumeText = document.getElementById('resume-text').value.trim();
+            const acceptedIds = Array.from(acceptedSuggestionIds);
+
+            try {
+                const response = await fetch('/api/apply-suggestions', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        resume_text: resumeText,
+                        accepted_suggestions: acceptedIds,
+                        suggestion_map: suggestionMap
+                    })
+                });
+
+                const data = await response.json();
+
+                if (!data.success) {
+                    showMessage('Error: ' + (data.error || 'Failed to apply suggestions'), 'error');
+                    return;
+                }
+
+                // Update resume text
+                document.getElementById('resume-text').value = data.updated_resume;
+                currentResumeText = data.updated_resume;
+
+                showMessage(`Applied ${data.applied_count} suggestions successfully!`, 'success');
+
+                // Clear accepted suggestions
+                acceptedSuggestionIds.clear();
+                document.getElementById('apply-suggestions-btn').style.display = 'none';
+
+            } catch (error) {
+                showMessage('Error applying suggestions: ' + error.message, 'error');
             }
         }
 
@@ -1601,10 +2832,42 @@
                 return;
             }
 
-            // If no suggestions, get them from the displayed list
+            // If no suggestions, get them from the displayed list or from analysis
             if (!currentSuggestions || currentSuggestions.length === 0) {
+                // Try to get from suggestions list (intelligent suggestions)
                 const suggestionsList = document.querySelectorAll('#suggestions-list li');
-                currentSuggestions = Array.from(suggestionsList).map(li => li.textContent.trim());
+                if (suggestionsList.length > 0) {
+                    // Extract suggestion text from the list items
+                    currentSuggestions = Array.from(suggestionsList).map(li => {
+                        const text = li.textContent.trim();
+                        // If it's a structured suggestion, try to extract the suggested text
+                        // Format might be: "Original text → Suggested text" or just "Suggested text"
+                        if (text.includes('→') || text.includes('->')) {
+                            const parts = text.split(/→|->/);
+                            return parts.length > 1 ? parts[1].trim() : text;
+                        }
+                        return text;
+                    });
+                } else {
+                    // Fallback: get from content suggestions if available
+                    const suggestionsEl = document.getElementById('suggestions-list');
+                    if (suggestionsEl && suggestionsEl.dataset.suggestions) {
+                        try {
+                            const storedSuggestions = JSON.parse(suggestionsEl.dataset.suggestions);
+                            if (Array.isArray(storedSuggestions)) {
+                                currentSuggestions = storedSuggestions.map(s => {
+                                    if (typeof s === 'string') return s;
+                                    if (s.suggested_text) return s.suggested_text;
+                                    if (s.suggestion) return s.suggestion;
+                                    if (s.text) return s.text;
+                                    return String(s);
+                                });
+                            }
+                        } catch (e) {
+                            console.warn('Could not parse stored suggestions:', e);
+                        }
+                    }
+                }
             }
 
             console.log('Optimizing resume...', {
@@ -1628,7 +2891,8 @@
                         job_description: currentJobDescription,
                         suggestions: currentSuggestions,
                         provider: document.getElementById('ai-provider').value,
-                        original_score: currentOriginalScore  // Pass original score for comparison
+                        original_score: currentOriginalScore,  // Pass original score for comparison
+                        template: currentTemplate  // Pass selected template
                     })
                 });
 
@@ -1644,25 +2908,40 @@
 
                 // Store the original text for download
                 currentOptimizedResumeText = data.optimized_resume || '';
-                
+
                 // Display score comparison if available
                 if (data.score_comparison) {
                     displayScoreComparison(data.score_comparison);
                 }
-                
+
                 // Display section breakdown if available
                 if (data.section_breakdown) {
                     displaySectionBreakdown(data.section_breakdown);
                 }
-                
+
                 // Display additional suggestions if score < 60%
                 if (data.additional_suggestions) {
                     displayAdditionalSuggestions(data.additional_suggestions);
                 }
-                
+
+                // Store original resume text for comparison
+                currentOriginalResumeText = data.original_resume || currentResumeText;
+
+                // Apply template styling before displaying
+                applyTemplateStyling();
+
                 // Format and display resumes with proper styling
-                document.getElementById('original-resume').innerHTML = formatResumeForDisplay(data.original_resume || currentResumeText);
-                document.getElementById('optimized-resume').innerHTML = formatResumeForDisplay(data.optimized_resume || '');
+                // Original resume: no highlights
+                document.getElementById('original-resume').innerHTML = formatResumeForDisplay(currentOriginalResumeText);
+
+                // Optimized resume: with highlights showing changes
+                document.getElementById('optimized-resume').innerHTML = formatResumeWithHighlights(
+                    currentOriginalResumeText,
+                    data.optimized_resume || ''
+                );
+
+                // Re-apply template styling after content is loaded
+                setTimeout(applyTemplateStyling, 100);
                 document.getElementById('optimization-results').style.display = 'block';
                 document.getElementById('download-section').style.display = 'flex';
                 document.getElementById('optimization-results').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -1682,12 +2961,12 @@
             const optimizedResumeEl = document.getElementById('optimized-resume');
             // Extract text from HTML or use textContent if available
             let optimizedResume = optimizedResumeEl.textContent || optimizedResumeEl.innerText;
-            
+
             // If we have the original text stored, use that instead
             if (currentOptimizedResumeText) {
                 optimizedResume = currentOptimizedResumeText;
             }
-            
+
             if (!optimizedResume || optimizedResume.trim() === '') {
                 showMessage('No optimized resume to download', 'error');
                 return;
@@ -1702,7 +2981,7 @@
 
             try {
                 showMessage(`Generating ${formatNames[format]} file...`, 'info');
-                
+
                 const response = await fetch('/api/download', {
                     method: 'POST',
                     headers: {
@@ -1711,7 +2990,8 @@
                     body: JSON.stringify({
                         resume_text: optimizedResume,
                         format: format,
-                        filename: `optimized_resume.${format}`
+                        filename: `optimized_resume.${format}`,
+                        template: currentTemplate  // Pass selected template to download
                     })
                 });
 
@@ -1723,18 +3003,18 @@
                 // Get the blob from response
                 const blob = await response.blob();
                 const url = window.URL.createObjectURL(blob);
-                
+
                 // Create download link
                 const a = document.createElement('a');
                 a.href = url;
                 a.download = `optimized_resume.${format}`;
                 document.body.appendChild(a);
                 a.click();
-                
+
                 // Cleanup
                 document.body.removeChild(a);
                 window.URL.revokeObjectURL(url);
-                
+
                 showMessage(`${formatNames[format]} file downloaded successfully!`, 'success');
             } catch (error) {
                 console.error('Download error:', error);
@@ -1743,5 +3023,5 @@
         }
     </script>
 </body>
-</html>
 
+</html>
