@@ -27,7 +27,7 @@ def review_interface(job_id):
 if __name__ == '__main__':
     import socket
     
-    def find_free_port(start_port=5000):
+    def find_free_port(start_port=5001):
         for port in range(start_port, start_port + 10):
             with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
                 try:
@@ -35,9 +35,9 @@ if __name__ == '__main__':
                     return port
                 except OSError:
                     continue
-        return 5000
+        return 5001
     
-    port = find_free_port(5000)
+    port = find_free_port(5001)  # Start at 5001 to avoid AirPlay on macOS
     
     print("\n" + "="*70)
     print("🎯 INTERNAL RECRUITER TOOL - Resume Optimizer")

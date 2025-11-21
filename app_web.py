@@ -3,10 +3,11 @@ Resume Analyzer Web Application
 Full web app with UI for analyzing and optimizing resumes.
 """
 
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_file
 from flask_cors import CORS
 import os
 import logging
+import re
 
 # Configure logging
 logging.basicConfig(
@@ -45,7 +46,9 @@ from utils.ai_providers import get_ai_provider, get_provider_info
 from utils.ats_compliance import get_ats_engine
 from utils.suggestion_engine import get_suggestion_engine
 from utils.link_extractor import extract_social_links
-from utils.resume_templates import get_template, get_all_templates
+from utils.resume_templates import (get_template, get_all_templates, recommend_template,
+                                     customize_template, get_available_fonts, get_spacing_options)
+from utils.resume_analytics import generate_comprehensive_analytics
 
 app = Flask(__name__)
 CORS(app)
@@ -87,6 +90,247 @@ MAX_RESUME_LENGTH = 50000  # 50K characters max
 MAX_JOB_DESCRIPTION_LENGTH = 20000  # 20K characters max
 MIN_RESUME_LENGTH = 50  # Minimum resume length
 MIN_JOB_DESCRIPTION_LENGTH = 20  # Minimum job description length
+
+# Template-specific section ordering configuration
+TEMPLATE_CONFIGS = {
+    'professional_modern': {
+        'name': 'Professional Modern',
+        'accent_color': '#2563eb',
+        'best_for': 'Corporate, Business, Management',
+        'section_order': [
+            'CONTACT',
+            'SUMMARY',           # Leadership & impact
+            'EXPERIENCE',        # Star of the show
+            'SKILLS',           # Supporting evidence
+            'EDUCATION',
+            'CERTIFICATIONS',
+            'PROJECTS'
+        ]
+    },
+    'tech_minimalist': {
+        'name': 'Tech Minimalist',
+        'accent_color': '#000000',
+        'best_for': 'Software Engineers, Developers',
+        'section_order': [
+            'CONTACT',
+            'SKILLS',           # Tech stack front & center
+            'EXPERIENCE',       # With tech details
+            'PROJECTS',         # Proves hands-on ability
+            'EDUCATION',
+            'CERTIFICATIONS'
+        ]
+    },
+    'data_professional': {
+        'name': 'Data Professional',
+        'accent_color': '#14b8a6',
+        'best_for': 'Data Scientists, Analysts, ML Engineers',
+        'section_order': [
+            'CONTACT',
+            'SUMMARY',          # Data impact statement
+            'SKILLS',           # Tools & frameworks
+            'EXPERIENCE',       # Business impact
+            'PROJECTS',         # Portfolio pieces
+            'EDUCATION',        # Academic credentials
+            'PUBLICATIONS'      # Research credibility
+        ]
+    }
+}
+
+# Section name normalization - handle variations
+SECTION_NORMALIZATION = {
+    # Summary variations
+    'PROFESSIONAL SUMMARY': 'SUMMARY',
+    'CAREER SUMMARY': 'SUMMARY',
+    'PROFILE': 'SUMMARY',
+    'OBJECTIVE': 'SUMMARY',
+    'CAREER OBJECTIVE': 'SUMMARY',
+    'PROFESSIONAL PROFILE': 'SUMMARY',
+
+    # Experience variations
+    'WORK EXPERIENCE': 'EXPERIENCE',
+    'PROFESSIONAL EXPERIENCE': 'EXPERIENCE',
+    'EMPLOYMENT HISTORY': 'EXPERIENCE',
+    'WORK HISTORY': 'EXPERIENCE',
+
+    # Skills variations
+    'TECHNICAL SKILLS': 'SKILLS',
+    'CORE COMPETENCIES': 'SKILLS',
+    'COMPETENCIES': 'SKILLS',
+    'KEY SKILLS': 'SKILLS',
+    'AREAS OF EXPERTISE': 'SKILLS',
+
+    # Projects variations
+    'ACADEMIC PROJECTS': 'PROJECTS',
+    'SCHOOL PROJECTS': 'PROJECTS',
+    'PERSONAL PROJECTS': 'PROJECTS',
+    'SIDE PROJECTS': 'PROJECTS',
+    'PORTFOLIO PROJECTS': 'PROJECTS',
+    'CAPSTONE PROJECTS': 'PROJECTS',
+    'RESEARCH PROJECTS': 'PROJECTS',
+    'INDIVIDUAL PROJECTS': 'PROJECTS',
+    'TEAM PROJECTS': 'PROJECTS',
+    'GROUP PROJECTS': 'PROJECTS',
+    'COURSE PROJECTS': 'PROJECTS',
+    'UNIVERSITY PROJECTS': 'PROJECTS',
+    'COLLEGE PROJECTS': 'PROJECTS',
+
+    # Education variations
+    'ACADEMIC BACKGROUND': 'EDUCATION',
+    'EDUCATIONAL BACKGROUND': 'EDUCATION',
+    'ACADEMIC QUALIFICATIONS': 'EDUCATION',
+
+    # Other variations
+    'AWARDS AND HONORS': 'AWARDS',
+    'HONORS AND AWARDS': 'AWARDS',
+    'ACHIEVEMENTS AND AWARDS': 'AWARDS',
+    'PROFESSIONAL CERTIFICATIONS': 'CERTIFICATIONS',
+    'LICENSES AND CERTIFICATIONS': 'CERTIFICATIONS',
+}
+
+
+def normalize_section_name(section_name):
+    """Normalize section name to standard form."""
+    section_upper = section_name.strip().upper()
+    return SECTION_NORMALIZATION.get(section_upper, section_upper)
+
+
+def parse_resume_into_sections(resume_text):
+    """
+    Parse resume text into sections.
+
+    Returns:
+        dict: {
+            'CONTACT': 'contact info text',
+            'SUMMARY': 'summary text',
+            'EXPERIENCE': 'experience text',
+            ...
+        }
+    """
+    sections = {}
+    lines = resume_text.split('\n')
+
+    # Common section headers (all caps, common resume sections)
+    section_headers = [
+        'CONTACT', 'PROFESSIONAL SUMMARY', 'SUMMARY', 'OBJECTIVE', 'EXPERIENCE',
+        'WORK EXPERIENCE', 'PROFESSIONAL EXPERIENCE', 'EDUCATION', 'SKILLS',
+        'TECHNICAL SKILLS', 'CERTIFICATIONS', 'PROJECTS', 'ACADEMIC PROJECTS',
+        'SCHOOL PROJECTS', 'PERSONAL PROJECTS', 'SIDE PROJECTS', 'PORTFOLIO PROJECTS',
+        'ACHIEVEMENTS', 'AWARDS', 'PUBLICATIONS', 'LANGUAGES', 'REFERENCES',
+        'CORE COMPETENCIES', 'AREAS OF EXPERTISE', 'PROFILE', 'CAREER SUMMARY',
+        'HONORS AND AWARDS', 'PROFESSIONAL CERTIFICATIONS'
+    ]
+
+    current_section = None
+    section_content = []
+    contact_lines = []
+    in_header = True
+
+    for i, line in enumerate(lines):
+        stripped = line.strip()
+
+        # Check if this is a section header
+        is_section = False
+        matched_section = None
+
+        for section in section_headers:
+            # Match exact section names (allow some flexibility with spacing)
+            if re.match(rf'^{re.escape(section)}(\s*:)?\s*$', stripped, re.IGNORECASE):
+                is_section = True
+                matched_section = section
+                break
+
+        if is_section and matched_section:
+            # Save previous section
+            if current_section:
+                normalized = normalize_section_name(current_section)
+                sections[normalized] = '\n'.join(section_content).strip()
+            elif in_header and contact_lines:
+                # Save contact/header info
+                sections['CONTACT'] = '\n'.join(contact_lines).strip()
+
+            # Start new section
+            current_section = matched_section
+            section_content = []
+            in_header = False
+
+        elif current_section:
+            # Add to current section
+            section_content.append(line)
+
+        elif in_header and stripped:
+            # Collect contact/header lines (first few lines before any section)
+            contact_lines.append(line)
+
+    # Save last section
+    if current_section:
+        normalized = normalize_section_name(current_section)
+        sections[normalized] = '\n'.join(section_content).strip()
+    elif contact_lines:
+        sections['CONTACT'] = '\n'.join(contact_lines).strip()
+
+    return sections
+
+
+def reorder_resume_sections(resume_text, template_name):
+    """
+    Reorder resume sections according to template configuration.
+
+    Args:
+        resume_text (str): Original resume text
+        template_name (str): Template name (e.g., 'professional_modern')
+
+    Returns:
+        str: Reordered resume text
+    """
+    # Get template config
+    if template_name not in TEMPLATE_CONFIGS:
+        logger.warning(f"Template '{template_name}' not found in configs, returning original")
+        return resume_text
+
+    template_config = TEMPLATE_CONFIGS[template_name]
+    desired_order = template_config['section_order']
+
+    # Parse resume into sections
+    sections = parse_resume_into_sections(resume_text)
+
+    if not sections:
+        logger.warning("No sections found in resume, returning original")
+        return resume_text
+
+    # Reorder sections according to template
+    reordered_lines = []
+    used_sections = set()
+
+    for section_name in desired_order:
+        if section_name in sections and sections[section_name].strip():
+            # Add section header
+            if section_name != 'CONTACT':
+                reordered_lines.append(section_name)
+                reordered_lines.append('')
+
+            # Add section content
+            reordered_lines.append(sections[section_name])
+            reordered_lines.append('')
+            used_sections.add(section_name)
+
+    # Add any remaining sections not in the template order (at the end)
+    for section_name, content in sections.items():
+        if section_name not in used_sections and content.strip():
+            if section_name != 'CONTACT':
+                reordered_lines.append(section_name)
+                reordered_lines.append('')
+            reordered_lines.append(content)
+            reordered_lines.append('')
+
+    # Join and clean up
+    reordered_text = '\n'.join(reordered_lines).strip()
+
+    # Remove excessive blank lines (more than 2 consecutive)
+    reordered_text = re.sub(r'\n{3,}', '\n\n', reordered_text)
+
+    logger.info(f"Reordered resume for template '{template_name}': {len(sections)} sections")
+
+    return reordered_text
 
 
 def analyze_resume_match(resume_text, job_description, provider_name="groq", api_key=None):
@@ -414,6 +658,178 @@ def _format_suggestion_enhanced(suggestion_text, resume_text, job_description):
     return formatted
 
 
+def enhance_analysis_for_dashboard(analysis, resume_text, job_description):
+    """
+    Enhance analysis with hybrid dashboard data:
+    - Score breakdown
+    - Categorized actions with priority
+    - Point potential
+    - Time estimates
+    """
+    import re
+
+    current_score = analysis.get('match_score', 0)
+
+    # Calculate score breakdown based on analysis
+    resume_lower = resume_text.lower()
+    job_lower = job_description.lower()
+
+    # Skills matching score
+    tech_keywords = {
+        'python', 'javascript', 'java', 'react', 'node', 'aws', 'docker',
+        'kubernetes', 'sql', 'mongodb', 'postgresql', 'git', 'agile'
+    }
+    job_tech = {kw for kw in tech_keywords if kw in job_lower}
+    resume_tech = {kw for kw in tech_keywords if kw in resume_lower}
+    skills_score = int((len(job_tech & resume_tech) / max(len(job_tech), 1)) * 50)
+    skills_potential = 50 - skills_score
+
+    # Keywords score
+    job_words = set(re.findall(r'\b\w{5,}\b', job_lower))
+    resume_words = set(re.findall(r'\b\w{5,}\b', resume_lower))
+    keywords_score = int((len(job_words & resume_words) / max(len(job_words), 1)) * 80)
+    keywords_potential = min(80 - keywords_score, 30)
+
+    # Experience quantification score (check for numbers in resume)
+    has_metrics = bool(re.findall(r'\d+%|\d+\+|increased|reduced|improved|saved|\$\d+', resume_lower))
+    experience_score = 80 if has_metrics else 40
+    experience_potential = 100 - experience_score
+
+    # ATS compliance (check formatting)
+    has_special_chars = bool(re.findall(r'[│║═╔╗╚╝]', resume_text))
+    ats_score = 60 if has_special_chars else 90
+    ats_potential = 100 - ats_score
+
+    # Clarity (based on resume length and structure)
+    clarity_score = 90 if 500 < len(resume_text) < 3000 else 70
+    clarity_potential = 100 - clarity_score
+
+    # Calculate potential score
+    potential_score = min(100, current_score + keywords_potential + skills_potential + experience_potential + ats_potential + clarity_potential)
+
+    score_breakdown = {
+        'ats_compliance': {
+            'score': ats_score,
+            'max': 100,
+            'potential_gain': ats_potential,
+            'status': 'good' if ats_score >= 80 else 'warning'
+        },
+        'skills_match': {
+            'score': skills_score,
+            'max': 50,
+            'potential_gain': skills_potential,
+            'status': 'good' if skills_score >= 40 else 'warning'
+        },
+        'keywords': {
+            'score': keywords_score,
+            'max': 80,
+            'potential_gain': keywords_potential,
+            'status': 'good' if keywords_score >= 60 else 'warning'
+        },
+        'experience': {
+            'score': experience_score,
+            'max': 100,
+            'potential_gain': experience_potential,
+            'status': 'good' if experience_score >= 70 else 'warning'
+        },
+        'clarity': {
+            'score': clarity_score,
+            'max': 100,
+            'potential_gain': clarity_potential,
+            'status': 'good' if clarity_score >= 80 else 'warning'
+        }
+    }
+
+    # Categorize actions from improvements and suggestions
+    categorized_actions = []
+
+    # Create actions from improvements_needed
+    improvements = analysis.get('improvements_needed', [])
+    suggestions = analysis.get('content_suggestions', [])
+
+    # Priority categorization logic
+    for idx, improvement in enumerate(improvements[:8]):
+        text_lower = improvement.lower()
+
+        # Determine priority based on impact
+        priority = 'polish'  # default
+        points = 3
+        time_estimate = '2 minutes'
+
+        if any(word in text_lower for word in ['keyword', 'skills', 'missing', 'add']):
+            priority = 'critical'
+            points = keywords_potential if keywords_potential > 0 else 20
+            time_estimate = '2 minutes'
+        elif any(word in text_lower for word in ['quantif', 'metrics', 'numbers', 'achievement']):
+            priority = 'critical'
+            points = experience_potential if experience_potential > 0 else 15
+            time_estimate = '5 minutes'
+        elif any(word in text_lower for word in ['summary', 'objective', 'headline']):
+            priority = 'high_impact'
+            points = 8
+            time_estimate = '3 minutes'
+        elif any(word in text_lower for word in ['format', 'ats', 'structure']):
+            priority = 'high_impact'
+            points = ats_potential if ats_potential > 0 else 5
+            time_estimate = '3 minutes'
+        elif any(word in text_lower for word in ['verb', 'action', 'stronger']):
+            priority = 'polish'
+            points = 3
+            time_estimate = '2 minutes'
+
+        categorized_actions.append({
+            'id': f'action-{idx}',
+            'title': improvement,
+            'priority': priority,
+            'points': points,
+            'time_estimate': time_estimate,
+            'type': 'improvement',
+            'expandable': True,
+            'applied': False
+        })
+
+    # Add a few key suggestions as actions
+    for idx, suggestion in enumerate(suggestions[:5]):
+        if isinstance(suggestion, str):
+            suggestion_text = suggestion
+        else:
+            suggestion_text = str(suggestion)
+
+        text_lower = suggestion_text.lower()
+
+        priority = 'polish'
+        points = 3
+        time_estimate = '2 minutes'
+
+        if any(word in text_lower for word in ['linkedin', 'github', 'link', 'portfolio']):
+            priority = 'high_impact'
+            points = 5
+            time_estimate = '1 minute'
+
+        categorized_actions.append({
+            'id': f'suggestion-{idx}',
+            'title': suggestion_text[:200],  # Truncate long suggestions
+            'priority': priority,
+            'points': points,
+            'time_estimate': time_estimate,
+            'type': 'suggestion',
+            'expandable': False,
+            'applied': False
+        })
+
+    # Sort by priority
+    priority_order = {'critical': 0, 'high_impact': 1, 'polish': 2}
+    categorized_actions.sort(key=lambda x: priority_order.get(x['priority'], 3))
+
+    # Add enhanced data to analysis
+    analysis['score_breakdown'] = score_breakdown
+    analysis['categorized_actions'] = categorized_actions
+    analysis['potential_score'] = potential_score
+    analysis['current_score'] = current_score
+
+    return analysis
+
+
 def get_dummy_analysis(resume_text, job_description):
     """Generate realistic dummy analysis for testing when Groq API is not available."""
     import re
@@ -684,15 +1100,64 @@ def create_optimized_resume(resume_text, job_description, suggestions, provider_
         }
     
     try:
-        # Use the provider to optimize with normalized suggestions
+        # ========== ENHANCED MULTI-STAGE OPTIMIZATION ==========
+        # Check if provider supports enhanced optimization (Groq)
+        use_enhanced = hasattr(provider, 'multi_stage_optimize') and hasattr(provider, 'analyze_job_description')
+
+        if use_enhanced:
+            logger.info("Using ENHANCED multi-stage optimization")
+
+            # Stage 0: Analyze job description first
+            logger.info("Stage 0: Analyzing job description...")
+            job_analysis = provider.analyze_job_description(job_description)
+
+            if 'error' not in job_analysis:
+                logger.info(f"Job Analysis - Industry: {job_analysis.get('industry')}, "
+                           f"Seniority: {job_analysis.get('seniority_level')}, "
+                           f"Skills: {len(job_analysis.get('required_skills', []))}")
+
+                # Multi-stage optimization
+                logger.info("Starting multi-stage optimization (3 stages)...")
+                multi_stage_result = provider.multi_stage_optimize(
+                    resume_text,
+                    job_description,
+                    job_analysis
+                )
+
+                if 'error' not in multi_stage_result:
+                    optimized_resume = multi_stage_result.get('optimized_resume', '')
+                    download_resume = multi_stage_result.get('download_resume', optimized_resume)
+                    logger.info("Multi-stage optimization completed successfully")
+
+                    # Calculate ATS score
+                    logger.info("Calculating ATS compatibility score...")
+                    ats_score = provider.calculate_ats_score(download_resume, job_description)
+
+                    return {
+                        "optimized_resume": optimized_resume,  # For preview (with commentary)
+                        "download_resume": download_resume,  # For download (clean)
+                        "original_resume": resume_text,
+                        "provider": provider_name,
+                        "enhanced": True,
+                        "job_analysis": job_analysis,
+                        "ats_score": ats_score,
+                        "optimization_stages": multi_stage_result.get('stages', {})
+                    }
+                else:
+                    logger.warning(f"Multi-stage optimization failed: {multi_stage_result.get('error')}")
+            else:
+                logger.warning(f"Job analysis failed: {job_analysis.get('error')}")
+
+        # Fallback to standard optimization if enhanced not available or failed
+        logger.info("Using standard optimization")
         optimized_resume = provider.optimize_resume(resume_text, job_description, normalized_suggestions, social_links)
-        
+
         # Clean up the response
         if "OPTIMIZED RESUME:" in optimized_resume:
             optimized_resume = optimized_resume.split("OPTIMIZED RESUME:")[-1].strip()
         elif "RESUME:" in optimized_resume:
             optimized_resume = optimized_resume.split("RESUME:")[-1].strip()
-        
+
         return {
             "optimized_resume": optimized_resume,
             "original_resume": resume_text,
@@ -809,13 +1274,13 @@ def analyze():
             }), 400
         
         analysis = analyze_resume_match(resume_text, job_description, provider_name, api_key)
-        
+
         if 'error' in analysis:
             return jsonify({
                 'success': False,
                 'error': analysis['error']
             }), 500
-        
+
         # Add ATS analysis to response (lightweight, fast)
         try:
             ats_engine = get_ats_engine()
@@ -831,7 +1296,10 @@ def analyze():
         except Exception as e:
             logger.warning(f"ATS analysis failed during resume analysis: {str(e)}")
             # Don't fail the main analysis if ATS fails
-        
+
+        # Enhance analysis with hybrid dashboard data
+        analysis = enhance_analysis_for_dashboard(analysis, resume_text, job_description)
+
         return jsonify({
             'success': True,
             'match_score': analysis['match_score'],
@@ -839,7 +1307,11 @@ def analyze():
             'strengths': analysis['strengths'],
             'improvements_needed': analysis['improvements_needed'],
             'content_suggestions': analysis['content_suggestions'],
-            'message': 'Resume is well-matched!' if analysis['match_score'] >= 70 
+            'score_breakdown': analysis.get('score_breakdown', {}),
+            'categorized_actions': analysis.get('categorized_actions', []),
+            'potential_score': analysis.get('potential_score', analysis['match_score']),
+            'current_score': analysis.get('current_score', analysis['match_score']),
+            'message': 'Resume is well-matched!' if analysis['match_score'] >= 70
                       else 'Resume needs optimization to better match this job.'
         })
         
@@ -1030,7 +1502,7 @@ def get_providers():
 
 
 @app.route('/api/templates', methods=['GET'])
-def get_templates():
+def get_templates_route():
     """Get list of available resume templates."""
     try:
         templates = get_all_templates()
@@ -1043,6 +1515,102 @@ def get_templates():
         return jsonify({
             'success': False,
             'error': 'An error occurred while getting templates. Please try again.'
+        }), 500
+
+
+@app.route('/api/templates/recommend', methods=['POST'])
+def recommend_template_route():
+    """Recommend best template based on job and resume."""
+    try:
+        data = request.get_json()
+
+        if not data:
+            return jsonify({'success': False, 'error': 'No data provided'}), 400
+
+        resume_text = data.get('resume_text', '')
+        job_description = data.get('job_description', '')
+        job_analysis = data.get('job_analysis')  # Optional
+
+        if not resume_text or not job_description:
+            return jsonify({
+                'success': False,
+                'error': 'resume_text and job_description are required'
+            }), 400
+
+        recommendation = recommend_template(job_description, resume_text, job_analysis)
+
+        return jsonify({
+            'success': True,
+            'recommendation': recommendation
+        })
+
+    except Exception as e:
+        logger.error(f"Error recommending template: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'An error occurred while recommending template. Please try again.'
+        }), 500
+
+
+@app.route('/api/templates/customization-options', methods=['GET'])
+def get_customization_options():
+    """Get available customization options for templates."""
+    try:
+        return jsonify({
+            'success': True,
+            'options': {
+                'fonts': get_available_fonts(),
+                'spacing': get_spacing_options(),
+                'colors': {
+                    'professional': '#2563eb',
+                    'tech': '#000000',
+                    'creative': '#ec4899',
+                    'success': '#10b981',
+                    'teal': '#14b8a6',
+                    'purple': '#7c3aed',
+                    'orange': '#f59e0b',
+                    'slate': '#1e293b'
+                }
+            }
+        })
+    except Exception as e:
+        logger.error(f"Error getting customization options: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'An error occurred while getting customization options. Please try again.'
+        }), 500
+
+
+@app.route('/api/templates/customize', methods=['POST'])
+def customize_template_route():
+    """Apply customizations to a template."""
+    try:
+        data = request.get_json()
+
+        if not data:
+            return jsonify({'success': False, 'error': 'No data provided'}), 400
+
+        template_name = data.get('template')
+        customizations = data.get('customizations', {})
+
+        if not template_name:
+            return jsonify({
+                'success': False,
+                'error': 'template name is required'
+            }), 400
+
+        customized = customize_template(template_name, customizations)
+
+        return jsonify({
+            'success': True,
+            'template': customized
+        })
+
+    except Exception as e:
+        logger.error(f"Error customizing template: {str(e)}")
+        return jsonify({
+            'success': False,
+            'error': 'An error occurred while customizing template. Please try again.'
         }), 500
 
 
@@ -1118,43 +1686,72 @@ def optimize():
             }), 500
         
         optimized_resume = result['optimized_resume']
-        
-        # Re-analyze optimized resume to get new score
-        new_analysis = analyze_resume_match(optimized_resume, job_description, provider_name, api_key)
-        new_score = new_analysis.get('match_score', 0) if 'error' not in new_analysis else 0
-        # Calculate improvement
-        if original_score is None:
-            original_score = 0
-        
+        download_resume = result.get('download_resume', optimized_resume)
+
+        # REORDER SECTIONS according to template configuration
+        logger.info(f"Applying section reordering for template: {template_name}")
+        optimized_resume = reorder_resume_sections(optimized_resume, template_name)
+        download_resume = reorder_resume_sections(download_resume, template_name)
+
+        # Calculate ATS scores for BOTH original and optimized resumes
+        # This ensures we're comparing apples to apples
+        logger.info("Calculating ATS scores for before/after comparison...")
+
+        try:
+            # Get provider for ATS scoring
+            provider = get_ai_provider(provider_name, api_key)
+
+            # Calculate ATS score for ORIGINAL resume
+            original_ats_result = provider.calculate_ats_score(resume_text, job_description)
+            original_ats_score = original_ats_result.get('overall_score', 0)
+            logger.info(f"Original resume ATS score: {original_ats_score}%")
+
+            # Calculate ATS score for OPTIMIZED resume
+            optimized_ats_result = provider.calculate_ats_score(download_resume, job_description)
+            new_ats_score = optimized_ats_result.get('overall_score', 0)
+            logger.info(f"Optimized resume ATS score: {new_ats_score}%")
+
+            # Use ATS scores for comparison
+            original_score = original_ats_score
+            new_score = new_ats_score
+
+        except Exception as e:
+            logger.warning(f"Failed to calculate ATS scores, falling back to match score: {str(e)}")
+            # Fallback to old method if ATS scoring fails
+            new_analysis = analyze_resume_match(optimized_resume, job_description, provider_name, api_key)
+            new_score = new_analysis.get('match_score', 0) if 'error' not in new_analysis else 0
+            if original_score is None:
+                original_score = 0
+
         # CRITICAL FIX: Ensure optimized resume ALWAYS scores higher
         # AI scoring can be inconsistent, so we apply intelligent score adjustment
         if new_score < original_score:
             # Calculate quality improvement based on optimization factors
             optimization_quality_bonus = 0
-            
+
             # Check if optimization added quantifiable metrics
             if any(char.isdigit() for char in optimized_resume) and optimized_resume.count('%') > resume_text.count('%'):
                 optimization_quality_bonus += 5  # Added metrics
-            
+
             # Check if optimization improved length (not too short, not too long)
             len_diff = len(optimized_resume) - len(resume_text)
             if 50 < len_diff < 500:  # Added substantial content
                 optimization_quality_bonus += 3
-            
+
             # Check if optimization added strong action verbs
             strong_verbs = ['developed', 'engineered', 'architected', 'led', 'managed', 'improved', 'optimized', 'increased', 'reduced']
             verbs_added = sum(optimized_resume.lower().count(verb) - resume_text.lower().count(verb) for verb in strong_verbs)
             if verbs_added > 0:
                 optimization_quality_bonus += min(verbs_added * 2, 5)  # Cap at 5 points
-            
+
             # Apply minimum improvement guarantee
             min_acceptable_score = original_score + optimization_quality_bonus
-            
+
             # If new score is lower, boost it to ensure improvement
             if new_score < min_acceptable_score:
                 logger.info(f"Score adjustment: AI gave {new_score}%, boosting to {min_acceptable_score}% (original: {original_score}% + quality bonus: {optimization_quality_bonus}%)")
                 new_score = min_acceptable_score
-        
+
         # Calculate final improvement
         improvement = new_score - original_score
         improvement_percent = (improvement / original_score * 100) if original_score > 0 else 0
@@ -1207,7 +1804,8 @@ def optimize():
         
         response_data = {
             'success': True,
-            'optimized_resume': optimized_resume,
+            'optimized_resume': optimized_resume,  # For preview (with commentary)
+            'download_resume': download_resume,  # For download (clean)
             'original_resume': result['original_resume'],
             'provider': result.get('provider', provider_name),
             'score_comparison': {
@@ -1223,7 +1821,35 @@ def optimize():
                 'improvements': section_analysis['improvements']
             }
         }
-        
+
+        # Add enhanced optimization data if available
+        if result.get('enhanced'):
+            response_data['enhanced_optimization'] = {
+                'enabled': True,
+                'job_analysis': result.get('job_analysis', {}),
+                'ats_score': result.get('ats_score', {}),
+                'optimization_stages': result.get('optimization_stages', {})
+            }
+            logger.info(f"Enhanced optimization data added - ATS Score: {result.get('ats_score', {}).get('overall_score', 'N/A')}")
+
+        # Generate comprehensive analytics
+        try:
+            logger.info("Generating comprehensive analytics...")
+            analytics = generate_comprehensive_analytics(
+                original_resume=resume_text,
+                optimized_resume=download_resume,  # Use clean version
+                job_description=job_description,
+                job_analysis=result.get('job_analysis'),
+                ats_score=result.get('ats_score')
+            )
+            response_data['analytics'] = analytics
+            logger.info(f"Analytics generated - {len(analytics.get('change_explanations', []))} changes, "
+                       f"{analytics.get('keyword_analysis', {}).get('total_matched_keywords', 0)} keywords matched")
+        except Exception as e:
+            logger.error(f"Error generating analytics: {str(e)}", exc_info=True)
+            # Analytics is optional, don't fail the entire request
+            response_data['analytics'] = None
+
         # Add fallback suggestions if available
         if additional_suggestions:
             response_data['additional_suggestions'] = {
@@ -1231,7 +1857,7 @@ def optimize():
                 'suggestions': additional_suggestions,
                 'message': f'Score is below 60%. Here are additional suggestions from {fallback_provider.upper()}:'
             }
-        
+
         return jsonify(response_data)
         
     except Exception as e:
@@ -1490,11 +2116,15 @@ def download_resume():
         
         # Normalize template name (handle case variations)
         template_name = template_name.lower().strip() if template_name else 'professional_modern'
-        
+
+        # REORDER SECTIONS according to template configuration
+        logger.info(f"Applying section reordering for download - Template: {template_name}")
+        resume_text = reorder_resume_sections(resume_text, template_name)
+
         # Log template being used for debugging
         logger.info(f"Download request - Template: {template_name}, Format: {file_format}")
         logger.info(f"Template parameter received: {data.get('template', 'NOT PROVIDED')}")
-        
+
         # Get template configuration
         template_config = get_template(template_name)
         accent_color = template_config.get('accent_color', '#000000')
@@ -2189,6 +2819,72 @@ def download_resume():
             'error': f'Error generating download file: {str(e)}'
         }), 500
 
+
+
+@app.route('/api/download/pdf', methods=['POST'])
+@conditional_limit("10 per hour")
+def download_pdf():
+    """Generate and download resume as PDF."""
+    try:
+        from utils.document_generator import generate_pdf
+        
+        data = request.get_json()
+        resume_text = data.get('resume_text', '')
+        
+        if not resume_text:
+            return jsonify({'success': False, 'error': 'No resume text provided'}), 400
+        
+        # Generate PDF
+        pdf_buffer = generate_pdf(resume_text)
+        
+        return send_file(
+            pdf_buffer,
+            as_attachment=True,
+            download_name='optimized_resume.pdf',
+            mimetype='application/pdf'
+        )
+    except ImportError as e:
+        logger.error(f"PDF generation library not installed: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'PDF generation not available. Install reportlab: pip install reportlab'
+        }), 500
+    except Exception as e:
+        logger.error(f"Error generating PDF: {e}")
+        return jsonify({'success': False, 'error': 'Failed to generate PDF'}), 500
+
+
+@app.route('/api/download/docx', methods=['POST'])
+@conditional_limit("10 per hour")
+def download_docx():
+    """Generate and download resume as Word document."""
+    try:
+        from utils.document_generator import generate_docx
+        
+        data = request.get_json()
+        resume_text = data.get('resume_text', '')
+        
+        if not resume_text:
+            return jsonify({'success': False, 'error': 'No resume text provided'}), 400
+        
+        # Generate DOCX
+        docx_buffer = generate_docx(resume_text)
+        
+        return send_file(
+            docx_buffer,
+            as_attachment=True,
+            download_name='optimized_resume.docx',
+            mimetype='application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+        )
+    except ImportError as e:
+        logger.error(f"Word generation library not installed: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Word document generation not available. Install python-docx: pip install python-docx'
+        }), 500
+    except Exception as e:
+        logger.error(f"Error generating Word document: {e}")
+        return jsonify({'success': False, 'error': 'Failed to generate Word document'}), 500
 
 if __name__ == '__main__':
     import socket

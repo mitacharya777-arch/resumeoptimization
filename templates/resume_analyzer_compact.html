@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Optimizer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #f5f5f5;
+            padding: 20px;
+            line-height: 1.4;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            padding: 20px;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .input-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #555;
+        }
+
+        textarea {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
+            resize: vertical;
+            min-height: 300px;
+            font-family: monospace;
+        }
+
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            align-items: center;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-primary:disabled {
+            background: #94a3b8;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #059669;
+        }
+
+        .file-upload {
+            display: inline-block;
+            padding: 8px 16px;
+            background: #f1f5f9;
+            border: 1px solid #cbd5e1;
+            border-radius: 4px;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .status {
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            display: none;
+        }
+
+        .status.show {
+            display: inline-block;
+        }
+
+        .status.success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status.error {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .status.info {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .results {
+            display: none;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #e5e7eb;
+        }
+
+        .results.show {
+            display: block;
+        }
+
+        .score-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 6px;
+        }
+
+        .score-item {
+            flex: 1;
+            text-align: center;
+        }
+
+        .score-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .score-label {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        .improvement {
+            display: inline-block;
+            margin-left: 8px;
+            padding: 2px 8px;
+            background: #d1fae5;
+            color: #065f46;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .resume-preview {
+            background: #f8fafc;
+            padding: 15px;
+            border-radius: 6px;
+            max-height: 400px;
+            overflow-y: auto;
+            font-family: monospace;
+            font-size: 12px;
+            white-space: pre-wrap;
+            margin-top: 15px;
+        }
+
+        .loading {
+            display: none;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .loading.show {
+            display: flex;
+        }
+
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #2563eb;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            border-bottom: 2px solid #e5e7eb;
+            margin-bottom: 15px;
+        }
+
+        .tab {
+            padding: 8px 16px;
+            cursor: pointer;
+            border: none;
+            background: none;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            border-bottom: 2px solid transparent;
+            margin-bottom: -2px;
+        }
+
+        .tab.active {
+            color: #2563eb;
+            border-bottom-color: #2563eb;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Resume Optimizer</h1>
+
+        <div class="input-grid">
+            <div class="input-section">
+                <label>Resume</label>
+                <textarea id="resumeText" placeholder="Paste your resume here..."></textarea>
+                <label class="file-upload" style="margin-top: 8px;">
+                    <input type="file" id="resumeFile" accept=".pdf,.docx,.doc,.txt">
+                    Or upload file (PDF, DOCX, TXT)
+                </label>
+            </div>
+
+            <div class="input-section">
+                <label>Job Description</label>
+                <textarea id="jobDescription" placeholder="Paste the job description here..."></textarea>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button class="btn-primary" id="optimizeBtn">Optimize Resume</button>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <span id="loadingText">Processing...</span>
+            </div>
+            <div class="status" id="status"></div>
+        </div>
+
+        <div class="results" id="results">
+            <div class="score-bar">
+                <div class="score-item">
+                    <div class="score-value" id="originalScore">-</div>
+                    <div class="score-label">Original Score</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="newScore">-</div>
+                    <div class="score-label">Optimized Score</div>
+                </div>
+                <div class="score-item">
+                    <div class="score-value" id="improvement" style="color: #10b981;">-</div>
+                    <div class="score-label">Improvement</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" data-tab="optimized">Optimized Resume</button>
+                <button class="tab" data-tab="analytics">Analytics</button>
+            </div>
+
+            <div class="tab-content active" id="tab-optimized">
+                <button class="btn-secondary" id="downloadBtn">Download Resume</button>
+                <div class="resume-preview" id="resumePreview"></div>
+            </div>
+
+            <div class="tab-content" id="tab-analytics">
+                <div id="analyticsContent"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const resumeText = document.getElementById('resumeText');
+        const jobDescription = document.getElementById('jobDescription');
+        const optimizeBtn = document.getElementById('optimizeBtn');
+        const loading = document.getElementById('loading');
+        const status = document.getElementById('status');
+        const results = document.getElementById('results');
+        const resumePreview = document.getElementById('resumePreview');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resumeFile = document.getElementById('resumeFile');
+
+        let optimizedResume = '';
+        let downloadResume = '';
+
+        // File upload
+        resumeFile.addEventListener('change', async (e) => {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch('/api/upload-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    resumeText.value = data.text;
+                    showStatus('Resume uploaded successfully', 'success');
+                } else {
+                    showStatus('Upload failed: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showStatus('Upload error: ' + error.message, 'error');
+            }
+        });
+
+        // Tab switching
+        document.querySelectorAll('.tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabName = tab.dataset.tab;
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('tab-' + tabName).classList.add('active');
+            });
+        });
+
+        // Optimize
+        optimizeBtn.addEventListener('click', async () => {
+            const resume = resumeText.value.trim();
+            const job = jobDescription.value.trim();
+
+            if (!resume || !job) {
+                showStatus('Please enter both resume and job description', 'error');
+                return;
+            }
+
+            setLoading(true, 'Optimizing resume...');
+            hideStatus();
+            results.classList.remove('show');
+
+            try {
+                const response = await fetch('/api/optimize', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        resume_text: resume,
+                        job_description: job,
+                        provider: 'groq',
+                        template: 'professional_modern'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    optimizedResume = data.optimized_resume;
+                    downloadResume = data.download_resume;
+
+                    // Show scores
+                    const scores = data.score_comparison;
+                    document.getElementById('originalScore').textContent = scores.original_score + '%';
+                    document.getElementById('newScore').textContent = scores.new_score + '%';
+                    document.getElementById('improvement').textContent = '+' + scores.improvement + '%';
+
+                    // Show resume
+                    resumePreview.textContent = optimizedResume;
+
+                    // Show analytics
+                    if (data.analytics) {
+                        showAnalytics(data.analytics);
+                    }
+
+                    results.classList.add('show');
+                    showStatus('Resume optimized successfully!', 'success');
+                } else {
+                    showStatus('Optimization failed: ' + data.error, 'error');
+                }
+            } catch (error) {
+                showStatus('Error: ' + error.message, 'error');
+            } finally {
+                setLoading(false);
+            }
+        });
+
+        // Download
+        downloadBtn.addEventListener('click', () => {
+            const blob = new Blob([downloadResume], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'optimized_resume.txt';
+            a.click();
+            URL.revokeObjectURL(url);
+        });
+
+        function setLoading(isLoading, text = 'Processing...') {
+            if (isLoading) {
+                loading.classList.add('show');
+                document.getElementById('loadingText').textContent = text;
+                optimizeBtn.disabled = true;
+            } else {
+                loading.classList.remove('show');
+                optimizeBtn.disabled = false;
+            }
+        }
+
+        function showStatus(message, type) {
+            status.textContent = message;
+            status.className = 'status show ' + type;
+        }
+
+        function hideStatus() {
+            status.classList.remove('show');
+        }
+
+        function showAnalytics(analytics) {
+            const content = document.getElementById('analyticsContent');
+
+            let html = '<div style="padding: 15px; background: #f8fafc; border-radius: 6px;">';
+
+            // Keyword analysis
+            if (analytics.keyword_analysis) {
+                const ka = analytics.keyword_analysis;
+                html += `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="font-size: 16px; margin-bottom: 10px;">Keyword Analysis</h3>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            <div style="background: white; padding: 10px; border-radius: 4px;">
+                                <div style="font-size: 20px; font-weight: 700; color: #2563eb;">${ka.total_matched_keywords || 0}</div>
+                                <div style="font-size: 11px; color: #64748b;">Keywords Matched</div>
+                            </div>
+                            <div style="background: white; padding: 10px; border-radius: 4px;">
+                                <div style="font-size: 20px; font-weight: 700; color: #10b981;">${ka.keywords_added || 0}</div>
+                                <div style="font-size: 11px; color: #64748b;">Keywords Added</div>
+                            </div>
+                            <div style="background: white; padding: 10px; border-radius: 4px;">
+                                <div style="font-size: 20px; font-weight: 700; color: #f59e0b;">${ka.coverage_percentage || 0}%</div>
+                                <div style="font-size: 11px; color: #64748b;">Coverage</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Changes made
+            if (analytics.change_explanations && analytics.change_explanations.length > 0) {
+                html += `
+                    <div style="margin-bottom: 20px;">
+                        <h3 style="font-size: 16px; margin-bottom: 10px;">Key Changes</h3>
+                        <div style="background: white; padding: 12px; border-radius: 4px; max-height: 200px; overflow-y: auto;">
+                `;
+
+                analytics.change_explanations.slice(0, 5).forEach(change => {
+                    html += `<div style="margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid #e5e7eb; font-size: 13px;">
+                        <strong>${change.section}</strong>: ${change.explanation}
+                    </div>`;
+                });
+
+                html += '</div></div>';
+            }
+
+            html += '</div>';
+            content.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

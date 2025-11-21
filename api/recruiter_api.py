@@ -90,6 +90,11 @@ def bulk_optimize():
             'status': 'processing'
         }
         
+        def update_progress(current, total, candidate_id, status):
+            progress_data['completed'] = current
+            if status == 'error':
+                progress_data['errors'] += 1
+        
         # Optimize in bulk
         job_description = job.get('description', '') + ' ' + job.get('requirements', '')
         results = bulk_optimizer.optimize_candidates_bulk(
@@ -97,11 +102,6 @@ def bulk_optimize():
             job_description=job_description,
             progress_callback=lambda current, total, cid, status: update_progress(current, total, status)
         )
-        
-        def update_progress(current, total, status):
-            progress_data['completed'] = current
-            if status == 'error':
-                progress_data['errors'] += 1
         
         # Store results (you'll need to implement this)
         # optimization_results_db.save_bulk(results, job_id)

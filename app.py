@@ -94,7 +94,20 @@ def health_check():
 
 
 if __name__ == '__main__':
+    import socket
+    # Find free port starting from 5001 (5000 is often used by AirPlay on macOS)
+    def find_free_port(start_port=5001):
+        for port in range(start_port, start_port + 10):
+            with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                try:
+                    s.bind(('127.0.0.1', port))
+                    return port
+                except OSError:
+                    continue
+        return 5001
+    
+    port = find_free_port(5001)
     print("🚀 Starting Resume Optimizer Web Application...")
-    print("📱 Open http://localhost:5000 in your browser")
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    print(f"📱 Open http://localhost:{port} in your browser")
+    app.run(debug=True, host='0.0.0.0', port=port)
 
