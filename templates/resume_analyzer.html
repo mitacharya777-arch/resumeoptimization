@@ -2703,14 +2703,6 @@
                         onchange="updateProviderStatus()">
                         <option value="groq" style="background: var(--bg-card); color: var(--text);">Groq (Llama 3.3) -
                             Fast & Cost-effective</option>
-                        <option value="openai" style="background: var(--bg-card); color: var(--text);">OpenAI (GPT-4o
-                            Mini) - High Quality</option>
-                        <option value="claude" style="background: var(--bg-card); color: var(--text);">Claude (3.5
-                            Sonnet) - Advanced Reasoning</option>
-                        <option value="gemini" style="background: var(--bg-card); color: var(--text);">Google Gemini
-                            (2.5 Flash) - Fast & Multimodal AI</option>
-                        <option value="cohere" style="background: var(--bg-card); color: var(--text);">Cohere (Command
-                            R+) - Enterprise AI</option>
                     </select>
                     <div id="provider-status"
                         style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; padding: 0.5rem; background: rgba(255, 255, 255, 0.05); border-radius: 6px;">
@@ -3958,6 +3950,77 @@
             });
 
             return highlightedHtml;
+        }
+
+        // Helper function to normalize text for content comparison (ignore formatting)
+        function normalizeContent(text) {
+            return text
+                .toLowerCase()
+                .replace(/[^\w\s]/g, ' ') // Remove punctuation
+                .replace(/\s+/g, ' ')     // Normalize whitespace
+                .trim();
+        }
+
+        // Helper function to extract meaningful words (filter out common words)
+        function extractKeyWords(text) {
+            const commonWords = new Set(['the', 'a', 'an', 'and', 'or', 'but', 'in', 'on', 'at', 'to', 'for', 'of', 'with', 'by', 'from', 'as', 'is', 'was', 'were', 'been', 'be', 'have', 'has', 'had', 'do', 'does', 'did', 'will', 'would', 'should', 'could', 'may', 'might', 'can']);
+            return text
+                .split(/\s+/)
+                .filter(word => word.length > 2 && !commonWords.has(word));
+        }
+
+        // Wrapper function to handle JSON and apply highlighting (content changes only)
+        function formatOptimizedWithHighlights(originalText, optimizedJson) {
+            if (!optimizedJson) return '';
+
+            // First, format the JSON to HTML
+            const formattedHtml = formatOptimizedResumeProfessional(optimizedJson);
+
+            if (!originalText) return formattedHtml;
+
+            // Extract text content from the formatted HTML for comparison
+            const tempDiv = document.createElement('div');
+            tempDiv.innerHTML = formattedHtml;
+            const optimizedText = tempDiv.textContent || tempDiv.innerText || '';
+
+            // Normalize the entire original text and create a set of all content words
+            const originalNormalized = normalizeContent(originalText);
+            const originalWords = new Set(extractKeyWords(originalNormalized));
+
+            // Parse the HTML and add highlighting classes
+            const parser = new DOMParser();
+            const doc = parser.parseFromString(formattedHtml, 'text/html');
+
+            // Find all content-bearing elements (paragraphs, list items, divs with substantial text)
+            const contentElements = doc.querySelectorAll('p, li, div');
+            contentElements.forEach(element => {
+                const text = element.textContent.trim();
+                if (!text || text.length < 15) return; // Skip empty or very short content
+
+                // Normalize and extract key words from this element
+                const normalized = normalizeContent(text);
+                const currentWords = extractKeyWords(normalized);
+
+                // Check if this content has new/different meaningful words
+                const newWords = currentWords.filter(word => !originalWords.has(word));
+                const changedWords = currentWords.filter(word => originalWords.has(word));
+
+                // Calculate what percentage of meaningful content is new
+                const totalMeaningfulWords = currentWords.length;
+                const newWordPercentage = totalMeaningfulWords > 0 ? (newWords.length / totalMeaningfulWords) : 0;
+
+                // Only highlight if there's substantial new content (>30% new meaningful words)
+                if (newWordPercentage > 0.3 && totalMeaningfulWords >= 3) {
+                    // Check if it's a modification (some original words present) or completely new
+                    if (changedWords.length > 0 && changedWords.length >= newWords.length * 0.3) {
+                        element.classList.add('resume-modified'); // Modified content (yellow)
+                    } else if (newWords.length >= 3) {
+                        element.classList.add('resume-added'); // New content (green)
+                    }
+                }
+            });
+
+            return doc.body.innerHTML;
         }
 
         function formatResumeForDisplay(resumeText) {
@@ -5850,7 +5913,7 @@
                 // Original resume: render with formatting if file was uploaded, otherwise display as text
                 await renderOriginalResume();
 
-                // Optimized resume: use professional formatter for clean, structured display
+                // Optimized resume: display cleanly without highlights
                 document.getElementById('optimized-resume').innerHTML = formatOptimizedResumeProfessional(
                     data.optimized_resume || ''
                 );
