@@ -1693,27 +1693,22 @@ def optimize():
         optimized_resume = reorder_resume_sections(optimized_resume, template_name)
         download_resume = reorder_resume_sections(download_resume, template_name)
 
-        # Calculate ATS scores for BOTH original and optimized resumes
-        # This ensures we're comparing apples to apples
-        logger.info("Calculating ATS scores for before/after comparison...")
+        # Calculate ATS score for optimized resume and compare with original
+        # Use the original_score from initial analysis (don't re-calculate it)
+        logger.info(f"Using original score from analysis: {original_score}%")
+        logger.info("Calculating ATS score for optimized resume...")
 
         try:
             # Get provider for ATS scoring
             provider = get_ai_provider(provider_name, api_key)
 
-            # Calculate ATS score for ORIGINAL resume
-            original_ats_result = provider.calculate_ats_score(resume_text, job_description)
-            original_ats_score = original_ats_result.get('overall_score', 0)
-            logger.info(f"Original resume ATS score: {original_ats_score}%")
-
-            # Calculate ATS score for OPTIMIZED resume
+            # Calculate ATS score for OPTIMIZED resume only
             optimized_ats_result = provider.calculate_ats_score(download_resume, job_description)
-            new_ats_score = optimized_ats_result.get('overall_score', 0)
-            logger.info(f"Optimized resume ATS score: {new_ats_score}%")
+            new_score = optimized_ats_result.get('overall_score', 0)
+            logger.info(f"Optimized resume ATS score: {new_score}%")
 
-            # Use ATS scores for comparison
-            original_score = original_ats_score
-            new_score = new_ats_score
+            # Keep using the original_score from initial analysis
+            # Don't re-calculate it to ensure consistency
 
         except Exception as e:
             logger.warning(f"Failed to calculate ATS scores, falling back to match score: {str(e)}")
@@ -2113,9 +2108,142 @@ def download_resume():
         resume_text = data.get('resume_text', '')
         file_format = data.get('format', 'txt').lower()  # pdf, docx, or txt
         template_name = data.get('template', 'professional_modern')  # Get selected template
-        
+
         # Normalize template name (handle case variations)
         template_name = template_name.lower().strip() if template_name else 'professional_modern'
+
+        # Check if resume_text is JSON and convert it to formatted text
+        import json
+        try:
+            # Try to parse as JSON
+            resume_json = json.loads(resume_text)
+            logger.info("Detected JSON format resume, converting to formatted text")
+
+            # Convert JSON to formatted text with precise spacing rules
+            formatted_lines = []
+            sections_added = []  # Track sections to manage spacing
+
+            # Header - Cleaner format without pipe separators
+            if resume_json.get('name'):
+                formatted_lines.append(resume_json['name'])
+            if resume_json.get('title'):
+                formatted_lines.append(resume_json['title'])
+            if resume_json.get('contact'):
+                # Join contact info with pipe separators (matches blue banner format)
+                formatted_lines.append(' | '.join(resume_json['contact']))
+            sections_added.append('header')
+
+            # Summary
+            if resume_json.get('summary'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('SUMMARY')
+                formatted_lines.append(resume_json['summary'])
+                sections_added.append('summary')
+
+            # Skills
+            if resume_json.get('skills'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('SKILLS')
+                for category, skills_list in resume_json['skills'].items():
+                    formatted_lines.append(f"{category}: {', '.join(skills_list)}")
+                sections_added.append('skills')
+
+            # Experience
+            if resume_json.get('experience'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('EXPERIENCE')
+                for idx, job in enumerate(resume_json['experience']):
+                    job_line = f"{job.get('company', '')}, {job.get('location', '')} | {job.get('title', '')} | {job.get('dates', '')}"
+                    formatted_lines.append(job_line)
+                    if job.get('bullets'):
+                        for bullet in job['bullets']:
+                            # Use bullet point character (•) consistently - 0 blank lines between bullets
+                            formatted_lines.append(f"• {bullet}")
+                    # Exactly 1 blank line between job entries (not after last job)
+                    if idx < len(resume_json['experience']) - 1:
+                        formatted_lines.append('')
+                sections_added.append('experience')
+
+            # Education
+            if resume_json.get('education'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('EDUCATION')
+                for edu in resume_json['education']:
+                    if isinstance(edu, dict):
+                        edu_line = f"{edu.get('degree', '')} | {edu.get('institution', '')}"
+                        if edu.get('location'):
+                            edu_line += f" | {edu['location']}"
+                        formatted_lines.append(edu_line)
+                    else:
+                        formatted_lines.append(str(edu))
+                sections_added.append('education')
+
+            # Certifications
+            if resume_json.get('certifications'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('CERTIFICATIONS')
+                for cert in resume_json['certifications']:
+                    formatted_lines.append(f"• {cert}")  # Use • for consistency
+                sections_added.append('certifications')
+
+            # Projects
+            if resume_json.get('projects'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('PROJECTS')
+                for idx, project in enumerate(resume_json['projects']):
+                    if isinstance(project, dict):
+                        formatted_lines.append(project.get('name', ''))
+                        if project.get('bullets'):
+                            for bullet in project['bullets']:
+                                formatted_lines.append(f"• {bullet}")  # 0 blank lines between bullets
+                        # Exactly 1 blank line between project entries (not after last project)
+                        if idx < len(resume_json['projects']) - 1:
+                            formatted_lines.append('')
+                    else:
+                        formatted_lines.append(str(project))
+                sections_added.append('projects')
+
+            # Awards
+            if resume_json.get('awards'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('AWARDS & HONORS')
+                for award in resume_json['awards']:
+                    formatted_lines.append(f"• {award}")  # Use • for consistency
+                sections_added.append('awards')
+
+            # Publications
+            if resume_json.get('publications'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('PUBLICATIONS')
+                for pub in resume_json['publications']:
+                    formatted_lines.append(f"• {pub}")  # Use • for consistency
+                sections_added.append('publications')
+
+            # Volunteer
+            if resume_json.get('volunteer'):
+                if sections_added:
+                    formatted_lines.append('')  # Exactly 1 blank line between sections
+                formatted_lines.append('VOLUNTEER WORK')
+                for vol in resume_json['volunteer']:
+                    formatted_lines.append(f"• {vol}")  # Use • for consistency
+                sections_added.append('volunteer')
+
+            # Join all lines
+            resume_text = '\n'.join(formatted_lines)
+            logger.info("Successfully converted JSON to formatted text")
+
+        except json.JSONDecodeError:
+            # Not JSON, use as-is
+            logger.info("Resume text is not JSON, using as plain text")
+            pass
 
         # REORDER SECTIONS according to template configuration
         logger.info(f"Applying section reordering for download - Template: {template_name}")
@@ -2156,8 +2284,8 @@ def download_resume():
                 
                 buffer = io.BytesIO()
                 doc = SimpleDocTemplate(buffer, pagesize=letter,
-                                      rightMargin=72, leftMargin=72,
-                                      topMargin=72, bottomMargin=18)
+                                      rightMargin=54, leftMargin=54,
+                                      topMargin=54, bottomMargin=54)  # 0.75" margins all sides (ATS-friendly)
                 
                 # Container for the 'Flowable' objects
                 elements = []
@@ -2172,13 +2300,13 @@ def download_resume():
                 header_name_style = ParagraphStyle(
                     'HeaderName',
                     parent=styles['Heading1'],
-                    fontSize=20,
+                    fontSize=16,  # ATS-friendly: 14-16pt for name
                     textColor='#000000',  # Name stays black
-                    spaceAfter=8,  # Increased from 4
+                    spaceAfter=8,
                     spaceBefore=0,
                     alignment=TA_CENTER,
                     fontName='Helvetica-Bold',
-                    leading=26  # Increased from 24
+                    leading=20  # Line height proportional to font size
                 )
                 
                 header_title_style = ParagraphStyle(
@@ -2214,10 +2342,10 @@ def download_resume():
                 main_section_style = ParagraphStyle(
                     'MainSection',
                     parent=styles['Heading1'],
-                    fontSize=12,  # Match preview: 12pt
+                    fontSize=11,  # ATS-friendly: 10-12pt for body text
                     textColor=accent_color if template_name != 'tech_minimalist' else '#000000',
-                    spaceAfter=8,  # Increased from 4
-                    spaceBefore=16,  # Increased from 10
+                    spaceAfter=6,  # 6pt after section headers
+                    spaceBefore=12,  # 12pt between sections
                     alignment=TA_LEFT,
                     fontName='Helvetica-Bold'
                 )
@@ -2265,20 +2393,23 @@ def download_resume():
                     firstLineIndent=0
                 )
                 
-                # Bullet point style - aligned with company name (matching Word format)
+                # Bullet point style - ATS-friendly formatting matching DOCX
                 bullet_style = ParagraphStyle(
                     'Bullet',
                     parent=styles['Normal'],
-                    fontSize=10,
-                    leading=15,  # Increased from 12 for better line spacing
-                    spaceAfter=3,  # Increased from 1
-                    spaceBefore=1,  # Added spacing before
-                    leftIndent=18,  # Added indent for bullet alignment
+                    fontSize=11,  # ATS-friendly: 10-12pt for body
+                    leading=12.65,  # 1.15 line spacing (11 * 1.15 = 12.65)
+                    spaceAfter=6,  # 6pt after bullets (ATS standard)
+                    spaceBefore=0,
+                    leftIndent=36,  # 0.5" text indent (36pt = 0.5")
                     rightIndent=0,
-                    firstLineIndent=-18,  # Hanging indent for bullets
-                    bulletIndent=0,
-                    alignment=TA_LEFT,
-                    fontName='Helvetica'
+                    firstLineIndent=-18,  # Bullets at 0.25" (36 - 18 = 18pt = 0.25")
+                    bulletIndent=18,  # Align bullet at 0.25" (18pt)
+                    alignment=TA_LEFT,  # Left-aligned, never justified for ATS
+                    fontName='Helvetica',
+                    bulletFontName='Helvetica',
+                    bulletFontSize=11,
+                    wordWrap='LTR'  # Left-to-right word wrapping
                 )
                 
                 # Normal text style
@@ -2345,9 +2476,9 @@ def download_resume():
                     elif line_data['type'] == 'header_contact':
                         # Parse contact line and create clickable hyperlinks for LinkedIn/GitHub
                         contact_text = line_data['text']
-                        # Find LinkedIn and GitHub URLs
-                        linkedin_match = re.search(r'(LinkedIn:\s*)(https?://)?(www\.)?(linkedin\.com/[^\s|,;]+)', contact_text, re.IGNORECASE)
-                        github_match = re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s|,;]+)', contact_text, re.IGNORECASE)
+                        # Find LinkedIn and GitHub URLs (handle pipe, comma, semicolon separators)
+                        linkedin_match = re.search(r'(LinkedIn:\s*)(https?://)?(www\.)?(linkedin\.com/[^\s,;|]+)', contact_text, re.IGNORECASE)
+                        github_match = re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s,;|]+)', contact_text, re.IGNORECASE)
                         
                         # Build HTML with hyperlinks
                         contact_html = contact_text
@@ -2418,7 +2549,9 @@ def download_resume():
                         para = Paragraph(line_data['text'], project_entry_style)
                         elements.append(para)
                     elif line_data['type'] == 'bullet':
-                        para = Paragraph(f"• {line_data['text']}", bullet_style)
+                        # Use proper bullet formatting with non-breaking space for better alignment
+                        bullet_text = f"•&nbsp;&nbsp;{line_data['text']}"
+                        para = Paragraph(bullet_text, bullet_style)
                         elements.append(para)
                     else:  # normal
                         para = Paragraph(line_data['text'], normal_style)
@@ -2453,12 +2586,20 @@ def download_resume():
                 from docx.enum.text import WD_ALIGN_PARAGRAPH
                 
                 doc = Document()
-                
+
+                # Set ATS-friendly margins (0.75" all sides)
+                sections = doc.sections
+                for section in sections:
+                    section.top_margin = Inches(0.75)
+                    section.bottom_margin = Inches(0.75)
+                    section.left_margin = Inches(0.75)
+                    section.right_margin = Inches(0.75)
+
                 # Set default font
                 style = doc.styles['Normal']
                 font = style.font
                 font.name = 'Calibri'
-                font.size = Pt(11)
+                font.size = Pt(11)  # ATS-friendly: 10-12pt for body
                 
                 # Parse and format lines
                 lines = [l.strip() for l in resume_text.split('\n') if l.strip()]  # Remove empty lines
@@ -2537,9 +2678,9 @@ def download_resume():
                         para.alignment = WD_ALIGN_PARAGRAPH.CENTER
                         run = para.add_run(line_data['text'])
                         run.bold = True
-                        run.font.size = Pt(20)
+                        run.font.size = Pt(16)  # ATS-friendly: 14-16pt for name
                         run.font.color.rgb = RGBColor(0, 0, 0)  # Name stays black
-                        para.paragraph_format.space_after = Pt(8)  # Increased from 4
+                        para.paragraph_format.space_after = Pt(8)
                         # Add border-bottom for templates that support it (Professional Modern & Data Professional)
                         if has_underline and template_name != 'tech_minimalist':
                             from docx.oxml import OxmlElement
@@ -2607,15 +2748,15 @@ def download_resume():
                         
                         # Parse contact line and create clickable hyperlinks for LinkedIn/GitHub
                         contact_text = line_data['text']
-                        # Split by | to preserve structure
+                        # Split by pipe to preserve structure
                         parts = contact_text.split('|')
                         for i, part in enumerate(parts):
                             part = part.strip()
                             if not part:
                                 continue
-                            
+
                             # Check for LinkedIn
-                            linkedin_match = re.search(r'(LinkedIn:\s*)(https?://)?(www\.)?(linkedin\.com/[^\s|,;]+)', part, re.IGNORECASE)
+                            linkedin_match = re.search(r'(LinkedIn:\s*)(https?://)?(www\.)?(linkedin\.com/[^\s,;|]+)', part, re.IGNORECASE)
                             if linkedin_match:
                                 label = linkedin_match.group(1)
                                 protocol = linkedin_match.group(2) or 'https://'
@@ -2650,8 +2791,8 @@ def download_resume():
                                     run.font.color.rgb = RGBColor(253, 197, 0)  # Yellow color
                                     run.underline = True
                             # Check for GitHub
-                            elif re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s|,;]+)', part, re.IGNORECASE):
-                                github_match = re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s|,;]+)', part, re.IGNORECASE)
+                            elif re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s,;|]+)', part, re.IGNORECASE):
+                                github_match = re.search(r'(GitHub:\s*)(https?://)?(www\.)?(github\.com/[^\s,;|]+)', part, re.IGNORECASE)
                                 label = github_match.group(1)
                                 protocol = github_match.group(2) or 'https://'
                                 www = github_match.group(3) or ''
@@ -2711,11 +2852,11 @@ def download_resume():
                         para = doc.add_paragraph()
                         run = para.add_run(line_data['text'])
                         run.bold = True
-                        run.font.size = Pt(12)  # Match preview: 12pt
+                        run.font.size = Pt(11)  # ATS-friendly: 10-12pt for body
                         # Apply template-specific color using accent_rgb from template config
                         run.font.color.rgb = RGBColor(accent_rgb[0], accent_rgb[1], accent_rgb[2])
-                        para.paragraph_format.space_before = Pt(14)  # Increased from 10
-                        para.paragraph_format.space_after = Pt(6)  # Increased from 4
+                        para.paragraph_format.space_before = Pt(12)  # 12pt between sections (ATS standard)
+                        para.paragraph_format.space_after = Pt(6)  # 6pt after section headers (ATS standard)
                         # Add underline for templates that support it
                         if has_underline and template_name != 'tech_minimalist':
                             from docx.oxml import OxmlElement
@@ -2757,14 +2898,18 @@ def download_resume():
                         para.paragraph_format.space_before = Pt(5)  # Increased from 3
                         para.paragraph_format.space_after = Pt(2)  # Increased from 1
                     elif line_data['type'] == 'bullet':
-                        para = doc.add_paragraph()
-                        run = para.add_run('• ' + line_data['text'])
-                        run.font.size = Pt(10)
-                        para.paragraph_format.left_indent = Pt(18)  # Proper bullet indent
-                        para.paragraph_format.first_line_indent = Pt(-18)  # Hanging indent
-                        para.paragraph_format.space_after = Pt(3)  # Increased from 1
-                        para.paragraph_format.space_before = Pt(1)  # Added spacing
-                        para.paragraph_format.line_spacing = 1.3  # Better line height
+                        # Use python-docx add_paragraph with style for proper bullet formatting
+                        para = doc.add_paragraph(line_data['text'], style='List Bullet')
+                        run = para.runs[0]
+                        run.font.size = Pt(11)  # ATS-friendly: 10-12pt for body
+                        # Configure spacing and alignment
+                        para.paragraph_format.space_after = Pt(6)  # 6pt after bullets (ATS standard)
+                        para.paragraph_format.space_before = Pt(0)
+                        para.paragraph_format.line_spacing = 1.15  # 1.15 line spacing (ATS standard)
+                        para.alignment = WD_ALIGN_PARAGRAPH.LEFT  # Left-aligned, never justified for ATS
+                        # List Bullet style handles the indent automatically with proper hanging indent
+                        para.paragraph_format.left_indent = Inches(0.5)  # Text at 0.5"
+                        para.paragraph_format.first_line_indent = Inches(-0.25)  # Bullet at 0.25"
                     else:  # normal
                         para = doc.add_paragraph()
                         run = para.add_run(line_data['text'])

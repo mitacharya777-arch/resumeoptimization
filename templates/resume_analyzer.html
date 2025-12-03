@@ -8,6 +8,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
+
+    <!-- PDF.js for client-side PDF rendering -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
+    <!-- mammoth.js for client-side DOCX to HTML conversion -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -71,15 +77,15 @@
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 2rem;
+            padding: 1.5rem;
             position: relative;
             z-index: 1;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 3rem;
-            padding: 3rem 0;
+            margin-bottom: 2rem;
+            padding: 2rem 0;
             animation: fadeInDown 0.6s ease-out;
         }
 
@@ -87,25 +93,25 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 1.5rem;
+            gap: 1rem;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
             gap: 1.5rem;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.25rem;
         }
 
         .careervest-logo {
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 0.875rem;
         }
 
         .logo-icon {
-            width: 90px;
-            height: 90px;
+            width: 75px;
+            height: 75px;
             position: relative;
             display: flex;
             align-items: center;
@@ -126,7 +132,7 @@
         }
 
         .logo-text .career {
-            font-size: 2.8rem;
+            font-size: 2.4rem;
             font-weight: 800;
             color: #ffffff;
             letter-spacing: 0.08em;
@@ -146,7 +152,7 @@
         .header h1 {
             font-size: clamp(1.5rem, 4vw, 2.5rem);
             font-weight: 700;
-            background: linear-gradient(135deg, #FDC500 0%, #ffffff 100%);
+            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 50%, #ffffff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -164,8 +170,8 @@
         .main-content {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-            margin-bottom: 2rem;
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
             animation: fadeInUp 0.8s ease-out;
         }
 
@@ -174,7 +180,7 @@
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 28px;
-            padding: 2.75rem 3rem;
+            padding: 2rem 2.25rem;
             transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             box-shadow:
                 0 10px 30px -5px rgba(104, 42, 83, 0.3),
@@ -244,12 +250,12 @@
         }
 
         .form-group {
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             font-weight: 600;
             color: var(--text);
             font-size: 1rem;
@@ -259,11 +265,11 @@
         .upload-area {
             border: 2px dashed var(--border);
             border-radius: 20px;
-            padding: 2.5rem;
+            padding: 2rem;
             text-align: center;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             background: var(--bg-glass);
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             cursor: pointer;
         }
 
@@ -376,34 +382,34 @@
         }
 
         .btn-download {
-            background: linear-gradient(135deg, #FDC500 0%, #ffd633 50%, #FDC500 100%);
+            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 50%, #682A53 100%);
             background-size: 200% 100%;
             background-position: 0% 50%;
-            color: #2a1a25;
+            color: #ffffff;
             padding: 1rem 2.25rem;
             font-size: 1rem;
             font-weight: 800;
             box-shadow:
-                0 8px 24px rgba(253, 197, 0, 0.5),
-                0 4px 12px rgba(104, 42, 83, 0.2),
-                inset 0 2px 0 rgba(255, 255, 255, 0.3);
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+                0 8px 24px rgba(104, 42, 83, 0.5),
+                0 4px 12px rgba(253, 197, 0, 0.25),
+                inset 0 2px 0 rgba(255, 255, 255, 0.15);
+            border: 2px solid rgba(253, 197, 0, 0.4);
+            text-shadow: none;
         }
 
         .btn-download::before {
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent);
+            background: linear-gradient(90deg, transparent, rgba(253, 197, 0, 0.3), transparent);
         }
 
         .btn-download:hover {
             transform: translateY(-4px) scale(1.02);
             box-shadow:
-                0 14px 40px rgba(253, 197, 0, 0.65),
-                0 8px 20px rgba(253, 197, 0, 0.5),
-                inset 0 2px 0 rgba(255, 255, 255, 0.4),
-                0 0 35px rgba(253, 197, 0, 0.5);
+                0 14px 40px rgba(104, 42, 83, 0.65),
+                0 8px 20px rgba(253, 197, 0, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(253, 197, 0, 0.3);
             background-position: 100% 50%;
-            border-color: rgba(255, 255, 255, 0.5);
+            border-color: var(--accent);
         }
 
         .btn-download:active {
@@ -411,30 +417,34 @@
         }
 
         .btn-upload {
-            background: linear-gradient(135deg, rgba(104, 42, 83, 0.2) 0%, rgba(104, 42, 83, 0.3) 100%);
-            color: var(--text);
-            border: 2px solid var(--border);
+            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 50%, #682A53 100%);
+            background-size: 200% 100%;
+            background-position: 0% 50%;
+            color: #ffffff;
+            border: 2px solid rgba(253, 197, 0, 0.4);
             padding: 1rem 2.25rem;
             font-size: 1rem;
             font-weight: 600;
-            backdrop-filter: blur(10px);
             box-shadow:
-                0 4px 14px rgba(0, 0, 0, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                0 8px 24px rgba(104, 42, 83, 0.5),
+                0 4px 12px rgba(253, 197, 0, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.15);
         }
 
         .btn-upload::before {
-            background: linear-gradient(90deg, transparent, rgba(253, 197, 0, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(253, 197, 0, 0.3), transparent);
         }
 
         .btn-upload:hover {
-            background: linear-gradient(135deg, rgba(104, 42, 83, 0.35) 0%, rgba(104, 42, 83, 0.45) 100%);
+            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 50%, #682A53 100%);
+            background-position: 100% 50%;
             border-color: var(--accent);
-            color: var(--accent);
+            color: #ffffff;
             box-shadow:
-                0 8px 24px rgba(104, 42, 83, 0.4),
-                0 0 20px rgba(253, 197, 0, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.15);
+                0 14px 40px rgba(104, 42, 83, 0.65),
+                0 8px 20px rgba(253, 197, 0, 0.4),
+                inset 0 2px 0 rgba(255, 255, 255, 0.2),
+                0 0 30px rgba(253, 197, 0, 0.3);
             transform: translateY(-3px) scale(1.01);
         }
 
@@ -460,7 +470,7 @@
 
         textarea {
             width: 100%;
-            padding: 1.5rem 1.75rem;
+            padding: 1.25rem 1.5rem;
             background: rgba(255, 255, 255, 0.06);
             border: 2px solid rgba(104, 42, 83, 0.3);
             border-radius: 16px;
@@ -468,7 +478,7 @@
             font-family: inherit;
             font-size: 1rem;
             resize: vertical;
-            min-height: 240px;
+            min-height: 200px;
             transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             line-height: 1.8;
             box-shadow:
@@ -613,7 +623,7 @@
             font-weight: 700;
             color: var(--text);
             margin-bottom: 1rem;
-            background: linear-gradient(135deg, #FDC500 0%, #ffffff 100%);
+            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 50%, #ffffff 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -662,11 +672,11 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #682A53, #FDC500, #682A53);
+            background: linear-gradient(90deg, #682A53, #8a3a6d, #682A53);
             background-size: 200% 100%;
             animation: progressSlide 2s ease-in-out infinite;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(253, 197, 0, 0.6);
+            box-shadow: 0 0 20px rgba(104, 42, 83, 0.6);
         }
 
         @keyframes progressSlide {
@@ -781,9 +791,9 @@
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #682A53, #FDC500);
+            background: linear-gradient(90deg, #682A53, #8a3a6d);
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(253, 197, 0, 0.6);
+            box-shadow: 0 0 20px rgba(104, 42, 83, 0.6);
             transition: width 0.3s ease;
             width: 0%;
         }
@@ -912,8 +922,8 @@
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #682A53, #FDC500, #ffffff);
-            box-shadow: 0 0 10px rgba(253, 197, 0, 0.5);
+            background: linear-gradient(90deg, #682A53, #8a3a6d, #ffffff);
+            box-shadow: 0 0 10px rgba(104, 42, 83, 0.5);
         }
 
         .score-circle {
@@ -946,9 +956,9 @@
         }
 
         .score-high {
-            background: linear-gradient(135deg, #FDC500 0%, #ffd633 100%);
-            color: #682A53;
-            box-shadow: 0 0 30px rgba(253, 197, 0, 0.5);
+            background: linear-gradient(135deg, #682A53 0%, #8a3a6d 50%, #682A53 100%);
+            color: #ffffff;
+            box-shadow: 0 0 30px rgba(104, 42, 83, 0.5);
         }
 
         .score-medium {
@@ -985,8 +995,8 @@
             backdrop-filter: blur(20px);
             border: 1px solid var(--border);
             border-radius: 20px;
-            padding: 2rem;
-            margin-bottom: 1.5rem;
+            padding: 1.75rem;
+            margin-bottom: 1.25rem;
             transition: all 0.3s;
             box-shadow: var(--shadow);
         }
@@ -998,7 +1008,7 @@
 
         .analysis-card h3 {
             font-size: 1.5rem;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.25rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
@@ -2811,37 +2821,57 @@
         </div>
 
         <div id="results" style="display: none;" class="results-section">
-            <!-- Top Section: Score Overview with Breakdown -->
-            <div class="dashboard-score-card">
-                <div class="score-header">
-                    <div class="score-main">
-                        <div id="score-circle" class="score-circle">
-                            <span id="score-value">0%</span>
-                        </div>
-                        <div class="score-info">
-                            <h2 id="score-message">Analyzing...</h2>
-                            <p id="score-description"></p>
-                        </div>
+            <!-- Ultra Clean Score Display -->
+            <div class="dashboard-score-card" style="text-align: center; padding: 3rem 2rem;">
+                <div class="score-main" style="display: flex; flex-direction: column; align-items: center; gap: 1.5rem;">
+                    <div id="score-circle" class="score-circle" style="margin: 0;">
+                        <span id="score-value">0%</span>
                     </div>
-                    <div class="score-potential">
-                        <div class="potential-badge">
-                            <span class="potential-label">Potential</span>
-                            <span id="potential-score" class="potential-value">0/100</span>
-                        </div>
+                    <div class="score-info">
+                        <h2 id="score-message" style="margin-bottom: 0.5rem;">Analyzing...</h2>
+                        <p id="score-description" style="font-size: 1.1rem;"></p>
                     </div>
-                </div>
 
-                <!-- Score Breakdown -->
-                <div class="score-breakdown">
-                    <h3><i class="fas fa-chart-bar"></i> Score Breakdown</h3>
-                    <div id="score-breakdown-items" class="breakdown-items">
-                        <!-- Will be populated by JavaScript -->
+                    <!-- Primary CTA Button -->
+                    <div id="optimization-section-inline" class="optimization-section" style="margin-top: 1rem; width: 100%; max-width: 400px;">
+                        <button id="optimize-btn-main" class="btn btn-primary" onclick="optimizeResume()"
+                                style="width: 100%; padding: 1.25rem 2rem; font-size: 1.1rem; font-weight: 700;">
+                            <i class="fas fa-magic"></i> Optimize My Resume
+                        </button>
                     </div>
-                    <div class="breakdown-footer">
-                        <p id="breakdown-message"><i class="fas fa-lightbulb"></i> Complete critical actions to reach your potential score</p>
-                    </div>
+
+                    <!-- Show Details Toggle -->
+                    <button onclick="toggleResultsDetails()"
+                            style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.95rem; margin-top: 1rem; display: flex; align-items: center; gap: 0.5rem; transition: all 0.3s;">
+                        <span id="details-toggle-text">▼ Show Detailed Analysis</span>
+                    </button>
                 </div>
             </div>
+
+            <!-- Detailed Analysis Section (Hidden by Default) -->
+            <div id="detailed-analysis" style="display: none; margin-top: 2rem;">
+                <!-- Score Header with Potential -->
+                <div class="dashboard-score-card">
+                    <div class="score-header">
+                        <div class="score-potential">
+                            <div class="potential-badge">
+                                <span class="potential-label">Potential</span>
+                                <span id="potential-score" class="potential-value">0/100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Score Breakdown -->
+                    <div class="score-breakdown">
+                        <h3><i class="fas fa-chart-bar"></i> Score Breakdown</h3>
+                        <div id="score-breakdown-items" class="breakdown-items">
+                            <!-- Will be populated by JavaScript -->
+                        </div>
+                        <div class="breakdown-footer">
+                            <p id="breakdown-message"><i class="fas fa-lightbulb"></i> Complete critical actions to reach your potential score</p>
+                        </div>
+                    </div>
+                </div>
 
             <!-- Middle Section: Priority Actions -->
             <div class="actions-dashboard">
@@ -2902,21 +2932,91 @@
                 <div id="ats-analysis-content"></div>
             </div>
 
-            <div id="optimization-section" class="optimization-section">
-                <div class="btn-center">
-                    <button id="optimize-btn" class="btn btn-primary" onclick="optimizeResume()">
-                        <i class="fas fa-magic"></i> Optimize Resume
-                    </button>
-                </div>
             </div>
+            <!-- End of Detailed Analysis Section -->
         </div>
 
         <div id="optimization-results" style="display: none;" class="results-section">
-            <!-- Score Comparison Card -->
-            <div id="score-comparison-card" style="display: none; margin-bottom: 2rem;" class="analysis-card">
-                <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Score Improvement</h3>
-                <div id="score-comparison-content"></div>
+            <!-- Ultra Clean Score Improvement Display -->
+            <div class="dashboard-score-card" style="text-align: center; padding: 3rem 2rem;">
+                <h2 style="margin-bottom: 2rem; font-size: 2rem;">
+                    <i class="fas fa-check-circle" style="color: var(--success);"></i> Resume Optimized!
+                </h2>
+
+                <!-- Score Improvement Summary -->
+                <div id="score-comparison-summary" style="margin-bottom: 2rem;">
+                    <!-- Will be populated by JavaScript -->
+                </div>
+
             </div>
+
+            <!-- Before / After Comparison (Always Visible) -->
+            <div class="analysis-card" id="before-after-comparison" style="margin-top: 2rem;">
+                <h3><i class="fas fa-code-branch" style="color: var(--primary);"></i> Before / After Comparison</h3>
+
+                <div class="comparison-view">
+                    <div class="resume-panel" id="original-resume-panel">
+                        <h4><i class="fas fa-file-alt"></i> Original Resume</h4>
+                        <div id="original-resume" class="resume-content"></div>
+                    </div>
+                    <div class="resume-panel" id="optimized-resume-panel">
+                        <div class="resume-panel-header">
+                            <h4><i class="fas fa-star"></i> Optimized Resume</h4>
+                        </div>
+                        <button class="resume-expand-btn" id="resume-expand-btn" onclick="toggleResumePreview()" style="display: none;">
+                            <i class="fas fa-chevron-down"></i>
+                            <span id="resume-expand-text">Show Full Resume</span>
+                        </button>
+                        <div id="optimized-resume" class="resume-content preview-mode">
+                            <div class="resume-preview-fade"></div>
+                        </div>
+
+                        <!-- Template Selection & Download Section -->
+                        <div id="download-section"
+                            style="display: none; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
+
+                            <!-- Download Controls -->
+                            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                                <!-- Format Selection -->
+                                <div>
+                                    <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">
+                                        Select Format
+                                    </label>
+                                    <select id="download-format"
+                                        style="width: 100%; padding: 0.875rem 1.25rem; background: #ffffff; border: 2px solid rgba(104, 42, 83, 0.3); border-radius: 8px; color: #1a1a1a; font-size: 1rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s;">
+                                        <option value="pdf">PDF Document (.pdf)</option>
+                                        <option value="docx">Word Document (.docx)</option>
+                                        <option value="txt">Text File (.txt)</option>
+                                    </select>
+                                </div>
+
+                                <!-- Download Button -->
+                                <button class="btn btn-download" onclick="downloadOptimizedResume()" id="download-btn"
+                                    style="width: 100%; padding: 1rem 1.5rem; font-size: 1rem; font-weight: 600;">
+                                    <i class="fas fa-download"></i> Download Resume
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Show Detailed Analytics Toggle -->
+            <div style="text-align: center; margin: 2rem 0;">
+                <button onclick="toggleOptimizationDetails()"
+                        style="background: none; border: none; color: var(--text-muted); cursor: pointer; font-size: 0.95rem; display: inline-flex; align-items: center; gap: 0.5rem; transition: all 0.3s;">
+                    <span id="optimization-details-toggle-text">▼ Show Detailed Analytics</span>
+                </button>
+            </div>
+
+            <!-- Detailed Analytics Section (Hidden by Default) -->
+            <div id="detailed-optimization-analytics" style="display: none;">
+
+                <!-- Score Comparison Card -->
+                <div id="score-comparison-card" style="display: none; margin-bottom: 2rem;" class="analysis-card">
+                    <h3><i class="fas fa-chart-line" style="color: var(--primary);"></i> Score Improvement</h3>
+                    <div id="score-comparison-content"></div>
+                </div>
 
             <!-- Section Breakdown Card -->
             <div id="section-breakdown-card" style="display: none; margin-bottom: 2rem;" class="analysis-card">
@@ -2967,8 +3067,9 @@
                 </div>
             </div>
 
+            <!-- Statistics Panel (Kept in detailed analytics) -->
             <div class="analysis-card">
-                <h3><i class="fas fa-code-branch" style="color: var(--primary);"></i> Before / After Comparison</h3>
+                <h3><i class="fas fa-chart-bar" style="color: var(--primary);"></i> Statistics</h3>
 
                 <!-- Statistics Panel -->
                 <div class="stats-panel" id="stats-panel" style="display: none;">
@@ -3013,110 +3114,9 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="comparison-view">
-                    <div class="resume-panel" id="original-resume-panel">
-                        <h4><i class="fas fa-file-alt"></i> Original Resume</h4>
-                        <div id="original-resume" class="resume-content"></div>
-                    </div>
-                    <div class="resume-panel" id="optimized-resume-panel">
-                        <div class="resume-panel-header">
-                            <h4><i class="fas fa-star"></i> Optimized Resume</h4>
-                        </div>
-                        <button class="resume-expand-btn" id="resume-expand-btn" onclick="toggleResumePreview()" style="display: none;">
-                            <i class="fas fa-chevron-down"></i>
-                            <span id="resume-expand-text">Show Full Resume</span>
-                        </button>
-                        <div id="optimized-resume" class="resume-content preview-mode">
-                            <div class="resume-preview-fade"></div>
-                        </div>
-
-                        <!-- Template Selection & Download Section -->
-                        <div id="download-section"
-                            style="display: none; margin-top: 1.5rem; border-top: 1px solid var(--border); padding-top: 1.5rem;">
-
-                            <!-- Template Carousel -->
-                            <div style="margin-bottom: 1.5rem;">
-                                <h5
-                                    style="margin-bottom: 0.8rem; color: var(--primary); font-size: 1rem; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 700;">
-                                    Choose Design Style</h5>
-                                <div class="template-carousel"
-                                    style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
-                                    <!-- Professional Modern -->
-                                    <div class="template-option active" onclick="selectTemplate('professional_modern')"
-                                        id="tmpl-professional_modern">
-                                        <div class="template-preview"
-                                            style="background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%); border-left: 4px solid #2563eb;">
-                                            <div
-                                                style="height: 4px; width: 40%; background: #2563eb; margin-bottom: 4px;">
-                                            </div>
-                                            <div
-                                                style="height: 2px; width: 70%; background: #e5e7eb; margin-bottom: 2px;">
-                                            </div>
-                                            <div style="height: 2px; width: 60%; background: #e5e7eb;"></div>
-                                        </div>
-                                        <div class="template-name">Professional</div>
-                                    </div>
-
-                                    <!-- Tech Minimalist -->
-                                    <div class="template-option" onclick="selectTemplate('tech_minimalist')"
-                                        id="tmpl-tech_minimalist">
-                                        <div class="template-preview"
-                                            style="background: #ffffff; border: 1px solid #e5e7eb;">
-                                            <div
-                                                style="height: 2px; width: 100%; background: #000000; margin-bottom: 6px;">
-                                            </div>
-                                            <div
-                                                style="height: 2px; width: 80%; background: #e5e7eb; margin-bottom: 2px;">
-                                            </div>
-                                            <div style="height: 2px; width: 60%; background: #e5e7eb;"></div>
-                                        </div>
-                                        <div class="template-name">Minimalist</div>
-                                    </div>
-
-                                    <!-- Data Professional -->
-                                    <div class="template-option" onclick="selectTemplate('data_professional')"
-                                        id="tmpl-data_professional">
-                                        <div class="template-preview"
-                                            style="background: #ffffff; border-top: 4px solid #14b8a6;">
-                                            <div
-                                                style="height: 4px; width: 30%; background: #14b8a6; margin-bottom: 4px; border-radius: 2px;">
-                                            </div>
-                                            <div
-                                                style="height: 2px; width: 70%; background: #e5e7eb; margin-bottom: 2px;">
-                                            </div>
-                                            <div style="height: 2px; width: 50%; background: #e5e7eb;"></div>
-                                        </div>
-                                        <div class="template-name">Data Pro</div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Download Controls -->
-                            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                                <!-- Format Selection -->
-                                <div>
-                                    <label style="display: block; font-size: 0.85rem; font-weight: 600; color: var(--primary); margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.5px;">
-                                        Select Format
-                                    </label>
-                                    <select id="download-format"
-                                        style="width: 100%; padding: 0.875rem 1.25rem; background: #ffffff; border: 2px solid rgba(104, 42, 83, 0.3); border-radius: 8px; color: #1a1a1a; font-size: 1rem; font-weight: 500; cursor: pointer; outline: none; transition: all 0.3s;">
-                                        <option value="pdf">PDF Document (.pdf)</option>
-                                        <option value="docx">Word Document (.docx)</option>
-                                        <option value="txt">Text File (.txt)</option>
-                                    </select>
-                                </div>
-
-                                <!-- Download Button -->
-                                <button class="btn btn-download" onclick="downloadOptimizedResume()" id="download-btn"
-                                    style="width: 100%; padding: 1rem 1.5rem; font-size: 1rem; font-weight: 600;">
-                                    <i class="fas fa-download"></i> Download Resume
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
+            </div>
+            <!-- End of Detailed Optimization Analytics Section -->
         </div>
     </div>
 
@@ -3517,6 +3517,350 @@
             return formatted;
         }
 
+        // Professional Resume Parser - extracts structured data from resume text
+        function parseResumeText(resumeText) {
+            if (!resumeText) return null;
+
+            const lines = resumeText.split('\n').map(l => l.trim()).filter(l => l);
+            const parsed = {
+                name: '',
+                title: '',
+                contact: [],
+                sections: []
+            };
+
+            let currentSection = null;
+            let currentSubsection = null;
+
+            // Common section headers
+            const sectionHeaders = [
+                'SUMMARY', 'PROFESSIONAL SUMMARY', 'PROFILE', 'OBJECTIVE',
+                'EXPERIENCE', 'WORK EXPERIENCE', 'PROFESSIONAL EXPERIENCE', 'EMPLOYMENT HISTORY',
+                'SKILLS', 'TECHNICAL SKILLS', 'CORE COMPETENCIES', 'EXPERTISE',
+                'EDUCATION', 'ACADEMIC BACKGROUND',
+                'CERTIFICATIONS', 'CERTIFICATES', 'PROFESSIONAL CERTIFICATIONS',
+                'PROJECTS', 'KEY PROJECTS',
+                'ACHIEVEMENTS', 'ACCOMPLISHMENTS',
+                'AWARDS', 'HONORS'
+            ];
+
+            // Extract name (usually first non-empty line)
+            if (lines.length > 0) {
+                parsed.name = lines[0];
+            }
+
+            // Parse through lines
+            for (let i = 1; i < lines.length; i++) {
+                const line = lines[i];
+                const upperLine = line.toUpperCase();
+
+                // Check if line is a section header
+                const isSection = sectionHeaders.some(header => upperLine === header || upperLine === header + ':');
+
+                if (isSection) {
+                    // Start new section
+                    currentSection = {
+                        title: line.replace(':', '').trim(),
+                        type: upperLine.replace(':', '').trim(),
+                        content: [],
+                        subsections: []
+                    };
+                    parsed.sections.push(currentSection);
+                    currentSubsection = null;
+                }
+                // Check for job title / company (usually has dates or | separator)
+                else if (line.includes('|') || /\d{4}/.test(line) || /\d{1,2}\/\d{4}/.test(line)) {
+                    // Likely a job header or date line
+                    if (currentSection && (currentSection.type.includes('EXPERIENCE') || currentSection.type.includes('EDUCATION'))) {
+                        currentSubsection = {
+                            header: line,
+                            bullets: []
+                        };
+                        currentSection.subsections.push(currentSubsection);
+                    } else if (currentSection) {
+                        currentSection.content.push(line);
+                    } else {
+                        // Contact info or title
+                        if (i === 1 || i === 2) {
+                            if (line.includes('@') || line.includes('|') || /\d{3}/.test(line)) {
+                                parsed.contact.push(line);
+                            } else {
+                                parsed.title = line;
+                            }
+                        }
+                    }
+                }
+                // Check for bullet points (must start with bullet marker)
+                else if (line.match(/^[-•·*]\s/)) {
+                    const cleanLine = line.replace(/^[-•·*]\s*/, '');
+                    if (currentSubsection) {
+                        currentSubsection.bullets.push(cleanLine);
+                    } else if (currentSection) {
+                        currentSection.content.push(cleanLine);
+                    }
+                }
+                // Lines in experience subsections (continued bullets without markers)
+                else if (currentSubsection && currentSection && currentSection.type.includes('EXPERIENCE') && line.length > 30) {
+                    currentSubsection.bullets.push(line);
+                }
+                // Regular content
+                else {
+                    if (!parsed.title && i <= 3 && !line.includes('@')) {
+                        parsed.title = line;
+                    } else if (i <= 3 && (line.includes('@') || line.includes('|') || /\d{3}/.test(line))) {
+                        parsed.contact.push(line);
+                    } else if (currentSection) {
+                        currentSection.content.push(line);
+                    }
+                }
+            }
+
+            return parsed;
+        }
+
+        // Professional Resume Formatter - creates clean HTML from JSON or text
+        function formatOptimizedResumeProfessional(resumeText) {
+            let parsed;
+
+            // Try to parse as JSON first
+            try {
+                // Clean the text - remove markdown code blocks if present
+                let cleanText = resumeText.trim();
+                if (cleanText.startsWith('```json')) {
+                    cleanText = cleanText.replace(/^```json\s*/, '').replace(/```\s*$/, '');
+                } else if (cleanText.startsWith('```')) {
+                    cleanText = cleanText.replace(/^```\s*/, '').replace(/```\s*$/, '');
+                }
+
+                parsed = JSON.parse(cleanText);
+                console.log('Successfully parsed JSON resume:', parsed);
+            } catch (e) {
+                // Fallback to text parsing
+                console.log('JSON parse failed, falling back to text parsing:', e);
+                parsed = parseResumeText(resumeText);
+            }
+
+            if (!parsed) return '<p style="color: #666;">No resume content available</p>';
+
+            let html = '<div style="font-family: \'Inter\', -apple-system, sans-serif; color: #000; line-height: 1.6; max-width: 100%; padding: 2rem; background: #fff; border-radius: 8px;">';
+
+            // Header Section
+            html += '<div style="text-align: center; border-bottom: 2px solid #000; padding-bottom: 1rem; margin-bottom: 1.5rem;">';
+
+            // Name
+            if (parsed.name) {
+                html += `<h1 style="margin: 0 0 0.5rem 0; font-size: 2rem; font-weight: 700; color: #000; letter-spacing: 0.5px;">${escapeHtml(parsed.name)}</h1>`;
+            }
+
+            // Title
+            if (parsed.title) {
+                html += `<div style="font-size: 1.1rem; font-weight: 500; color: #333; margin-bottom: 0.5rem;">${escapeHtml(parsed.title)}</div>`;
+            }
+
+            // Contact
+            if (parsed.contact.length > 0) {
+                html += '<div style="font-size: 0.95rem; color: #555;">';
+                parsed.contact.forEach(contact => {
+                    html += `<span style="margin: 0 0.5rem;">${escapeHtml(contact)}</span>`;
+                });
+                html += '</div>';
+            }
+
+            html += '</div>';
+
+            // Check if this is JSON format (has summary field) or parsed text format (has sections array)
+            const isJSONFormat = parsed.summary !== undefined && !parsed.sections;
+
+            if (isJSONFormat) {
+                // Handle JSON format directly
+
+                // Summary Section
+                if (parsed.summary) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">SUMMARY</h2>';
+                    html += `<p style="margin: 0 0 0.75rem 0; color: #333; line-height: 1.7; text-align: justify;">${escapeHtml(parsed.summary)}</p>`;
+                    html += '</div>';
+                }
+
+                // Skills Section
+                if (parsed.skills) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">SKILLS</h2>';
+
+                    for (const [category, skills] of Object.entries(parsed.skills)) {
+                        html += `<div style="margin-bottom: 0.75rem;"><strong style="color: #000;">${escapeHtml(category)}:</strong> `;
+                        html += skills.map(skill => escapeHtml(skill)).join(', ');
+                        html += '</div>';
+                    }
+                    html += '</div>';
+                }
+
+                // Experience Section
+                if (parsed.experience && parsed.experience.length > 0) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">EXPERIENCE</h2>';
+
+                    parsed.experience.forEach(job => {
+                        html += '<div style="margin-bottom: 1.25rem;">';
+                        html += `<div style="margin-bottom: 0.5rem;"><strong style="font-size: 1.05rem; color: #000;">${escapeHtml(job.company)}, ${escapeHtml(job.location)} | ${escapeHtml(job.dates)} | ${escapeHtml(job.title)}</strong></div>`;
+
+                        if (job.bullets && job.bullets.length > 0) {
+                            job.bullets.forEach(bullet => {
+                                html += `<div style="margin-left: 1.5rem; margin-bottom: 0.4rem; position: relative; color: #333; line-height: 1.6;">
+                                    <span style="position: absolute; left: -1.5rem; color: #000;">•</span>
+                                    ${escapeHtml(bullet)}
+                                </div>`;
+                            });
+                        }
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+
+                // Education Section
+                if (parsed.education && parsed.education.length > 0) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">EDUCATION</h2>';
+
+                    parsed.education.forEach(edu => {
+                        html += `<div style="margin-bottom: 0.5rem;">${escapeHtml(edu.degree)}: ${escapeHtml(edu.institution)}, ${escapeHtml(edu.location)}</div>`;
+                    });
+                    html += '</div>';
+                }
+
+                // Projects Section
+                if (parsed.projects && parsed.projects.length > 0) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">PROJECTS</h2>';
+
+                    parsed.projects.forEach(project => {
+                        html += '<div style="margin-bottom: 1.25rem;">';
+                        html += `<div style="margin-bottom: 0.5rem;"><strong style="font-size: 1.05rem; color: #000;">${escapeHtml(project.name)} | ${escapeHtml(project.technologies)} | ${escapeHtml(project.date)}</strong></div>`;
+
+                        if (project.bullets && project.bullets.length > 0) {
+                            project.bullets.forEach(bullet => {
+                                html += `<div style="margin-left: 1.5rem; margin-bottom: 0.4rem; position: relative; color: #333; line-height: 1.6;">
+                                    <span style="position: absolute; left: -1.5rem; color: #000;">•</span>
+                                    ${escapeHtml(bullet)}
+                                </div>`;
+                            });
+                        }
+                        html += '</div>';
+                    });
+                    html += '</div>';
+                }
+
+                // Certifications Section
+                if (parsed.certifications && parsed.certifications.length > 0) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">CERTIFICATIONS</h2>';
+
+                    parsed.certifications.forEach(cert => {
+                        html += `<div style="margin-bottom: 0.5rem; color: #333;">• ${escapeHtml(cert)}</div>`;
+                    });
+                    html += '</div>';
+                }
+
+                // Awards Section
+                if (parsed.awards && parsed.awards.length > 0) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">AWARDS & HONORS</h2>';
+
+                    parsed.awards.forEach(award => {
+                        html += `<div style="margin-bottom: 0.5rem; color: #333;">• ${escapeHtml(award)}</div>`;
+                    });
+                    html += '</div>';
+                }
+
+                // Publications Section
+                if (parsed.publications && parsed.publications.length > 0) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">PUBLICATIONS</h2>';
+
+                    parsed.publications.forEach(pub => {
+                        html += `<div style="margin-bottom: 0.5rem; color: #333;">• ${escapeHtml(pub)}</div>`;
+                    });
+                    html += '</div>';
+                }
+
+                // Volunteer Section
+                if (parsed.volunteer && parsed.volunteer.length > 0) {
+                    html += '<div style="margin-bottom: 1.5rem;">';
+                    html += '<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">VOLUNTEER WORK</h2>';
+
+                    parsed.volunteer.forEach(vol => {
+                        html += `<div style="margin-bottom: 0.5rem; color: #333;">• ${escapeHtml(vol)}</div>`;
+                    });
+                    html += '</div>';
+                }
+            } else {
+                // Handle parsed text format (fallback)
+                parsed.sections.forEach(section => {
+                html += '<div style="margin-bottom: 1.5rem;">';
+
+                // Section Header
+                html += `<h2 style="font-size: 1.2rem; font-weight: 700; color: #000; text-transform: uppercase; margin: 0 0 0.75rem 0; padding-bottom: 0.25rem; border-bottom: 1px solid #ddd; letter-spacing: 0.5px;">${escapeHtml(section.title)}</h2>`;
+
+                // Section Content
+                if (section.content.length > 0) {
+                    // Special handling for SUMMARY/PROFILE sections - combine into one paragraph
+                    if (section.type.includes('SUMMARY') || section.type.includes('PROFILE') || section.type.includes('OBJECTIVE')) {
+                        const summaryText = section.content.join(' ');
+                        html += `<p style="margin: 0 0 0.75rem 0; color: #333; line-height: 1.7; text-align: justify;">${escapeHtml(summaryText)}</p>`;
+                    } else {
+                        section.content.forEach(content => {
+                            // Check if it's a skill list (comma-separated)
+                            if (content.includes(',') && content.split(',').length > 3) {
+                                // Format as skill tags
+                                html += '<div style="margin-bottom: 0.5rem;">';
+                                content.split(',').forEach(skill => {
+                                    html += `<span style="display: inline-block; background: #f0f0f0; padding: 0.25rem 0.75rem; margin: 0.25rem; border-radius: 4px; font-size: 0.9rem; color: #333;">${escapeHtml(skill.trim())}</span>`;
+                                });
+                                html += '</div>';
+                            } else if (content.startsWith('-') || content.startsWith('•')) {
+                                // Bullet point
+                                html += `<div style="margin-left: 1.5rem; margin-bottom: 0.5rem; position: relative;">
+                                    <span style="position: absolute; left: -1.5rem;">•</span>
+                                    ${escapeHtml(content.replace(/^[-•]\s*/, ''))}
+                                </div>`;
+                            } else {
+                                // Regular paragraph
+                                html += `<p style="margin: 0 0 0.75rem 0; color: #333; line-height: 1.7;">${escapeHtml(content)}</p>`;
+                            }
+                        });
+                    }
+                }
+
+                // Subsections (for Experience/Education)
+                section.subsections.forEach(subsection => {
+                    html += '<div style="margin-bottom: 1.25rem;">';
+
+                    // Subsection header (job title, company, dates)
+                    html += `<div style="margin-bottom: 0.5rem;">
+                        <strong style="font-size: 1.05rem; color: #000;">${escapeHtml(subsection.header)}</strong>
+                    </div>`;
+
+                    // Bullets
+                    if (subsection.bullets.length > 0) {
+                        subsection.bullets.forEach(bullet => {
+                            html += `<div style="margin-left: 1.5rem; margin-bottom: 0.4rem; position: relative; color: #333; line-height: 1.6;">
+                                <span style="position: absolute; left: -1.5rem; color: #000;">•</span>
+                                ${escapeHtml(bullet)}
+                            </div>`;
+                        });
+                    }
+
+                    html += '</div>';
+                });
+
+                html += '</div>';
+            });
+            } // Close else block for parsed text format
+
+            html += '</div>';
+            return html;
+        }
+
         // Function to highlight differences between original and optimized resume
         function formatResumeWithHighlights(originalText, optimizedText) {
             if (!optimizedText) return '';
@@ -3840,6 +4184,7 @@
         function displayScoreComparison(comparison) {
             const card = document.getElementById('score-comparison-card');
             const content = document.getElementById('score-comparison-content');
+            const summaryDiv = document.getElementById('score-comparison-summary');
 
             const originalScore = comparison.original_score || 0;
             const newScore = comparison.new_score || 0;
@@ -3854,13 +4199,35 @@
             else if (status === 'decreased') statusColor = '#ef4444'; // Red
             else if (status === 'minor_improvement') statusColor = '#f59e0b'; // Yellow
 
+            // Populate clean summary at the top
+            const summaryHTML = `
+                <div style="display: inline-flex; align-items: center; gap: 2rem; background: rgba(104, 42, 83, 0.1); padding: 2rem 3rem; border-radius: 16px; border: 2px solid ${statusColor};">
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Before</div>
+                        <div style="font-size: 3rem; font-weight: 800; color: var(--text);">${originalScore}%</div>
+                    </div>
+                    <div style="font-size: 3rem; color: ${statusColor};">→</div>
+                    <div style="text-align: center;">
+                        <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">After</div>
+                        <div style="font-size: 3rem; font-weight: 800; color: ${statusColor};">${newScore}%</div>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; font-size: 1.3rem; font-weight: 600; color: ${statusColor};">
+                    ${improvement >= 0 ? '+' : ''}${improvement} points ${improvement >= 0 ? '🎉' : ''}
+                </div>
+                <div style="font-size: 1rem; color: var(--text-muted); margin-top: 0.5rem;">
+                    ${statusMessage}
+                </div>
+            `;
+            summaryDiv.innerHTML = summaryHTML;
+
             const html = `
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 1.5rem;">
                     <div>
                         <div style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.5rem;">Before Optimization</div>
                         <div style="font-size: 2.5rem; font-weight: 700; color: var(--text);">${originalScore}%</div>
                         <div style="width: 100%; height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-top: 0.5rem; overflow: hidden;">
-                            <div style="width: ${originalScore}%; height: 100%; background: linear-gradient(90deg, #682A53, #FDC500); transition: width 0.5s;"></div>
+                            <div style="width: ${originalScore}%; height: 100%; background: linear-gradient(90deg, #682A53, #8a3a6d); transition: width 0.5s;"></div>
                         </div>
                     </div>
                     <div>
@@ -4285,9 +4652,30 @@
             }
         }
 
+        // Global variables to store original uploaded file for rendering
+        let originalResumeFile = null;
+        let originalResumeFileType = null;
+        let originalResumeFileName = null;
+
         async function handleResumeUpload(event) {
             const file = event.target.files[0];
             if (!file) return;
+
+            // Store the original file in memory for later rendering
+            originalResumeFile = file;
+            originalResumeFileName = file.name;
+
+            // Determine file type
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            if (fileExtension === 'pdf') {
+                originalResumeFileType = 'pdf';
+            } else if (fileExtension === 'docx' || fileExtension === 'doc') {
+                originalResumeFileType = 'docx';
+            } else {
+                originalResumeFileType = 'text'; // For TXT files
+            }
+
+            console.log('File stored in memory:', originalResumeFileName, 'Type:', originalResumeFileType);
 
             const filenameEl = document.getElementById('resume-filename');
             filenameEl.innerHTML = `<i class="fas fa-file"></i> ${file.name}`;
@@ -4319,11 +4707,148 @@
                     showMessage('Error: ' + (data.error || 'Failed to parse resume'), 'error');
                     filenameEl.style.display = 'none';
                     console.error('Upload error:', data.error);
+                    // Clear stored file on error
+                    originalResumeFile = null;
+                    originalResumeFileType = null;
+                    originalResumeFileName = null;
                 }
             } catch (error) {
                 document.getElementById('loading').classList.remove('show');
                 showMessage('Error uploading resume: ' + error.message, 'error');
                 filenameEl.style.display = 'none';
+                // Clear stored file on error
+                originalResumeFile = null;
+                originalResumeFileType = null;
+                originalResumeFileName = null;
+            }
+        }
+
+        // Function to render original PDF file with formatting
+        async function renderPDFOriginal(file, containerElement) {
+            try {
+                // Clear container and show loading
+                containerElement.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading PDF...</div>';
+
+                // Configure PDF.js worker
+                if (typeof pdfjsLib !== 'undefined') {
+                    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+                }
+
+                // Read file as array buffer
+                const arrayBuffer = await file.arrayBuffer();
+
+                // Load PDF
+                const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+                console.log('PDF loaded, pages:', pdf.numPages);
+
+                // Clear loading message
+                containerElement.innerHTML = '';
+
+                // Render each page
+                for (let pageNum = 1; pageNum <= pdf.numPages; pageNum++) {
+                    const page = await pdf.getPage(pageNum);
+                    const viewport = page.getViewport({ scale: 1.5 });
+
+                    // Create canvas for this page
+                    const canvas = document.createElement('canvas');
+                    const context = canvas.getContext('2d');
+                    canvas.height = viewport.height;
+                    canvas.width = viewport.width;
+                    canvas.style.width = '100%';
+                    canvas.style.height = 'auto';
+                    canvas.style.marginBottom = '1rem';
+                    canvas.style.border = '1px solid rgba(104, 42, 83, 0.2)';
+                    canvas.style.borderRadius = '8px';
+
+                    // Render page
+                    const renderContext = {
+                        canvasContext: context,
+                        viewport: viewport
+                    };
+                    await page.render(renderContext).promise;
+
+                    // Add page to container
+                    containerElement.appendChild(canvas);
+                }
+
+                console.log('PDF rendering complete');
+            } catch (error) {
+                console.error('Error rendering PDF:', error);
+                containerElement.innerHTML = `<div style="color: var(--danger); padding: 1rem;">Error rendering PDF: ${error.message}</div>`;
+            }
+        }
+
+        // Function to render original DOCX file with formatting
+        async function renderDOCXOriginal(file, containerElement) {
+            try {
+                // Clear container and show loading
+                containerElement.innerHTML = '<div style="text-align: center; padding: 2rem; color: var(--text-muted);"><i class="fas fa-spinner fa-spin"></i> Loading Word document...</div>';
+
+                // Read file as array buffer
+                const arrayBuffer = await file.arrayBuffer();
+
+                // Convert DOCX to HTML using mammoth
+                const result = await mammoth.convertToHtml({ arrayBuffer: arrayBuffer });
+                console.log('DOCX converted to HTML');
+
+                // Style the HTML output
+                const styledHTML = `
+                    <div style="
+                        font-family: inherit;
+                        font-size: 1rem;
+                        line-height: 1.8;
+                        color: var(--text);
+                        background: rgba(255, 255, 255, 0.06);
+                        padding: 1.5rem;
+                        border-radius: 12px;
+                        border: 2px solid rgba(104, 42, 83, 0.3);
+                    ">
+                        ${result.value}
+                    </div>
+                `;
+
+                containerElement.innerHTML = styledHTML;
+
+                // Log any conversion warnings
+                if (result.messages && result.messages.length > 0) {
+                    console.log('DOCX conversion warnings:', result.messages);
+                }
+            } catch (error) {
+                console.error('Error rendering DOCX:', error);
+                containerElement.innerHTML = `<div style="color: var(--danger); padding: 1rem;">Error rendering Word document: ${error.message}</div>`;
+            }
+        }
+
+        // Master function to render original resume based on file type
+        async function renderOriginalResume() {
+            const containerElement = document.getElementById('original-resume');
+
+            // Check if container element exists (it might not be visible yet)
+            if (!containerElement) {
+                console.log('Original resume container not found, skipping render');
+                return;
+            }
+
+            if (!originalResumeFile || !originalResumeFileType) {
+                // Fallback to text display if no file is stored
+                containerElement.textContent = currentOriginalResumeText || currentResumeText || '';
+                containerElement.style.whiteSpace = 'pre-wrap';
+                containerElement.style.wordWrap = 'break-word';
+                console.log('No original file stored, displaying as text');
+                return;
+            }
+
+            console.log('Rendering original resume:', originalResumeFileName, 'Type:', originalResumeFileType);
+
+            if (originalResumeFileType === 'pdf') {
+                await renderPDFOriginal(originalResumeFile, containerElement);
+            } else if (originalResumeFileType === 'docx') {
+                await renderDOCXOriginal(originalResumeFile, containerElement);
+            } else {
+                // For text files, display as plain text
+                containerElement.textContent = currentOriginalResumeText || currentResumeText || '';
+                containerElement.style.whiteSpace = 'pre-wrap';
+                containerElement.style.wordWrap = 'break-word';
             }
         }
 
@@ -4628,12 +5153,15 @@
                 `<li><i class="fas fa-check"></i> <span>${s}</span></li>`
             ).join('');
 
-            const optimizationSection = document.getElementById('optimization-section');
-            if (data.show_optimization) {
-                optimizationSection.classList.add('show');
-                currentSuggestions = data.content_suggestions;
-            } else {
-                optimizationSection.classList.remove('show');
+            // Store suggestions for optimization (button is always visible in new design)
+            if (data.show_optimization || data.content_suggestions) {
+                currentSuggestions = data.content_suggestions || [];
+            }
+
+            // Show the optimize button (it's always visible now, no need to toggle)
+            const optimizationSection = document.getElementById('optimization-section-inline');
+            if (optimizationSection) {
+                optimizationSection.style.display = 'block';
             }
 
             document.getElementById('results').style.display = 'block';
@@ -4743,6 +5271,32 @@
                 icon.classList.remove('fa-chevron-up');
                 icon.classList.add('fa-chevron-down');
                 header.classList.remove('expanded');
+            }
+        }
+
+        function toggleResultsDetails() {
+            const detailedSection = document.getElementById('detailed-analysis');
+            const toggleText = document.getElementById('details-toggle-text');
+
+            if (detailedSection.style.display === 'none' || detailedSection.style.display === '') {
+                detailedSection.style.display = 'block';
+                toggleText.textContent = '▲ Hide Detailed Analysis';
+            } else {
+                detailedSection.style.display = 'none';
+                toggleText.textContent = '▼ Show Detailed Analysis';
+            }
+        }
+
+        function toggleOptimizationDetails() {
+            const detailedSection = document.getElementById('detailed-optimization-analytics');
+            const toggleText = document.getElementById('optimization-details-toggle-text');
+
+            if (detailedSection.style.display === 'none' || detailedSection.style.display === '') {
+                detailedSection.style.display = 'block';
+                toggleText.textContent = '▲ Hide Detailed Analytics';
+            } else {
+                detailedSection.style.display = 'none';
+                toggleText.textContent = '▼ Show Detailed Analytics';
             }
         }
 
@@ -5205,8 +5759,12 @@
                 suggestionsCount: currentSuggestions.length
             });
 
-            // Show loading state on button
-            const optimizeBtn = document.getElementById('optimize-btn');
+            // Show loading state on button (try new button ID first, fall back to old)
+            const optimizeBtn = document.getElementById('optimize-btn-main') || document.getElementById('optimize-btn');
+            if (!optimizeBtn) {
+                console.error('Optimize button not found');
+                return;
+            }
             const originalBtnHTML = optimizeBtn.innerHTML;
             optimizeBtn.disabled = true;
             optimizeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Optimizing...';
@@ -5289,15 +5847,11 @@
                 applyTemplateStyling();
 
                 // Format and display resumes with proper styling
-                // Original resume: display as plain text (like textarea) - no formatting
-                const originalResumeEl = document.getElementById('original-resume');
-                originalResumeEl.textContent = currentOriginalResumeText || '';
-                originalResumeEl.style.whiteSpace = 'pre-wrap';
-                originalResumeEl.style.wordWrap = 'break-word';
+                // Original resume: render with formatting if file was uploaded, otherwise display as text
+                await renderOriginalResume();
 
-                // Optimized resume: with highlights showing changes and template styling
-                document.getElementById('optimized-resume').innerHTML = formatResumeWithHighlights(
-                    currentOriginalResumeText,
+                // Optimized resume: use professional formatter for clean, structured display
+                document.getElementById('optimized-resume').innerHTML = formatOptimizedResumeProfessional(
                     data.optimized_resume || ''
                 );
 
@@ -5370,13 +5924,14 @@
         }
 
         async function downloadOptimizedResume() {
-            // Instead of downloading directly, show preview first
+            // Download directly without showing preview
             if (!currentOptimizedResumeText || currentOptimizedResumeText.trim() === '') {
                 showMessage('No optimized resume to download', 'error');
                 return;
             }
 
-            showExportPreview();
+            // Call the actual download function directly
+            await actuallyDownloadResume();
         }
 
         async function actuallyDownloadResume() {

@@ -367,11 +367,82 @@ IMPORTANT INSTRUCTIONS:
 
 - Reorder experience to highlight most relevant positions first
 - Keep formatting clean and professional
-- Do NOT add any explanatory text before or after the resume
-- Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
-Provide ONLY the complete optimized resume in the format above, nothing else."""
+OUTPUT FORMAT - RETURN ONLY VALID JSON (NO OTHER TEXT):
+Return the optimized resume as a JSON object with this EXACT structure:
+
+{{
+  "name": "Full Name",
+  "title": "Job Title/Position",
+  "contact": ["Location: City, State", "Email: email@example.com", "Phone: (123) 456-7890", "LinkedIn: https://linkedin.com/in/username", "GitHub: https://github.com/username"],
+  "summary": "Complete summary paragraph as single string",
+  "skills": {{
+    "Category 1": ["skill1", "skill2", "skill3"],
+    "Category 2": ["skill1", "skill2", "skill3"]
+  }},
+  "experience": [
+    {{
+      "company": "Company Name",
+      "location": "City, State",
+      "dates": "Start Date - End Date",
+      "title": "Job Title",
+      "bullets": [
+        "First bullet point with achievements and metrics",
+        "Second bullet point with achievements and metrics"
+      ]
+    }}
+  ],
+  "education": [
+    {{
+      "degree": "Degree Name",
+      "institution": "University Name",
+      "location": "City, State"
+    }}
+  ],
+  "certifications": [
+    "Certification exactly as written in original resume (e.g., AWS Certified Solutions Architect, 2023)",
+    "Another certification"
+  ],
+  "projects": [
+    {{
+      "name": "Project Name",
+      "technologies": "Tech stack used",
+      "date": "Date or Duration",
+      "bullets": [
+        "Project description and achievements",
+        "Key features or results"
+      ]
+    }}
+  ],
+  "awards": [
+    "Award exactly as written in original resume",
+    "Another award or honor"
+  ],
+  "publications": [
+    "Publication exactly as written in original resume",
+    "Another publication"
+  ],
+  "volunteer": [
+    "Volunteer work exactly as written in original resume",
+    "Another volunteer experience"
+  ]
+}}
+
+CRITICAL JSON RULES:
+- Return ONLY valid JSON - no markdown, no explanations, no code blocks
+- Include sections ONLY if they exist in original resume:
+  * "education" - Check for: EDUCATION, ACADEMIC BACKGROUND, QUALIFICATIONS, ACADEMIC QUALIFICATIONS
+  * "certifications" - Check for: CERTIFICATIONS, CERTIFICATES, PROFESSIONAL CERTIFICATIONS, LICENSES, LICENSE & CERTIFICATIONS
+  * "projects" - Check for: PROJECTS, ACADEMIC PROJECTS, PERSONAL PROJECTS, SIDE PROJECTS, PORTFOLIO
+  * "awards" - Check for: AWARDS, HONORS, ACHIEVEMENTS, HONORS & AWARDS, RECOGNITION
+  * "publications" - Check for: PUBLICATIONS, RESEARCH, PAPERS, PUBLISHED WORK
+  * "volunteer" - Check for: VOLUNTEER, VOLUNTEER WORK, VOLUNTEER EXPERIENCE, COMMUNITY SERVICE
+- If a section doesn't exist in original resume, DO NOT include it in JSON
+- Preserve original formatting for certifications, awards, publications, volunteer (copy exactly as written)
+- All strings must be properly escaped
+- Contact array MUST include ALL contact info from original: Location, Email, Phone, LinkedIn, GitHub (include all that are present)
+- Experience bullets must follow all the rules specified above (metrics, rewriting, etc.)
+- Section order in output: summary → skills → experience → education → certifications → projects → awards → publications → volunteer"""
 
         try:
             response = self.client.chat.completions.create(
@@ -524,20 +595,91 @@ JOB ANALYSIS:
 
 Improve the resume content by:
 1. Emphasizing relevant experience for {job_analysis.get('seniority_level', 'this')} level
-2. Using strong action verbs and quantifiable achievements
+2. Creating authentic, human-sounding bullet points (NOT generic AI language)
 3. Highlighting skills that match the job requirements
 4. Reordering experience to put most relevant first
 5. Optimizing the summary/objective for this specific role
 
+CRITICAL BULLET POINT WRITING RULES (EXPERIENCE SECTION):
+
+1. **50/50 QUANTITATIVE/QUALITATIVE BALANCE**:
+   - 50% of bullets MUST include specific metrics (numbers, percentages, timeframes)
+   - 50% of bullets should be qualitative (impact, outcomes, responsibilities) without forcing numbers
+
+2. **HUMAN TOUCH - AVOID AI LANGUAGE**:
+   ❌ NEVER use these generic AI phrases:
+   - "Spearheaded" or "spearheading"
+   - "Leveraged" or "leveraging"
+   - "Utilized" or "utilizing"
+   - "Implemented robust solutions"
+   - "Streamlined processes"
+   - "Drove results"
+   - "Instrumental in"
+
+   ✅ USE natural, authentic action verbs instead:
+   - Built, Created, Designed, Developed, Engineered
+   - Led, Managed, Coordinated, Guided
+   - Improved, Optimized, Enhanced, Reduced
+   - Launched, Shipped, Delivered, Released
+   - Collaborated, Partnered, Worked with
+   - Solved, Fixed, Resolved, Debugged
+   - Automated, Integrated, Migrated
+
+3. **VARY SENTENCE STRUCTURE**:
+   - Don't start every bullet with the same verb
+   - Mix short punchy bullets with more detailed ones
+   - Use different constructions (not just "Verb + object + metric")
+
+4. **BE SPECIFIC AND AUTHENTIC**:
+   - Use real technical details from the original resume
+   - Don't exaggerate or add accomplishments that aren't there
+   - Make metrics realistic (not always "increased by 50%" or "reduced by 40%")
+   - Include context that makes accomplishments believable
+
+5. **ATS-OPTIMIZED BULLETS** (CRITICAL - Must pass ATS keyword matching first):
+   - Bullets can be 2-3 lines if needed to include relevant keywords and technical details
+   - PRIORITIZE keyword density and job description matching over strict brevity
+   - Include specific technologies, tools, frameworks, and methodologies from job description
+   - Lead with impact, but include comprehensive technical details for ATS scoring
+   - Remove only truly unnecessary filler, but keep ALL technical terminology and relevant details
+
+6. **LEAD WITH IMPACT** (Put the important stuff FIRST, then add technical details):
+   ✅ GOOD: "Reduced deployment time 40% by implementing Docker and Kubernetes microservices architecture with automated CI/CD pipeline using Jenkins, GitHub Actions, and AWS CodeDeploy"
+   ❌ BAD: "Implemented a comprehensive Docker and Kubernetes based microservices architecture that resulted in deployment time reduction of 40%"
+
+   ✅ GOOD: "Increased system reliability to 99.9% uptime through Datadog monitoring, PagerDuty alerting, automated incident response workflows, and Prometheus metrics collection"
+   ❌ BAD: "Developed comprehensive monitoring and alerting system infrastructure which increased reliability to 99.9% uptime"
+
+7. **MAXIMIZE JOB DESCRIPTION KEYWORD MATCHING**:
+   - Extract ALL relevant keywords from job description (technologies, skills, methodologies, tools, frameworks)
+   - Incorporate keywords naturally into bullets even if it makes them 2-3 lines long
+   - Focus on matching exact technical requirements and qualifications from job posting
+   - Add relevant technical details and tools to maximize ATS score
+   - Most recent role: 6-7 bullets maximum
+   - Previous roles: 4-5 bullets maximum
+   - Older roles: 3-4 bullets maximum
+
+QUANTITATIVE Examples (ATS-optimized with comprehensive technical details):
+- Reduced API response time 75% (800ms to 200ms) by implementing Redis distributed caching layer with cache invalidation strategies, improving system performance and user experience for 500K+ daily active users
+- Cut deployment time 3 hours per release through automated CI/CD pipeline using Jenkins, Docker containerization, Kubernetes orchestration, GitHub Actions workflows, and infrastructure-as-code with Terraform
+- Managed cross-functional team of 6 engineers across 3 time zones to deliver enterprise software projects on schedule using Agile/Scrum methodologies, Jira project tracking, and Confluence documentation
+
+QUALITATIVE Examples (ATS-optimized with comprehensive technical details):
+- Architected scalable microservices platform handling 10M daily users using Node.js, Express, MongoDB, RabbitMQ message queuing, and AWS cloud infrastructure (EC2, S3, RDS, Lambda)
+- Led cross-functional collaboration with product managers, designers, and stakeholders to define technical requirements, system architecture, and implementation roadmap for enterprise applications
+- Mentored 5 junior developers on software engineering best practices including code review processes, unit testing with Jest, integration testing, design patterns, SOLID principles, and system design
+
 CRITICAL EXPERIENCE SECTION FORMATTING:
 For EVERY job entry in the EXPERIENCE section, you MUST use this EXACT format:
 - Line 1: COMPANY NAME IN ALL CAPS, Location | JOB TITLE IN ALL CAPS | Month YYYY - Month YYYY (or Present)
-- Line 2+: Bullet points with achievements
+- Line 2+: Bullet points with achievements (following all rules above)
 
-Example:
+Example (note: ATS-optimized, impact-first with comprehensive technical details):
 MICROSOFT, Redmond, WA | SOFTWARE ENGINEER | June 2020 - Present
-- Developed cloud infrastructure serving 10M+ users
-- Led team of 5 engineers in migration project
+- Achieved 99.9% uptime for cloud infrastructure serving 10M+ daily users using AWS EC2, S3, RDS, Lambda, CloudWatch monitoring, auto-scaling groups, and load balancing with Application Load Balancer (ALB)
+- Improved system scalability 3x with event-driven microservices architecture using Node.js, Express, MongoDB, Redis caching, RabbitMQ message queuing, and Docker containerization with Kubernetes orchestration
+- Reduced deployment time 60% by migrating monolith to microservices architecture and implementing automated CI/CD pipeline using Jenkins, GitHub Actions, infrastructure-as-code with Terraform, and automated testing
+- Implemented OAuth2 authentication and JWT token-based authorization across 15+ microservices for enhanced security, user management, and role-based access control (RBAC)
 
 CRITICAL PROJECT SECTION FORMATTING:
 For EVERY project entry in the PROJECTS/PROJECTS section, you MUST use this EXACT format:
@@ -597,16 +739,40 @@ ATS KEYWORDS:
 {', '.join(ats_keywords[:15])}
 
 Optimize for ATS by:
-1. Naturally incorporating the critical keywords listed above
-2. Using exact keyword phrases from the job description
-3. Including synonyms and related terms
-4. Ensuring keywords appear in relevant sections (not keyword stuffing)
+1. Naturally incorporating the critical keywords listed above into existing bullet points
+2. Using exact keyword phrases from the job description where they fit naturally
+3. Including synonyms and related terms organically
+4. Ensuring keywords appear in relevant sections (NO keyword stuffing - keep it natural)
 5. Using standard section headers (SUMMARY, EXPERIENCE, EDUCATION, SKILLS)
+
+CRITICAL: MAINTAIN HUMAN-SOUNDING LANGUAGE FROM STAGE 1
+- DO NOT add keywords in a way that makes bullets sound robotic or AI-generated
+- DO NOT use generic AI phrases like "spearheaded", "leveraged", "utilized"
+- DO NOT sacrifice the natural flow and authenticity from Stage 1
+- Keywords should blend seamlessly into the existing narrative
+
+MAINTAIN 50/50 QUANTITATIVE/QUALITATIVE BALANCE:
+- Keep the mix of metric-based and impact-based bullets from Stage 1
+- When adding keywords, maintain this balance
+- Don't force metrics where they don't exist
+
+CRITICAL: MAXIMIZE ATS KEYWORD MATCHING (FROM STAGE 1):
+- Bullets can expand to 2-3 lines when adding relevant keywords and technical details
+- PRIORITIZE adding job-relevant keywords even if it makes bullets longer
+- Include comprehensive technical terminology, tools, frameworks, and methodologies
+- Lead with impact first, then add detailed technical specifications for ATS optimization
+
+When adding keywords:
+✅ GOOD: "Built RESTful APIs using Python, FastAPI framework, PostgreSQL database, Redis caching, and Docker containerization, enabling seamless integration with third-party services and microservices architecture"
+   (Keywords: RESTful APIs, Python, FastAPI, PostgreSQL, Redis, Docker, microservices - comprehensive technical details)
+
+❌ BAD: "Leveraged Python and FastAPI to spearhead the development of robust RESTful APIs"
+   (Too generic, missing technical details, sounds AI-generated)
 
 CRITICAL EXPERIENCE SECTION FORMATTING:
 For EVERY job entry in the EXPERIENCE section, you MUST maintain this EXACT format from Stage 1:
 - Line 1: COMPANY NAME IN ALL CAPS, Location | JOB TITLE IN ALL CAPS | Month YYYY - Month YYYY (or Present)
-- Line 2+: Bullet points with achievements
+- Line 2+: Bullet points with achievements (keeping the human touch from Stage 1)
 
 CRITICAL PROJECT SECTION FORMATTING:
 For EVERY project entry in the PROJECTS section, you MUST maintain this EXACT format from Stage 1:
@@ -621,10 +787,11 @@ Line 3: [Contact info on one line separated by " | "]
 
 IMPORTANT:
 - Keep the EDUCATION section EXACTLY as it appears in the resume from Stage 1. Do not modify it.
-- PRESERVE the professional title/job title from the header (the line immediately after the name) on its own line. Keep it EXACTLY as it appears in Stage 1.
+- PRESERVE the professional title/job title from the header on its own line. Keep it EXACTLY as it appears in Stage 1.
 - PRESERVE ALL contact information in the header including Phone Number, Email, LinkedIn, GitHub, Portfolio, and any other links. Keep them EXACTLY as they appear in Stage 1.
 - In EXPERIENCE section: Company names MUST be in ALL CAPS. Job titles MUST be in ALL CAPS. This formatting is MANDATORY.
 - In PROJECTS section: Project names MUST be in ALL CAPS. This formatting is MANDATORY.
+- PRESERVE the authentic, human-sounding language from Stage 1 - just enhance with keywords
 
 Provide the complete ATS-optimized resume."""
 
@@ -640,79 +807,119 @@ Provide the complete ATS-optimized resume."""
 
             stage2_resume = stage2_response.choices[0].message.content.strip()
 
-            # Stage 3: Format and Consistency Check
-            stage3_prompt = f"""STAGE 3: FORMAT AND CONSISTENCY CHECK
+            # Stage 3: Format and Consistency Check - Convert to JSON
+            stage3_prompt = f"""STAGE 3: CONVERT TO STRUCTURED JSON FORMAT
 
 RESUME FROM STAGE 2:
 {stage2_resume[:4000]}
 
-Perform final quality check:
+ORIGINAL RESUME (for section preservation):
+{resume_text[:4000]}
+
+Convert the optimized resume from Stage 2 into a structured JSON format. Perform quality checks while converting:
 1. Ensure consistent formatting throughout
 2. Check for grammar and spelling
 3. Verify all bullet points use parallel structure
-4. Ensure dates are consistent (e.g., all "Month YYYY" format)
+4. Ensure dates are consistent
 5. Remove any duplicate information
 6. Ensure professional tone throughout
-7. Verify resume is ATS-friendly (no complex formatting)
-8. DO NOT use markdown formatting like **bold** or *italic* - use plain text only
+7. **VERIFY 50/50 quantitative/qualitative balance in experience bullets**
+8. **CONFIRM no AI-sounding phrases (spearheaded, leveraged, utilized, etc.)**
+9. **ENSURE bullets sound natural and human-written**
 
-CRITICAL EXPERIENCE SECTION FORMATTING - THIS IS MANDATORY:
-For EVERY SINGLE job entry in the EXPERIENCE section, you MUST use this EXACT format:
-- Line 1: COMPANY NAME IN ALL CAPS, Location | JOB TITLE IN ALL CAPS | Month YYYY - Month YYYY (or Present)
-- Line 2+: Bullet points with achievements
+OUTPUT FORMAT - RETURN ONLY VALID JSON (NO OTHER TEXT):
+Return the optimized resume as a JSON object with this EXACT structure:
 
-Example (COPY THIS FORMAT EXACTLY):
-MICROSOFT, Redmond, WA | SENIOR SOFTWARE ENGINEER | January 2020 - Present
-- Developed cloud infrastructure serving 10M+ users
-- Led team of 5 engineers in migration project
+{{
+  "name": "Full Name",
+  "title": "Job Title/Position",
+  "contact": ["Location: City, State", "Email: email@example.com", "Phone: (123) 456-7890", "LinkedIn: https://linkedin.com/in/username", "GitHub: https://github.com/username"],
+  "summary": "Complete summary paragraph as single string",
+  "skills": {{
+    "Category 1": ["skill1", "skill2", "skill3"],
+    "Category 2": ["skill1", "skill2", "skill3"]
+  }},
+  "experience": [
+    {{
+      "company": "Company Name",
+      "location": "City, State",
+      "dates": "Start Date - End Date",
+      "title": "Job Title",
+      "bullets": [
+        "First bullet point with achievements and metrics",
+        "Second bullet point with achievements and metrics"
+      ]
+    }}
+  ],
+  "education": [
+    {{
+      "degree": "Degree Name",
+      "institution": "University Name",
+      "location": "City, State"
+    }}
+  ],
+  "certifications": [
+    "Certification exactly as written in original resume (e.g., AWS Certified Solutions Architect, 2023)",
+    "Another certification"
+  ],
+  "projects": [
+    {{
+      "name": "Project Name",
+      "technologies": "Tech stack used",
+      "date": "Date or Duration",
+      "bullets": [
+        "Project description and achievements",
+        "Key features or results"
+      ]
+    }}
+  ],
+  "awards": [
+    "Award exactly as written in original resume",
+    "Another award or honor"
+  ],
+  "publications": [
+    "Publication exactly as written in original resume",
+    "Another publication"
+  ],
+  "volunteer": [
+    "Volunteer work exactly as written in original resume",
+    "Another volunteer experience"
+  ]
+}}
 
-GOOGLE, Mountain View, CA | SOFTWARE ENGINEER | June 2018 - December 2019
-- Built scalable APIs handling 1M+ requests per day
-- Optimized database queries reducing latency by 40%
+CRITICAL JSON RULES:
+- Return ONLY valid JSON - no markdown, no explanations, no code blocks
+- Include sections ONLY if they exist in ORIGINAL resume:
+  * "education" - Check original for: EDUCATION, ACADEMIC BACKGROUND, QUALIFICATIONS
+  * "certifications" - Check original for: CERTIFICATIONS, CERTIFICATES, LICENSES
+  * "projects" - Check original for: PROJECTS, ACADEMIC PROJECTS, PERSONAL PROJECTS
+  * "awards" - Check original for: AWARDS, HONORS, ACHIEVEMENTS
+  * "publications" - Check original for: PUBLICATIONS, RESEARCH, PAPERS
+  * "volunteer" - Check original for: VOLUNTEER, VOLUNTEER WORK, COMMUNITY SERVICE
+- If a section doesn't exist in ORIGINAL resume, DO NOT include it in JSON
+- For certifications, awards, publications, volunteer: Copy EXACTLY from ORIGINAL resume
+- For education: Copy EXACTLY from ORIGINAL resume, preserve all degree details
+- All strings must be properly escaped
+- Contact array MUST include ALL contact info from original: Location, Email, Phone, LinkedIn, GitHub (include all that are present)
+- Experience bullets should be from Stage 2 (optimized, with 50/50 quantitative/qualitative balance)
+- Skills should be from Stage 2 (optimized)
+- Summary should be from Stage 2 (optimized)
 
-CRITICAL PROJECT SECTION FORMATTING - THIS IS MANDATORY:
-For EVERY project entry in the PROJECTS section, you MUST use this EXACT format:
-- Line 1: PROJECT NAME IN ALL CAPS
-- Line 2+: Bullet points with project details
-
-Example (COPY THIS FORMAT EXACTLY):
-E-COMMERCE PLATFORM
-- Built full-stack web application using React and Node.js
-- Implemented payment gateway integration with Stripe
-- Deployed on AWS with CI/CD pipeline
-
-MACHINE LEARNING CLASSIFIER
-- Developed ML model to predict customer churn with 92% accuracy
-- Used Python, TensorFlow, and scikit-learn
-
-CRITICAL HEADER FORMATTING - COPY FROM STAGE 2:
-The header MUST follow this EXACT format from Stage 2:
-Line 1: [Full Name]
-Line 2: [Professional Title - e.g., Software Engineer]
-Line 3: [Contact info on one line separated by " | "]
-
-Example:
-Abhishek Panda
-Software Engineer
-(224) 844-6987 | pandaabhishek34@gmail.com | linkedin.com/in/abhishek-rabindra-panda | github.com/pandaabhishek38 | abhishekrabindrapanda-portfolio.vercel.app
-
-ABSOLUTE REQUIREMENTS (NON-NEGOTIABLE):
-- Company names MUST be in ALL CAPS (e.g., MICROSOFT, GOOGLE, AMAZON)
-- Job titles MUST be in ALL CAPS (e.g., SENIOR SOFTWARE ENGINEER, DATA SCIENTIST)
-- Project names MUST be in ALL CAPS (e.g., E-COMMERCE PLATFORM, MACHINE LEARNING CLASSIFIER)
-- This is the ONLY way to make them stand out in ATS-friendly plain text
-- Provide plain text resume only. NO markdown formatting (**bold**, *italic*, etc.). ATS systems cannot parse markdown.
-- Keep the EDUCATION section EXACTLY as it appears in the resume from Stage 2. Do not modify it.
-- PRESERVE the professional title/job title from the header (the line immediately after the name) on its own line. Keep it EXACTLY as it appears in Stage 2. This title should be prominent and clearly visible.
-- PRESERVE ALL contact information in the header including Phone Number, Email, LinkedIn, GitHub, Portfolio, and any other links. Keep them EXACTLY as they appear in Stage 2.
-- Keep dates in Title Case (Month YYYY format)
-
-Provide the final, polished resume in plain text format."""
+EXPERIENCE BULLETS QUALITY CHECK:
+- Bullets can be 2-3 lines to include comprehensive technical details and ATS keywords
+- Approximately 50% should have metrics (numbers, percentages, timeframes)
+- Approximately 50% should be qualitative (impact, responsibilities) without forced numbers
+- NO generic AI phrases: "spearheaded", "leveraged", "utilized", "robust", "streamlined"
+- Must sound authentic and human-written
+- Lead with impact first, then add technical specifications (tools, frameworks, technologies)
+- Include comprehensive job-relevant keywords from job description
+- Use varied sentence structures and action verbs
+- Most recent role: 6-7 bullets max; Previous roles: 4-5 bullets max; Older roles: 3-4 bullets max"""
 
             stage3_response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[
-                    {"role": "system", "content": "You are a meticulous resume editor focused on quality, consistency, and professionalism."},
+                    {"role": "system", "content": "You are a meticulous resume editor. Return ONLY valid JSON, no other text."},
                     {"role": "user", "content": stage3_prompt}
                 ],
                 temperature=0.5,
@@ -721,146 +928,29 @@ Provide the final, polished resume in plain text format."""
 
             final_resume = stage3_response.choices[0].message.content.strip()
 
-            # Clean up the final resume - remove AI preambles and commentary
-            # Common preamble patterns to remove
-            preamble_markers = [
-                "FINAL RESUME:",
-                "Here's the final",
-                "Here is the final",
-                "After conducting",
-                "I've made",
-                "I have made",
-                "The final resume",
-                "Below is",
-                "Here's the polished",
-                "Here is the polished"
-            ]
+            # Clean up JSON if wrapped in markdown code blocks
+            import json
+            if final_resume.startswith('```json'):
+                final_resume = final_resume.replace('```json', '').replace('```', '').strip()
+            elif final_resume.startswith('```'):
+                final_resume = final_resume.replace('```', '').strip()
 
-            # Check if any preamble exists and remove everything before it
-            lines = final_resume.split('\n')
-            resume_start_index = 0
-
-            for i, line in enumerate(lines):
-                line_lower = line.lower().strip()
-                # Skip empty lines
-                if not line_lower:
-                    continue
-                # Check if this line is a preamble
-                is_preamble = any(marker.lower() in line_lower for marker in preamble_markers)
-                if is_preamble:
-                    resume_start_index = i + 1
-                    continue
-                # If we find a line that looks like the start of a resume (name or contact), stop
-                # Resume typically starts with a name (capitalized words) or contact info
-                if not is_preamble and (
-                    line.strip() and
-                    (line.strip()[0].isupper() or '@' in line or 'phone' in line_lower or 'email' in line_lower)
-                ):
-                    resume_start_index = i
-                    break
-
-            # Reconstruct resume from the detected start (for preview - includes trailing commentary)
-            final_resume_with_commentary = '\n'.join(lines[resume_start_index:]).strip()
-
-            # Create a clean version for download (remove trailing AI commentary)
-            # Find where the actual resume ends and commentary begins
-            resume_lines = lines[resume_start_index:]
-            clean_resume_end = len(resume_lines)
-
-            # Patterns that indicate the start of trailing commentary
-            commentary_indicators = [
-                "I've made the following adjustments",
-                "I have made the following adjustments",
-                "The following adjustments",
-                "The final resume is",
-                "This resume is polished",
-                "This polished resume",
-                "ready for submission",
-                "effectively showcases",
-                "showcasing your",
-                "showcases your",
-                "strong candidate for passing",
-                "Here are the changes",
-                "Changes made:",
-                "Improvements made:",
-                "clear, concise, and professional manner"
-            ]
-
-            # Patterns for bullet-pointed commentary (AI describing what it did)
-            commentary_bullet_patterns = [
-                "* Ensured",
-                "* Verified",
-                "* Corrected",
-                "* Removed",
-                "* Maintained",
-                "* Fixed",
-                "* Updated",
-                "* Confirmed",
-                "* Standardized",
-                "- Ensured",
-                "- Verified",
-                "- Corrected",
-                "- Removed",
-                "- Maintained",
-                "- Fixed",
-                "- Updated",
-                "- Confirmed",
-                "- Standardized"
-            ]
-
-            # Common words in AI commentary about changes
-            commentary_action_words = [
-                "ensured", "verified", "corrected", "removed", "maintained",
-                "fixed", "updated", "confirmed", "standardized", "professional tone",
-                "ats-friendly", "parallel structure", "consistent formatting"
-            ]
-
-            # Search backwards to find where commentary starts
-            import re
-            for i in range(len(resume_lines) - 1, -1, -1):
-                line = resume_lines[i].strip()
-                line_lower = line.lower()
-
-                # Check for explicit commentary indicators
-                if any(indicator.lower() in line_lower for indicator in commentary_indicators):
-                    clean_resume_end = i
-                    continue
-
-                # Check for bullet points describing AI's changes
-                if any(line.startswith(pattern) for pattern in commentary_bullet_patterns):
-                    clean_resume_end = i
-                    continue
-
-                # Check for numbered list items (1. , 2. , etc.) with commentary action words
-                if re.match(r'^\d+\.\s+', line):
-                    if any(action_word in line_lower for action_word in commentary_action_words):
-                        clean_resume_end = i
-                        continue
-
-                # If we found commentary, keep looking backwards for more
-                if clean_resume_end < len(resume_lines):
-                    continue
-
-                # Stop if we hit a legitimate resume section header
-                # (all caps headers like EDUCATION, SKILLS, EXPERIENCE, etc.)
-                if line.isupper() and len(line.split()) <= 3 and len(line) > 2:
-                    break
-
-            # Clean version without trailing commentary
-            download_resume = '\n'.join(resume_lines[:clean_resume_end]).strip()
-
-            # Remove markdown bold formatting (**text**) - not ATS-friendly
-            final_resume_with_commentary = final_resume_with_commentary.replace('**', '')
-            download_resume = download_resume.replace('**', '')
+            # Validate it's valid JSON
+            try:
+                json.loads(final_resume)
+            except json.JSONDecodeError as e:
+                # If JSON parsing fails, log the error but return the text anyway
+                # The frontend will handle fallback to text parsing
+                print(f"Warning: Stage 3 didn't return valid JSON: {e}")
 
             return {
-                "optimized_resume": download_resume,  # For preview (clean version)
-                "download_resume": download_resume,  # For download (clean)
+                "optimized_resume": final_resume,  # JSON format
+                "download_resume": final_resume,  # JSON format
                 "original_resume": resume_text,
                 "stages": {
                     "stage1_content": "Content improved",
                     "stage2_keywords": f"Added {len(critical_keywords)} critical keywords",
-                    "stage3_format": "Format and consistency checked"
+                    "stage3_format": "Converted to JSON format"
                 },
                 "multi_stage": True
             }
@@ -1313,11 +1403,82 @@ IMPORTANT INSTRUCTIONS:
 
 - Reorder experience to highlight most relevant positions first
 - Keep formatting clean and professional
-- Do NOT add any explanatory text before or after the resume
-- Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
-Provide ONLY the complete optimized resume in the format above, nothing else."""
+OUTPUT FORMAT - RETURN ONLY VALID JSON (NO OTHER TEXT):
+Return the optimized resume as a JSON object with this EXACT structure:
+
+{{
+  "name": "Full Name",
+  "title": "Job Title/Position",
+  "contact": ["Location: City, State", "Email: email@example.com", "Phone: (123) 456-7890", "LinkedIn: https://linkedin.com/in/username", "GitHub: https://github.com/username"],
+  "summary": "Complete summary paragraph as single string",
+  "skills": {{
+    "Category 1": ["skill1", "skill2", "skill3"],
+    "Category 2": ["skill1", "skill2", "skill3"]
+  }},
+  "experience": [
+    {{
+      "company": "Company Name",
+      "location": "City, State",
+      "dates": "Start Date - End Date",
+      "title": "Job Title",
+      "bullets": [
+        "First bullet point with achievements and metrics",
+        "Second bullet point with achievements and metrics"
+      ]
+    }}
+  ],
+  "education": [
+    {{
+      "degree": "Degree Name",
+      "institution": "University Name",
+      "location": "City, State"
+    }}
+  ],
+  "certifications": [
+    "Certification exactly as written in original resume (e.g., AWS Certified Solutions Architect, 2023)",
+    "Another certification"
+  ],
+  "projects": [
+    {{
+      "name": "Project Name",
+      "technologies": "Tech stack used",
+      "date": "Date or Duration",
+      "bullets": [
+        "Project description and achievements",
+        "Key features or results"
+      ]
+    }}
+  ],
+  "awards": [
+    "Award exactly as written in original resume",
+    "Another award or honor"
+  ],
+  "publications": [
+    "Publication exactly as written in original resume",
+    "Another publication"
+  ],
+  "volunteer": [
+    "Volunteer work exactly as written in original resume",
+    "Another volunteer experience"
+  ]
+}}
+
+CRITICAL JSON RULES:
+- Return ONLY valid JSON - no markdown, no explanations, no code blocks
+- Include sections ONLY if they exist in original resume:
+  * "education" - Check for: EDUCATION, ACADEMIC BACKGROUND, QUALIFICATIONS, ACADEMIC QUALIFICATIONS
+  * "certifications" - Check for: CERTIFICATIONS, CERTIFICATES, PROFESSIONAL CERTIFICATIONS, LICENSES, LICENSE & CERTIFICATIONS
+  * "projects" - Check for: PROJECTS, ACADEMIC PROJECTS, PERSONAL PROJECTS, SIDE PROJECTS, PORTFOLIO
+  * "awards" - Check for: AWARDS, HONORS, ACHIEVEMENTS, HONORS & AWARDS, RECOGNITION
+  * "publications" - Check for: PUBLICATIONS, RESEARCH, PAPERS, PUBLISHED WORK
+  * "volunteer" - Check for: VOLUNTEER, VOLUNTEER WORK, VOLUNTEER EXPERIENCE, COMMUNITY SERVICE
+- If a section doesn't exist in original resume, DO NOT include it in JSON
+- Preserve original formatting for certifications, awards, publications, volunteer (copy exactly as written)
+- All strings must be properly escaped
+- Contact array MUST include ALL contact info from original: Location, Email, Phone, LinkedIn, GitHub (include all that are present)
+- Experience bullets must follow all the rules specified above (metrics, rewriting, etc.)
+- Section order in output: summary → skills → experience → education → certifications → projects → awards → publications → volunteer"""
 
         try:
             response = self.client.chat.completions.create(
@@ -1702,11 +1863,82 @@ IMPORTANT INSTRUCTIONS:
 
 - Reorder experience to highlight most relevant positions first
 - Keep formatting clean and professional
-- Do NOT add any explanatory text before or after the resume
-- Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
-Provide ONLY the complete optimized resume in the format above, nothing else."""
+OUTPUT FORMAT - RETURN ONLY VALID JSON (NO OTHER TEXT):
+Return the optimized resume as a JSON object with this EXACT structure:
+
+{{
+  "name": "Full Name",
+  "title": "Job Title/Position",
+  "contact": ["Location: City, State", "Email: email@example.com", "Phone: (123) 456-7890", "LinkedIn: https://linkedin.com/in/username", "GitHub: https://github.com/username"],
+  "summary": "Complete summary paragraph as single string",
+  "skills": {{
+    "Category 1": ["skill1", "skill2", "skill3"],
+    "Category 2": ["skill1", "skill2", "skill3"]
+  }},
+  "experience": [
+    {{
+      "company": "Company Name",
+      "location": "City, State",
+      "dates": "Start Date - End Date",
+      "title": "Job Title",
+      "bullets": [
+        "First bullet point with achievements and metrics",
+        "Second bullet point with achievements and metrics"
+      ]
+    }}
+  ],
+  "education": [
+    {{
+      "degree": "Degree Name",
+      "institution": "University Name",
+      "location": "City, State"
+    }}
+  ],
+  "certifications": [
+    "Certification exactly as written in original resume (e.g., AWS Certified Solutions Architect, 2023)",
+    "Another certification"
+  ],
+  "projects": [
+    {{
+      "name": "Project Name",
+      "technologies": "Tech stack used",
+      "date": "Date or Duration",
+      "bullets": [
+        "Project description and achievements",
+        "Key features or results"
+      ]
+    }}
+  ],
+  "awards": [
+    "Award exactly as written in original resume",
+    "Another award or honor"
+  ],
+  "publications": [
+    "Publication exactly as written in original resume",
+    "Another publication"
+  ],
+  "volunteer": [
+    "Volunteer work exactly as written in original resume",
+    "Another volunteer experience"
+  ]
+}}
+
+CRITICAL JSON RULES:
+- Return ONLY valid JSON - no markdown, no explanations, no code blocks
+- Include sections ONLY if they exist in original resume:
+  * "education" - Check for: EDUCATION, ACADEMIC BACKGROUND, QUALIFICATIONS, ACADEMIC QUALIFICATIONS
+  * "certifications" - Check for: CERTIFICATIONS, CERTIFICATES, PROFESSIONAL CERTIFICATIONS, LICENSES, LICENSE & CERTIFICATIONS
+  * "projects" - Check for: PROJECTS, ACADEMIC PROJECTS, PERSONAL PROJECTS, SIDE PROJECTS, PORTFOLIO
+  * "awards" - Check for: AWARDS, HONORS, ACHIEVEMENTS, HONORS & AWARDS, RECOGNITION
+  * "publications" - Check for: PUBLICATIONS, RESEARCH, PAPERS, PUBLISHED WORK
+  * "volunteer" - Check for: VOLUNTEER, VOLUNTEER WORK, VOLUNTEER EXPERIENCE, COMMUNITY SERVICE
+- If a section doesn't exist in original resume, DO NOT include it in JSON
+- Preserve original formatting for certifications, awards, publications, volunteer (copy exactly as written)
+- All strings must be properly escaped
+- Contact array MUST include ALL contact info from original: Location, Email, Phone, LinkedIn, GitHub (include all that are present)
+- Experience bullets must follow all the rules specified above (metrics, rewriting, etc.)
+- Section order in output: summary → skills → experience → education → certifications → projects → awards → publications → volunteer"""
 
         try:
             # Try multiple model names, use the one that worked before or try all
@@ -2125,11 +2357,82 @@ IMPORTANT INSTRUCTIONS:
 
 - Reorder experience to highlight most relevant positions first
 - Keep formatting clean and professional
-- Do NOT add any explanatory text before or after the resume
-- Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
-Provide ONLY the complete optimized resume in the format above, nothing else."""
+OUTPUT FORMAT - RETURN ONLY VALID JSON (NO OTHER TEXT):
+Return the optimized resume as a JSON object with this EXACT structure:
+
+{{
+  "name": "Full Name",
+  "title": "Job Title/Position",
+  "contact": ["Location: City, State", "Email: email@example.com", "Phone: (123) 456-7890", "LinkedIn: https://linkedin.com/in/username", "GitHub: https://github.com/username"],
+  "summary": "Complete summary paragraph as single string",
+  "skills": {{
+    "Category 1": ["skill1", "skill2", "skill3"],
+    "Category 2": ["skill1", "skill2", "skill3"]
+  }},
+  "experience": [
+    {{
+      "company": "Company Name",
+      "location": "City, State",
+      "dates": "Start Date - End Date",
+      "title": "Job Title",
+      "bullets": [
+        "First bullet point with achievements and metrics",
+        "Second bullet point with achievements and metrics"
+      ]
+    }}
+  ],
+  "education": [
+    {{
+      "degree": "Degree Name",
+      "institution": "University Name",
+      "location": "City, State"
+    }}
+  ],
+  "certifications": [
+    "Certification exactly as written in original resume (e.g., AWS Certified Solutions Architect, 2023)",
+    "Another certification"
+  ],
+  "projects": [
+    {{
+      "name": "Project Name",
+      "technologies": "Tech stack used",
+      "date": "Date or Duration",
+      "bullets": [
+        "Project description and achievements",
+        "Key features or results"
+      ]
+    }}
+  ],
+  "awards": [
+    "Award exactly as written in original resume",
+    "Another award or honor"
+  ],
+  "publications": [
+    "Publication exactly as written in original resume",
+    "Another publication"
+  ],
+  "volunteer": [
+    "Volunteer work exactly as written in original resume",
+    "Another volunteer experience"
+  ]
+}}
+
+CRITICAL JSON RULES:
+- Return ONLY valid JSON - no markdown, no explanations, no code blocks
+- Include sections ONLY if they exist in original resume:
+  * "education" - Check for: EDUCATION, ACADEMIC BACKGROUND, QUALIFICATIONS, ACADEMIC QUALIFICATIONS
+  * "certifications" - Check for: CERTIFICATIONS, CERTIFICATES, PROFESSIONAL CERTIFICATIONS, LICENSES, LICENSE & CERTIFICATIONS
+  * "projects" - Check for: PROJECTS, ACADEMIC PROJECTS, PERSONAL PROJECTS, SIDE PROJECTS, PORTFOLIO
+  * "awards" - Check for: AWARDS, HONORS, ACHIEVEMENTS, HONORS & AWARDS, RECOGNITION
+  * "publications" - Check for: PUBLICATIONS, RESEARCH, PAPERS, PUBLISHED WORK
+  * "volunteer" - Check for: VOLUNTEER, VOLUNTEER WORK, VOLUNTEER EXPERIENCE, COMMUNITY SERVICE
+- If a section doesn't exist in original resume, DO NOT include it in JSON
+- Preserve original formatting for certifications, awards, publications, volunteer (copy exactly as written)
+- All strings must be properly escaped
+- Contact array MUST include ALL contact info from original: Location, Email, Phone, LinkedIn, GitHub (include all that are present)
+- Experience bullets must follow all the rules specified above (metrics, rewriting, etc.)
+- Section order in output: summary → skills → experience → education → certifications → projects → awards → publications → volunteer"""
 
         try:
             # Try with current model, fallback to other models if needed
@@ -2494,11 +2797,82 @@ IMPORTANT INSTRUCTIONS:
 
 - Reorder experience to highlight most relevant positions first
 - Keep formatting clean and professional
-- Do NOT add any explanatory text before or after the resume
-- Start directly with the header (name)
-- Section order: Header → SUMMARY → SKILLS → EXPERIENCE → EDUCATION (if exists) → PROJECTS (if exists)
 
-Provide ONLY the complete optimized resume in the format above, nothing else."""
+OUTPUT FORMAT - RETURN ONLY VALID JSON (NO OTHER TEXT):
+Return the optimized resume as a JSON object with this EXACT structure:
+
+{{
+  "name": "Full Name",
+  "title": "Job Title/Position",
+  "contact": ["Location: City, State", "Email: email@example.com", "Phone: (123) 456-7890", "LinkedIn: https://linkedin.com/in/username", "GitHub: https://github.com/username"],
+  "summary": "Complete summary paragraph as single string",
+  "skills": {{
+    "Category 1": ["skill1", "skill2", "skill3"],
+    "Category 2": ["skill1", "skill2", "skill3"]
+  }},
+  "experience": [
+    {{
+      "company": "Company Name",
+      "location": "City, State",
+      "dates": "Start Date - End Date",
+      "title": "Job Title",
+      "bullets": [
+        "First bullet point with achievements and metrics",
+        "Second bullet point with achievements and metrics"
+      ]
+    }}
+  ],
+  "education": [
+    {{
+      "degree": "Degree Name",
+      "institution": "University Name",
+      "location": "City, State"
+    }}
+  ],
+  "certifications": [
+    "Certification exactly as written in original resume (e.g., AWS Certified Solutions Architect, 2023)",
+    "Another certification"
+  ],
+  "projects": [
+    {{
+      "name": "Project Name",
+      "technologies": "Tech stack used",
+      "date": "Date or Duration",
+      "bullets": [
+        "Project description and achievements",
+        "Key features or results"
+      ]
+    }}
+  ],
+  "awards": [
+    "Award exactly as written in original resume",
+    "Another award or honor"
+  ],
+  "publications": [
+    "Publication exactly as written in original resume",
+    "Another publication"
+  ],
+  "volunteer": [
+    "Volunteer work exactly as written in original resume",
+    "Another volunteer experience"
+  ]
+}}
+
+CRITICAL JSON RULES:
+- Return ONLY valid JSON - no markdown, no explanations, no code blocks
+- Include sections ONLY if they exist in original resume:
+  * "education" - Check for: EDUCATION, ACADEMIC BACKGROUND, QUALIFICATIONS, ACADEMIC QUALIFICATIONS
+  * "certifications" - Check for: CERTIFICATIONS, CERTIFICATES, PROFESSIONAL CERTIFICATIONS, LICENSES, LICENSE & CERTIFICATIONS
+  * "projects" - Check for: PROJECTS, ACADEMIC PROJECTS, PERSONAL PROJECTS, SIDE PROJECTS, PORTFOLIO
+  * "awards" - Check for: AWARDS, HONORS, ACHIEVEMENTS, HONORS & AWARDS, RECOGNITION
+  * "publications" - Check for: PUBLICATIONS, RESEARCH, PAPERS, PUBLISHED WORK
+  * "volunteer" - Check for: VOLUNTEER, VOLUNTEER WORK, VOLUNTEER EXPERIENCE, COMMUNITY SERVICE
+- If a section doesn't exist in original resume, DO NOT include it in JSON
+- Preserve original formatting for certifications, awards, publications, volunteer (copy exactly as written)
+- All strings must be properly escaped
+- Contact array MUST include ALL contact info from original: Location, Email, Phone, LinkedIn, GitHub (include all that are present)
+- Experience bullets must follow all the rules specified above (metrics, rewriting, etc.)
+- Section order in output: summary → skills → experience → education → certifications → projects → awards → publications → volunteer"""
 
         try:
             response = self.client.chat(
