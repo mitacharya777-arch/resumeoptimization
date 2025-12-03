@@ -3033,26 +3033,42 @@ def download_docx():
 
 if __name__ == '__main__':
     import socket
-    
-    def find_free_port(start_port=5000, max_port=5100):
-        """Find a free port."""
-        for port in range(start_port, max_port):
-            try:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    s.bind(('127.0.0.1', port))
-                    return port
-            except OSError:
-                continue
-        raise RuntimeError("No free port found")
-    
-    port = find_free_port()
-    
+
+    # Check if running on Azure (PORT environment variable is set by Azure)
+    port = int(os.getenv('PORT', 0))
+
+    # If no PORT env var, find a free port (local development)
+    if port == 0:
+        def find_free_port(start_port=5000, max_port=5100):
+            """Find a free port."""
+            for port in range(start_port, max_port):
+                try:
+                    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+                        s.bind(('127.0.0.1', port))
+                        return port
+                except OSError:
+                    continue
+            raise RuntimeError("No free port found")
+
+        port = find_free_port()
+
+    # Determine if running in production (Azure) or development (local)
+    is_production = os.getenv('FLASK_ENV') == 'production' or os.getenv('ENVIRONMENT') == 'production' or os.getenv('PORT')
+    debug_mode = not is_production
+
+    # Host: 0.0.0.0 for Azure (accessible externally), 127.0.0.1 for local
+    host = '0.0.0.0' if is_production else '127.0.0.1'
+
     print(f"\n{'='*60}")
     print(f"🚀 Resume Analyzer Web App")
     print(f"{'='*60}")
-    print(f"📱 Open in browser: http://localhost:{port}")
+    if is_production:
+        print(f"📱 Running on Azure App Service")
+        print(f"📱 Port: {port}")
+    else:
+        print(f"📱 Open in browser: http://localhost:{port}")
     print(f"{'='*60}")
-    
+
     # Check Groq connection status
     if groq_optimizer.is_available():
         print(f"\n✅ Groq API Connected - Using real AI analysis!")
@@ -3063,21 +3079,20 @@ if __name__ == '__main__':
         print(f"   2. Install: pip install groq")
         print(f"   3. Set: export GROQ_API_KEY=your_key_here")
         print(f"   4. Or create .env file with: GROQ_API_KEY=your_key_here\n")
-    
+
     # Production vs Development mode
-    is_production = os.getenv('FLASK_ENV') == 'production' or os.getenv('ENVIRONMENT') == 'production'
-    debug_mode = not is_production
-    
     if is_production:
         print("\n🚀 Running in PRODUCTION mode")
         print("   - Debug mode: DISABLED")
         print("   - Rate limiting: ENABLED" if RATE_LIMITING_ENABLED else "   - Rate limiting: DISABLED")
         print("   - File size limit: 10MB")
-        print("   - Input validation: ENABLED\n")
+        print("   - Input validation: ENABLED")
+        print(f"   - Host: {host} (accessible externally)\n")
     else:
         print("\n🔧 Running in DEVELOPMENT mode")
         print("   - Debug mode: ENABLED")
-        print("   - Rate limiting: ENABLED" if RATE_LIMITING_ENABLED else "   - Rate limiting: DISABLED\n")
-    
-    app.run(host='127.0.0.1', port=port, debug=debug_mode, use_reloader=False)
+        print("   - Rate limiting: ENABLED" if RATE_LIMITING_ENABLED else "   - Rate limiting: DISABLED")
+        print(f"   - Host: {host} (local only)\n")
+
+    app.run(host=host, port=port, debug=debug_mode, use_reloader=False)
 
